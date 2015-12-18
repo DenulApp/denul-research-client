@@ -12,6 +12,6 @@ public class Main {
      * @param args Arguments
      */
     public static void main(String[] args) {
-        new TextUI().MainMenu();
+        new TextUI().mainMenu();
     }
 }

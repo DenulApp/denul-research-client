@@ -1,6 +1,5 @@
 package de.velcommuta.denul.data;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,11 +21,6 @@ public class StudyRequest {
     public String participationAndWithdrawal;
     public String rights;
     public List<Investigator> investigators = new LinkedList<>();
-
-    /**
-     * Empty constructor
-     */
-    public StudyRequest() {};
 
     public String toString() {
         StringBuilder builder = new StringBuilder();

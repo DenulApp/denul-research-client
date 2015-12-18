@@ -19,12 +19,6 @@ import static de.velcommuta.denul.util.Input.yes;
  */
 public class TextUI {
     /**
-     * Empty constructor - not very interesting
-     */
-    public TextUI() {}
-
-
-    /**
      * Open the local database and ask for a password, if needed
      * @return true if the database was successfully opened, false otherwise
      */

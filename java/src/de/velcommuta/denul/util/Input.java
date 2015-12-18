@@ -1,7 +1,6 @@
 package de.velcommuta.denul.util;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,9 +73,7 @@ public class Input {
     @NotNull
     public static String readLine(String prompt) {
         System.out.print(prompt + ": ");
-        String line = read();
-        if (line != null) return line;
-        return "";
+        return read();
     }
 
 

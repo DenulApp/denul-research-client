@@ -1,4 +1,4 @@
-package de.velcommuta.denul.research;
+package de.velcommuta.denul;
 
 import org.junit.Test;
 

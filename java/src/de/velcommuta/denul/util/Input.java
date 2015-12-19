@@ -1,10 +1,14 @@
 package de.velcommuta.denul.util;
 
+import de.velcommuta.denul.networking.HttpsConnection;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.SSLProtocolException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 
 /**
  * Utility functions for interactive input from STDIN
@@ -110,5 +114,27 @@ public class Input {
             reply = read().toLowerCase();
         }
         return (reply.equals("y") || reply.equals("yes"));
+    }
+
+    /**
+     * Read a URL from stdin and ensure that it is a valid https-URL that does not 404
+     * @param prompt The prompt to display. Will be postfixed with a ": "
+     * @return The URL, guaranteed to be valid (at the time of the check)
+     */
+    public static String readHttpsURL(String prompt) {
+        String url = readLine(prompt);
+        try {
+            if (HttpsConnection.exists(url)) {
+                return url;
+            } else {
+                return readHttpsURL("The URL does not exist. Please enter a valid https:// URL");
+            }
+        } catch (MalformedURLException e) {
+            return readHttpsURL("That is not a valid URL. The URL must begin with https://. Try again");
+        } catch (SSLProtocolException e) {
+            return readHttpsURL("Unable to establish a secure connection. Please ensure that you enter a URL\nwith a valid SSL certificate");
+        } catch (UnknownHostException e) {
+            return readHttpsURL("That domain does not exist. Try again");
+        }
     }
 }

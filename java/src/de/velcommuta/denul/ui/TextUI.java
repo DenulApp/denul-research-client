@@ -3,6 +3,7 @@ package de.velcommuta.denul.ui;
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.networking.HttpsConnection;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 
 import java.security.KeyPair;
@@ -17,6 +18,7 @@ import static de.velcommuta.denul.util.Output.print;
 import static de.velcommuta.denul.util.Input.readLine;
 import static de.velcommuta.denul.util.Input.readLines;
 import static de.velcommuta.denul.util.Input.readSelection;
+import static de.velcommuta.denul.util.Input.readHttpsURL;
 import static de.velcommuta.denul.util.Input.yes;
 
 /**
@@ -56,9 +58,9 @@ public class TextUI {
         // Ask the questions for the form
         request.institution = readLine("Name of your institution");
         request.name        = readLine("Title of study");
+        // TODO Commented out actual validation for testing - put this back in for production use
+        // request.webpage     = readHttpsURL("Web page of study - must be reachable via HTTPS");
         request.webpage     = readLine("Web page of study - must be reachable via HTTPS");
-        // TODO Validate that this is a valid domain that is reachable via HTTPS with a good cert
-        // TODO Validate the URL does not 404
         request.description = readLines("Please give a short description of the study");
         request.purpose     = readLines("Please explain the purpose of your study");
         request.procedures  = readLines("Please explain the procedures of this study - what data will be collected, and why");

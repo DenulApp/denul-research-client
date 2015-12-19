@@ -3,8 +3,10 @@ package de.velcommuta.denul.crypto;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 
+import java.lang.reflect.Field;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -39,7 +41,16 @@ public class ECDHKeyExchange implements KeyExchange {
 
     // Insert BouncyCastle provider
     static {
-        Security.insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
+        // Disable java cryptography limitations using reflection.
+        // Code source http://stackoverflow.com/a/28136100/1232833
+        // Original source: http://middlesphere-1.blogspot.ru/2014/06/this-code-allows-to-break-limit-if.html
+        try {
+            Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
+            field.setAccessible(true);
+            field.set(null, java.lang.Boolean.FALSE);
+        } catch (Exception ex) {
+        }
+        Security.insertProviderAt(new BouncyCastleProvider(), 1);
     }
 
     /**

@@ -3,8 +3,11 @@ package de.velcommuta.denul.ui;
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.networking.TLSConnection;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 
+import javax.net.ssl.SSLHandshakeException;
+import java.io.IOException;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,9 +40,12 @@ public class TextUI {
      * Create a new request
      */
     public void newRequest() {
+        // Start key generation in background
         FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA();
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
+        // Create new study request
         StudyRequest request = new StudyRequest();
+        // Give basic information
         println("");
         println("All questions are modelled after the medical study information sheet of the");
         println("Office for the Protection of Research Subjects of the University of Sourthern");
@@ -47,6 +53,7 @@ public class TextUI {
         println("http://oprs.usc.edu/files/2013/04/Informed-Consent-Booklet-4.4.13.pdf");
         println("Please refer to that document to learn more about the individual questions.");
         println("");
+        // Ask the questions for the form
         request.institution = readLine("Name of your institution");
         request.name        = readLine("Title of study");
         request.webpage     = readLine("Web page of study");
@@ -60,13 +67,19 @@ public class TextUI {
         request.confidentiality = readLines("Please explain your data security and confidentiality policy");
         request.participationAndWithdrawal = readLines("Please explain your policy on participating and withdrawing from the study");
         request.rights      = readLines("Please describe the rights of study participants");
+        // Add investigator details
         println("You will now be asked to add at least one investigator to the study.");
         println("");
         request.investigators.addAll(addInvestigators());
         println("\n\nPlease review the following information:\n");
         println(request.toString());
-        // TODO Handle a "no" reply
-        yes("Is this information correct?");
+        if (!yes("Is this information correct?")) {
+            rsagen.cancel(true);
+            ecdhgen.cancel(true);
+            newRequest();
+            return;
+        }
+        // Retrieve keys from background tasks
         KeyPair keys;
         ECDHKeyExchange exchange;
         if (!rsagen.isDone() || !ecdhgen.isDone()) {

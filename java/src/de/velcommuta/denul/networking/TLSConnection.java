@@ -1,17 +1,20 @@
 package de.velcommuta.denul.networking;
 
 import java.io.BufferedInputStream;
+import java.io.IOError;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.*;
 
 /**
  * A TCP connection using TLS to communicate with the server.
@@ -30,14 +33,69 @@ public class TLSConnection implements Connection {
      * @throws IOException If the underlying socket throws it
      * @throws UnknownHostException If the underlying socket throws it
      * @throws SSLHandshakeException If the certificate hostname validation fails
+     * Code partially based on https://docs.fedoraproject.org/en-US/Fedora_Security_Team/1/html/Defensive_Coding/sect-Defensive_Coding-TLS-Client-OpenJDK.html
      */
     public TLSConnection(String host, int port) throws IOException, UnknownHostException, SSLHandshakeException {
         logger.fine("TLSConnection: Establishing connection to " + host + ":" + port);
+        // Get SSL context
+        SSLContext ctx;
+        try {
+            ctx = SSLContext.getInstance("TLSv1.2", "SunJSSE");
+        } catch (NoSuchAlgorithmException e) {
+            // No TLS 1.2 available. Fall back to TLS 1.0
+            try {
+                ctx = SSLContext.getInstance("TLSv1", "SunJSSE");
+            } catch (NoSuchAlgorithmException | NoSuchProviderException e2) {
+                throw new IOError(e2);
+            }
+        } catch (NoSuchProviderException e) {
+            throw new IOError(e);
+        }
+        try {
+            // initiate Context
+            ctx.init(null, null, null);
+        } catch (KeyManagementException e) {
+            throw new IOError(e);
+        }
+        // Get SSL Parameters
+        SSLParameters params = ctx.getDefaultSSLParameters();
+        // Set allowed protocols
+        ArrayList<String> protocols = new ArrayList<String>(
+                Arrays.asList(params.getProtocols()));
+        // No SSLv2 compatible HELLO
+        protocols.remove("SSLv2Hello");
+        // No SSLv3
+        protocols.remove("SSLv3");
+        // Set the protocols
+        params.setProtocols(protocols.toArray(new String[protocols.size()]));
+        // Bad ciphers we don't want to see used:
+        String[] badAlgos = {
+                "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+                "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+                "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+                "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",
+                "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",
+                "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+                "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA"
+        };
+        // Get ciphersuite
+        ArrayList<String> ciphers = new ArrayList<>(
+                Arrays.asList(params.getCipherSuites()));
+        // Remove bad algorithms
+        ciphers.removeAll(Arrays.asList(badAlgos));
+        // Set the cipher suite
+        params.setCipherSuites(ciphers.toArray(new String[ciphers.size()]));
+        // Enable verification
+        params.setEndpointIdentificationAlgorithm("HTTPS");
         // Get SSL Socket factory
         SocketFactory factory = SSLSocketFactory.getDefault();
         // Create a socket and connect to the host and port, throwing an exception if anything
         // goes wrong
         mSocket = (SSLSocket) factory.createSocket(host, port);
+        // Set the parameters
+        mSocket.setSSLParameters(params);
+        // Start the handshake
+        mSocket.startHandshake();
         // Get an SSLSession object
         SSLSession s = mSocket.getSession();
         logger.fine("TLSConnection: Connection established using " + s.getProtocol() + " (" +  s.getCipherSuite() + ")");

@@ -1,12 +1,17 @@
 package de.velcommuta.denul.ui;
 
-// Static-import a bunch of methods for more concise code
+import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.util.AsyncKeyGenerator;
 
+import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
+// Static-import a bunch of methods for more concise code
 import static de.velcommuta.denul.util.Output.println;
 import static de.velcommuta.denul.util.Output.print;
 import static de.velcommuta.denul.util.Input.readLine;
@@ -32,6 +37,8 @@ public class TextUI {
      * Create a new request
      */
     public void newRequest() {
+        FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA();
+        FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
         StudyRequest request = new StudyRequest();
         println("");
         println("All questions are modelled after the medical study information sheet of the");
@@ -58,7 +65,24 @@ public class TextUI {
         request.investigators.addAll(addInvestigators());
         println("\n\nPlease review the following information:\n");
         println(request.toString());
+        // TODO Handle a "no" reply
         yes("Is this information correct?");
+        KeyPair keys;
+        ECDHKeyExchange exchange;
+        if (!rsagen.isDone() || !ecdhgen.isDone()) {
+            println("Waiting for key generation to complete...");
+        }
+        try {
+            keys = rsagen.get();
+            exchange = ecdhgen.get();
+        } catch (InterruptedException | ExecutionException e) {
+            println("Something went wrong during key generation, aborting");
+            e.printStackTrace();
+            return;
+        }
+        request.pubkey = keys.getPublic();
+        request.privkey = keys.getPrivate();
+        request.exchange = exchange;
     }
 
 

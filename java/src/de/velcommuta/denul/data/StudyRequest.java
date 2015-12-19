@@ -1,5 +1,9 @@
 package de.velcommuta.denul.data;
 
+import de.velcommuta.denul.crypto.KeyExchange;
+
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +25,11 @@ public class StudyRequest {
     public String participationAndWithdrawal;
     public String rights;
     public List<Investigator> investigators = new LinkedList<>();
+
+    // Cryptographic material
+    public PublicKey pubkey;
+    public PrivateKey privkey;
+    public KeyExchange exchange;
 
     public String toString() {
         StringBuilder builder = new StringBuilder();

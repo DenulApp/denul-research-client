@@ -180,4 +180,14 @@ public class Input {
             return readHttpsURL("That domain does not exist. Try again");
         }
     }
+
+
+    /**
+     * Wait for the user to press enter
+     * @param prompt The prompt to display to the user
+     */
+    public static void confirm(String prompt) {
+        assert prompt != null;
+        readLine(prompt);
+    }
 }

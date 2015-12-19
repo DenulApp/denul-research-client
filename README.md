@@ -7,5 +7,6 @@ proposals to a Denul server, from where they can be served to clients.
 ## Libraries
 This application uses the following libraries:
 - [Bouncycastle](https://www.bouncycastle.org/) ([MIT License](https://www.bouncycastle.org/licence.html))
+- [DNSJava](http://www.xbill.org/dnsjava/) ([BSD License](http://www.dnsjava.org/dnsjava-current/LICENSE))
 - [Google Protocol Buffers](https://github.com/google/protobuf) ([BSD 3-Clause License](https://github.com/google/protobuf/blob/master/LICENSE))
 - [libvicbf](https://github.com/malexmave/libvicbf) ([Apache License v2](https://github.com/malexmave/libvicbf/blob/master/LICENSE))

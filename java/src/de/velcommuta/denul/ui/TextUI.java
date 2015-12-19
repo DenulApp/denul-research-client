@@ -4,6 +4,7 @@ import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.networking.DNSVerifier;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 
 import java.net.MalformedURLException;
@@ -22,6 +23,7 @@ import static de.velcommuta.denul.util.Input.readLines;
 import static de.velcommuta.denul.util.Input.readSelection;
 import static de.velcommuta.denul.util.Input.readHttpsURL;
 import static de.velcommuta.denul.util.Input.yes;
+import static de.velcommuta.denul.util.Input.confirm;
 
 /**
  * Text-based UI for use on the console
@@ -190,7 +192,18 @@ public class TextUI {
             if (!yes("Are you sure you want to use this verification system?")) {
                 return addVerificationStrategy();
             }
-            // TODO Implement actual logic
+            // Give the user time to add the DNS entry
+            confirm("Please add the DNS record now. Afterwards, hit enter to check if it works");
+            // Check DNS entry, and keep checking until it works
+            // TODO Give a way to cancel out
+            boolean okay = DNSVerifier.verify(request);
+            while (!okay) {
+                println("Something seems to be wrong, I could not find the correct TXT record...");
+                confirm("Please double-check and hit enter to try again");
+            }
+            // Verification was successful
+            println("Verification successful.");
+            return 0;  // TODO Switch this over to an ENUM field once they are established
         } catch (MalformedURLException e) {
             // This should not happen, as the URL has been verified already
             e.printStackTrace();

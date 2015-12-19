@@ -13,4 +13,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'com.google.protobuf:protobuf-java:2.6.1'
     compile 'org.bouncycastle:bcprov-jdk15on:1.53'
+    compile 'dnsjava:dnsjava:2.1.7'
 }

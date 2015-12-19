@@ -56,6 +56,7 @@ public class Input {
      */
     @NotNull
     public static String readLines(String prompt) {
+        assert prompt != null;
         println(prompt + ":");
         println("(Finish your input with an empty line)");
         // Prepare variables
@@ -80,6 +81,7 @@ public class Input {
      */
     @NotNull
     public static String readLine(String prompt) {
+        assert prompt != null;
         print(prompt + ": ");
         return read();
     }
@@ -92,6 +94,8 @@ public class Input {
      * @return The index of the selected option
      */
     public static int readSelection(String prompt, String[] options) {
+        assert prompt != null;
+        assert options != null;
         println(prompt);
         for (int i = 1; i <= options.length; i++) {
             println("  (" + i + ") " + options[i-1]);
@@ -113,6 +117,8 @@ public class Input {
      * @return The index of the selected option
      */
     public static String readSelection(String prompt, HashMap<String, String> options) {
+        assert prompt != null;
+        assert options != null;
         println(prompt);
         int i = 1;
         for (String key : options.keySet()) {
@@ -143,6 +149,7 @@ public class Input {
      * @return True if the user selected y[es], false otherwise
      */
     public static boolean yes(String prompt) {
+        assert prompt != null;
         print(prompt + " (y/n) ");
         String reply = read().toLowerCase();
         while (!(reply.equals("y") || reply.equals("n") || reply.equals("yes") || reply.equals("no"))) {
@@ -157,6 +164,7 @@ public class Input {
      * @return The URL, guaranteed to be valid (at the time of the check)
      */
     public static String readHttpsURL(String prompt) {
+        assert prompt != null;
         String url = readLine(prompt);
         try {
             if (HttpsConnection.exists(url)) {

@@ -9,6 +9,7 @@ public class Output {
      * @param line The String
      */
     public static void println(String line) {
+        assert line != null;
         System.out.println(line);
     }
 
@@ -17,6 +18,7 @@ public class Output {
      * @param line The String
      */
     public static void print(String line) {
+        assert line != null;
         System.out.print(line);
     }
 }

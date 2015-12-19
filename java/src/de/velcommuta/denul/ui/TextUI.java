@@ -33,7 +33,7 @@ public class TextUI {
      * Open the local database and ask for a password, if needed
      * @return true if the database was successfully opened, false otherwise
      */
-    public boolean openDatabase() {
+    private boolean openDatabase() {
         // TODO
         return true;
     }
@@ -100,6 +100,9 @@ public class TextUI {
         try {
             keys = rsagen.get();
             exchange = ecdhgen.get();
+            // Make sure we did not get null values
+            assert keys != null;
+            assert exchange != null;
         } catch (InterruptedException | ExecutionException e) {
             println("Something went wrong during key generation, aborting");
             e.printStackTrace();
@@ -118,7 +121,7 @@ public class TextUI {
      * Ask the user to input the details of at least one, potentially more, Investigator(s)
      * @return A List of {@link Investigator}s
      */
-    public List<Investigator> addInvestigators() {
+    private List<Investigator> addInvestigators() {
         // Prepare List to return
         List<Investigator> rv = new LinkedList<>();
         // Create new investigator object

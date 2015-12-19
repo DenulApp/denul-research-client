@@ -1,5 +1,6 @@
 package de.velcommuta.denul.crypto;
 
+import de.velcommuta.denul.util.FormatHelper;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 
@@ -162,13 +163,7 @@ public class RSA {
             sig.initSign(privateKey, new SecureRandom());
             sig.update(data);
             return sig.sign();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
+        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException | NoSuchProviderException e) {
             e.printStackTrace();
         }
         return null;
@@ -188,15 +183,34 @@ public class RSA {
             sig.initVerify(pubkey);
             sig.update(data);
             return sig.verify(signature);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
+        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException | SignatureException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    ///// Fingerprinting
+    /**
+     * Calculate a fingerprint of a public key
+     * @param pubkey The public key
+     * @return The fingerprint, or null if the four horsemen of the apocalypse have arrived and removed SHA256 from the
+     * list of supported hash functions.
+     */
+    public static String fingerprint(PublicKey pubkey) {
+        assert pubkey != null;
+        try {
+            // Get a SHA256 hash function
+            MessageDigest md = MessageDigest.getInstance("SHA256");
+            // Add the bytes of the public key
+            md.update(pubkey.getEncoded());
+            // Calculate hash
+            byte[] hash = md.digest();
+            // Return String-representation
+            return FormatHelper.bytesToHex(hash);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

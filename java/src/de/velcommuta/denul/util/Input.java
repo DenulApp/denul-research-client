@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+
+import static de.velcommuta.denul.util.Output.print;
+import static de.velcommuta.denul.util.Output.println;
 
 /**
  * Utility functions for interactive input from STDIN
@@ -39,7 +43,7 @@ public class Input {
         try {
             return Integer.parseInt(rep);
         } catch (NumberFormatException e) {
-            System.out.print("That's not even a number. Try again: ");
+            print("That's not even a number. Try again: ");
             return readInt();
         }
     }
@@ -52,8 +56,8 @@ public class Input {
      */
     @NotNull
     public static String readLines(String prompt) {
-        System.out.println(prompt + ":");
-        System.out.println("(Finish your input with an empty line)");
+        println(prompt + ":");
+        println("(Finish your input with an empty line)");
         // Prepare variables
         StringBuilder input = new StringBuilder();
         String line;
@@ -76,7 +80,7 @@ public class Input {
      */
     @NotNull
     public static String readLine(String prompt) {
-        System.out.print(prompt + ": ");
+        print(prompt + ": ");
         return read();
     }
 
@@ -88,17 +92,48 @@ public class Input {
      * @return The index of the selected option
      */
     public static int readSelection(String prompt, String[] options) {
-        System.out.println(prompt);
+        println(prompt);
         for (int i = 1; i <= options.length; i++) {
-            System.out.println("  (" + i + ") " + options[i-1]);
+            println("  (" + i + ") " + options[i-1]);
         }
-        System.out.print("Please select an option: ");
+        print("Please select an option: ");
         int selection = readInt();
         while (selection - 1 >= options.length || selection - 1 < 0) {
-            System.out.print("That's not an option. Try again: ");
+            print("That's not an option. Try again: ");
             selection = readInt();
         }
         return selection - 1;
+    }
+
+    
+    /**
+     * Offer a number of options to the user and ask for a selection
+     * @param prompt The prompt to display
+     * @param options The options, mapping a short description string to a longer explanation string
+     * @return The index of the selected option
+     */
+    public static String readSelection(String prompt, HashMap<String, String> options) {
+        println(prompt);
+        int i = 1;
+        for (String key : options.keySet()) {
+            println("  (" + i + ") " + key);
+            println("      " + options.get(key));
+            i++;
+        }
+        print("Please select an option: ");
+        int selection = readInt();
+        while (selection - 1 >= options.size() || selection - 1 < 0) {
+            print("That's not an option. Try again: ");
+            selection = readInt();
+        }
+        // Ugly way to determine the key associated with this index
+        i = 1;
+        for (String key : options.keySet()) {
+            if (i == selection) return key;
+            i++;
+        }
+        // Should be unreachable
+        return null;
     }
 
 
@@ -108,7 +143,7 @@ public class Input {
      * @return True if the user selected y[es], false otherwise
      */
     public static boolean yes(String prompt) {
-        System.out.print(prompt + " (y/n) ");
+        print(prompt + " (y/n) ");
         String reply = read().toLowerCase();
         while (!(reply.equals("y") || reply.equals("n") || reply.equals("yes") || reply.equals("no"))) {
             reply = read().toLowerCase();

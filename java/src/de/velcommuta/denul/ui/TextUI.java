@@ -1,11 +1,13 @@
 package de.velcommuta.denul.ui;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
+import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
-import de.velcommuta.denul.networking.HttpsConnection;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +27,8 @@ import static de.velcommuta.denul.util.Input.yes;
  * Text-based UI for use on the console
  */
 public class TextUI {
+    private StudyRequest request;
+
     /**
      * Open the local database and ask for a password, if needed
      * @return true if the database was successfully opened, false otherwise
@@ -44,7 +48,7 @@ public class TextUI {
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
 
         // Create new study request
-        StudyRequest request = new StudyRequest();
+        request = new StudyRequest();
 
         // Give basic information
         println("");
@@ -87,7 +91,6 @@ public class TextUI {
             return;
         }
 
-        // TODO Add key verification method choice
         // Retrieve keys from background tasks
         KeyPair keys;
         ECDHKeyExchange exchange;
@@ -105,6 +108,9 @@ public class TextUI {
         request.pubkey = keys.getPublic();
         request.privkey = keys.getPrivate();
         request.exchange = exchange;
+
+        // Get verification strategy
+        int vs = addVerificationStrategy();
     }
 
 
@@ -134,6 +140,87 @@ public class TextUI {
         }
         // return
         return rv;
+    }
+
+    /**
+     * Ask the user which verification strategy she wants to use to authenticate the study request
+     * @return TODO
+     * TODO Better language
+     */
+    private int addVerificationStrategy() {
+        // Ensure values are sane
+        assert request != null;
+        assert request.pubkey != null;
+        // Display and read selection
+        String selection = readSelection("\nPlease select how you want to authenticate your request", StudyRequest.verificationOptions);
+        // Ensure selection was sane
+        assert selection != null;
+        // Call helper functions depending on selection
+        switch (selection) {
+            case StudyRequest.VERIFY_DNS:
+                return addVerifyDNS();
+            case StudyRequest.VERIFY_FILE:
+                return addVerifyFile();
+            case StudyRequest.VERIFY_META:
+                return addVerifyMeta();
+            default:
+                return -42;
+        }
+    }
+
+
+    /**
+     * Inform the user about DNS verification, check if she still wants to use it, and verify that the verification
+     * token was actually placed in the DNS
+     * @return TODO
+     */
+    private int addVerifyDNS() {
+        // Ensure variables are sane
+        assert request != null;
+        assert request.pubkey != null;
+        try {
+            // Show instructions
+            println(String.format(StudyRequest.VERIFY_DNS_DESC_LONG,
+                    new URL(request.webpage).getHost(),
+                    RSA.fingerprint(request.pubkey)));
+            // Ask if method should be used
+            if (!yes("Are you sure you want to use this verification system?")) {
+                return addVerificationStrategy();
+            }
+            // TODO Implement actual logic
+        } catch (MalformedURLException e) {
+            // This should not happen, as the URL has been verified already
+            e.printStackTrace();
+        }
+        return -42;
+    }
+
+
+    /**
+     * Inform the user about how file-based verification works, check if she still wants to use it, and verify that the
+     * verification token was placed in the correct location
+     * @return TODO
+     */
+    private int addVerifyFile() {
+        assert request != null;
+        assert request.pubkey != null;
+        // TODO
+        println("NotImplemented");
+        return addVerificationStrategy();
+    }
+
+
+    /**
+     * Inform the user about how meta-tag-based verification works, check if she still wants to use it, and verify that
+     * the verification token was placed in the correct location
+     * @return TODO
+     */
+    private int addVerifyMeta() {
+        assert request != null;
+        assert request.pubkey != null;
+        // TODO
+        println("NotImplemented");
+        return addVerificationStrategy();
     }
 
 

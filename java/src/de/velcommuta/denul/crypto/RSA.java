@@ -154,6 +154,7 @@ public class RSA {
      * @param data The data to sign
      * @param privateKey The private key to use
      * @return The signature, as a byte[], or null if an error occured
+     * Based on http://www.java2s.com/Tutorial/Java/0490__Security/RSASignatureGeneration.htm
      */
     public static byte[] sign(byte[] data, PrivateKey privateKey) {
         try {
@@ -179,6 +180,7 @@ public class RSA {
      * @param signature The signature bytes
      * @param pubkey The public key
      * @return True if the signature is valid, false otherwise
+     * Based on http://www.java2s.com/Tutorial/Java/0490__Security/RSASignatureGeneration.htm
      */
     public static boolean verify(byte[] data, byte[] signature, PublicKey pubkey) {
         try {

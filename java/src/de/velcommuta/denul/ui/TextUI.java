@@ -3,11 +3,8 @@ package de.velcommuta.denul.ui;
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
-import de.velcommuta.denul.networking.TLSConnection;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 
-import javax.net.ssl.SSLHandshakeException;
-import java.io.IOException;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +53,9 @@ public class TextUI {
         // Ask the questions for the form
         request.institution = readLine("Name of your institution");
         request.name        = readLine("Title of study");
-        request.webpage     = readLine("Web page of study");
+        request.webpage     = readLine("Web page of study - must be reachable via HTTPS");
+        // TODO Validate that this is a valid domain that is reachable via HTTPS with a good cert
+        // TODO Validate the URL does not 404
         request.description = readLines("Please give a short description of the study");
         request.purpose     = readLines("Please explain the purpose of your study");
         request.procedures  = readLines("Please explain the procedures of this study - what data will be collected, and why");
@@ -79,6 +78,7 @@ public class TextUI {
             newRequest();
             return;
         }
+        // TODO Add key verification method choice
         // Retrieve keys from background tasks
         KeyPair keys;
         ECDHKeyExchange exchange;

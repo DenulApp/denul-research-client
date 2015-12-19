@@ -3,16 +3,7 @@ package de.velcommuta.denul.crypto;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Security;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Logger;
@@ -153,5 +144,57 @@ public class RSA {
             logger.severe("decryptRSA: Encountered Exception: "+ e.getMessage());
         }
         return null;
+    }
+
+
+    ///// Signatures
+
+    /**
+     * Sign data with a private RSA key
+     * @param data The data to sign
+     * @param privateKey The private key to use
+     * @return The signature, as a byte[], or null if an error occured
+     */
+    public static byte[] sign(byte[] data, PrivateKey privateKey) {
+        try {
+            Signature sig = Signature.getInstance("SHA256withRSA", "BC");
+            sig.initSign(privateKey, new SecureRandom());
+            sig.update(data);
+            return sig.sign();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Verify a signature over a piece of data using a public key
+     * @param data The data to verify
+     * @param signature The signature bytes
+     * @param pubkey The public key
+     * @return True if the signature is valid, false otherwise
+     */
+    public static boolean verify(byte[] data, byte[] signature, PublicKey pubkey) {
+        try {
+            Signature sig = Signature.getInstance("SHA256withRSA", "BC");
+            sig.initVerify(pubkey);
+            sig.update(data);
+            return sig.verify(signature);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

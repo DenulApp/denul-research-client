@@ -19,6 +19,7 @@ public class RSATest extends TestCase {
      */
     public void testKeypairEncodingDecoding() {
         KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
         String pubkey_enc = RSA.encodeKey(kp.getPublic());
         String privkey_enc = RSA.encodeKey(kp.getPrivate());
         PublicKey pubkey = RSA.decodePublicKey(pubkey_enc);
@@ -50,6 +51,7 @@ public class RSATest extends TestCase {
      */
     public void testRsaEncryption() {
         KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
         byte[] message = new byte[5];
         new Random().nextBytes(message);
         try {
@@ -65,6 +67,7 @@ public class RSATest extends TestCase {
      */
     public void testRsaEncryptionFailOnTooLarge() {
         KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
         byte[] message = new byte[256];
         new Random().nextBytes(message);
         byte[] ciphertext = null;
@@ -81,6 +84,7 @@ public class RSATest extends TestCase {
      */
     public void testRsaDecryption() {
         KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
         byte[] message = new byte[5];
         new Random().nextBytes(message);
         try {
@@ -99,6 +103,7 @@ public class RSATest extends TestCase {
      */
     public void testRsaDecryptionFailOnModifiedData() {
         KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
         byte[] message = new byte[5];
         new Random().nextBytes(message);
         byte[] plaintext = null;
@@ -113,5 +118,57 @@ public class RSATest extends TestCase {
             assertTrue("Modified data accepted", true);
         }
         assertNull("Plaintext not null", plaintext);
+    }
+
+    /**
+     * Test if the signature and verification works
+     */
+    public void testRsaSignVerify() {
+        KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
+        byte[] message = new byte[5];
+        new Random().nextBytes(message);
+        byte[] signature = RSA.sign(message, kp.getPrivate());
+        assertTrue(RSA.verify(message, signature, kp.getPublic()));
+    }
+
+    /**
+     * Test if the signature and verification works
+     */
+    public void testRsaSignVerifyFailOnModifiedData() {
+        KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
+        byte[] message = new byte[5];
+        new Random().nextBytes(message);
+        byte[] signature = RSA.sign(message, kp.getPrivate());
+        message[3] = (byte) ((int)message[3] ^ 1);
+        assertFalse(RSA.verify(message, signature, kp.getPublic()));
+    }
+
+    /**
+     * Test if the signature and verification works
+     */
+    public void testRsaSignVerifyFailOnModifiedSignature() {
+        KeyPair kp = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
+        byte[] message = new byte[5];
+        new Random().nextBytes(message);
+        byte[] signature = RSA.sign(message, kp.getPrivate());
+        signature[3] = (byte) ((int)signature[3] ^ 1);
+        assertFalse(RSA.verify(message, signature, kp.getPublic()));
+    }
+
+    /**
+     * Test if the signature and verification works
+     */
+    public void testRsaSignVerifyFailOnWrongPubkey() {
+        KeyPair kp = RSA.generateRSAKeypair(1024);
+        KeyPair kp2 = RSA.generateRSAKeypair(1024);
+        assertNotNull(kp);
+        assertNotNull(kp2);
+        byte[] message = new byte[5];
+        new Random().nextBytes(message);
+        byte[] signature = RSA.sign(message, kp.getPrivate());
+        assertFalse(RSA.verify(message, signature, kp2.getPublic()));
     }
 }

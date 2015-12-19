@@ -40,8 +40,10 @@ public class TextUI {
         // Start key generation in background
         FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA();
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
+
         // Create new study request
         StudyRequest request = new StudyRequest();
+
         // Give basic information
         println("");
         println("All questions are modelled after the medical study information sheet of the");
@@ -50,6 +52,7 @@ public class TextUI {
         println("http://oprs.usc.edu/files/2013/04/Informed-Consent-Booklet-4.4.13.pdf");
         println("Please refer to that document to learn more about the individual questions.");
         println("");
+
         // Ask the questions for the form
         request.institution = readLine("Name of your institution");
         request.name        = readLine("Title of study");
@@ -66,10 +69,13 @@ public class TextUI {
         request.confidentiality = readLines("Please explain your data security and confidentiality policy");
         request.participationAndWithdrawal = readLines("Please explain your policy on participating and withdrawing from the study");
         request.rights      = readLines("Please describe the rights of study participants");
+
         // Add investigator details
         println("You will now be asked to add at least one investigator to the study.");
         println("");
         request.investigators.addAll(addInvestigators());
+
+        // Review information
         println("\n\nPlease review the following information:\n");
         println(request.toString());
         if (!yes("Is this information correct?")) {
@@ -78,6 +84,7 @@ public class TextUI {
             newRequest();
             return;
         }
+
         // TODO Add key verification method choice
         // Retrieve keys from background tasks
         KeyPair keys;
@@ -104,17 +111,26 @@ public class TextUI {
      * @return A List of {@link Investigator}s
      */
     public List<Investigator> addInvestigators() {
+        // Prepare List to return
         List<Investigator> rv = new LinkedList<>();
+        // Create new investigator object
         Investigator investigator = new Investigator();
+
+        // Query the user for the details
         investigator.name = readLine("Please enter the investigators full name");
         investigator.institution = readLine("Please enter the institution of the investigator");
         investigator.group = readLine("Please enter the group of the investigator");
         investigator.position = readLine("Please enter the position of the investigator");
+        // Add investigator to return list
         rv.add(investigator);
+
+        // Check if more investigators should be added
         if (yes("Do you want to add additional Investigators?")) {
             println("");
+            // Recursively add further investigator(s)
             rv.addAll(addInvestigators());
         }
+        // return
         return rv;
     }
 

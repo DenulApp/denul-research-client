@@ -15,15 +15,16 @@ public class AsyncKeyGenerator {
      * Create a task that generates an RSA key in the background and makes it possible to retrieve it from the returned
      * object. Call {@link FutureTask#isDone()} to determine if the computations have been completed, and call
      * {@link FutureTask#get()} to retrieve the result (will block until the result is available)
+     * @param bitness Bitstrength of the generated key
      * @return A {@link FutureTask} which will compute and return an RSA keypair
      * Code based in part on http://stackoverflow.com/a/27955299/1232833
      */
-    public static FutureTask<KeyPair> generateRSA() {
+    public static FutureTask<KeyPair> generateRSA(final int bitness) {
         FutureTask<KeyPair> task = new FutureTask<>(
                 new Callable<KeyPair>() {
                     @Override
                     public KeyPair call() throws Exception {
-                        return RSA.generateRSAKeypair(4096);
+                        return RSA.generateRSAKeypair(bitness);
                     }
                 }
         );

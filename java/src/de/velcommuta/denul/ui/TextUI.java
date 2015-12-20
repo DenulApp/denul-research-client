@@ -45,7 +45,7 @@ public class TextUI {
      */
     public void newRequest() {
         // Start key generation in background
-        FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA();
+        FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA(4096);
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
 
         // Create new study request
@@ -190,6 +190,7 @@ public class TextUI {
         String selection = readSelection("\nPlease select how you want to authenticate your request", StudyRequest.verificationOptions);
         // Ensure selection was sane
         assert selection != null;
+        println("");
         // Call helper functions depending on selection
         switch (selection) {
             case StudyRequest.VERIFY_DNS_TITLE:

@@ -802,17 +802,28 @@ public final class StudyMessage {
         int index);
 
     /**
-     * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
      */
-    boolean hasDataRequest();
+    java.util.List<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest> 
+        getDataRequestList();
     /**
-     * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
      */
-    de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest getDataRequest();
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest getDataRequest(int index);
     /**
-     * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
      */
-    de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder getDataRequestOrBuilder();
+    int getDataRequestCount();
+    /**
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     */
+    java.util.List<? extends de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder> 
+        getDataRequestOrBuilderList();
+    /**
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     */
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder getDataRequestOrBuilder(
+        int index);
 
     /**
      * <code>required bytes publicKey = 16;</code>
@@ -842,15 +853,15 @@ public final class StudyMessage {
     de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.VerificationStrategy getVerificationStrategy();
 
     /**
-     * <code>required string verificationData = 19;</code>
+     * <code>optional string verificationData = 19;</code>
      */
     boolean hasVerificationData();
     /**
-     * <code>required string verificationData = 19;</code>
+     * <code>optional string verificationData = 19;</code>
      */
     java.lang.String getVerificationData();
     /**
-     * <code>required string verificationData = 19;</code>
+     * <code>optional string verificationData = 19;</code>
      */
     com.google.protobuf.ByteString
         getVerificationDataBytes();
@@ -1025,20 +1036,15 @@ public final class StudyMessage {
               break;
             }
             case 122: {
-              de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder subBuilder = null;
-              if (((bitField0_ & 0x00002000) == 0x00002000)) {
-                subBuilder = dataRequest_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00004000) == 0x00004000)) {
+                dataRequest_ = new java.util.ArrayList<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest>();
+                mutable_bitField0_ |= 0x00004000;
               }
-              dataRequest_ = input.readMessage(de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(dataRequest_);
-                dataRequest_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00002000;
+              dataRequest_.add(input.readMessage(de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.PARSER, extensionRegistry));
               break;
             }
             case 130: {
-              bitField0_ |= 0x00004000;
+              bitField0_ |= 0x00002000;
               publicKey_ = input.readBytes();
               break;
             }
@@ -1048,7 +1054,7 @@ public final class StudyMessage {
               if (value == null) {
                 unknownFields.mergeVarintField(17, rawValue);
               } else {
-                bitField0_ |= 0x00008000;
+                bitField0_ |= 0x00004000;
                 publicKeyAlgo_ = value;
               }
               break;
@@ -1059,19 +1065,19 @@ public final class StudyMessage {
               if (value == null) {
                 unknownFields.mergeVarintField(18, rawValue);
               } else {
-                bitField0_ |= 0x00010000;
+                bitField0_ |= 0x00008000;
                 verificationStrategy_ = value;
               }
               break;
             }
             case 154: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00020000;
+              bitField0_ |= 0x00010000;
               verificationData_ = bs;
               break;
             }
             case 162: {
-              bitField0_ |= 0x00040000;
+              bitField0_ |= 0x00020000;
               kexData_ = input.readBytes();
               break;
             }
@@ -1081,13 +1087,13 @@ public final class StudyMessage {
               if (value == null) {
                 unknownFields.mergeVarintField(21, rawValue);
               } else {
-                bitField0_ |= 0x00080000;
+                bitField0_ |= 0x00040000;
                 kexAlgorithm_ = value;
               }
               break;
             }
             case 178: {
-              bitField0_ |= 0x00100000;
+              bitField0_ |= 0x00080000;
               queueIdentifier_ = input.readBytes();
               break;
             }
@@ -1101,6 +1107,9 @@ public final class StudyMessage {
       } finally {
         if (((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
           investigators_ = java.util.Collections.unmodifiableList(investigators_);
+        }
+        if (((mutable_bitField0_ & 0x00004000) == 0x00004000)) {
+          dataRequest_ = java.util.Collections.unmodifiableList(dataRequest_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3982,24 +3991,38 @@ public final class StudyMessage {
     }
 
     public static final int DATAREQUEST_FIELD_NUMBER = 15;
-    private de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest dataRequest_;
+    private java.util.List<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest> dataRequest_;
     /**
-     * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
      */
-    public boolean hasDataRequest() {
-      return ((bitField0_ & 0x00002000) == 0x00002000);
-    }
-    /**
-     * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
-     */
-    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest getDataRequest() {
+    public java.util.List<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest> getDataRequestList() {
       return dataRequest_;
     }
     /**
-     * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
      */
-    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder getDataRequestOrBuilder() {
+    public java.util.List<? extends de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder> 
+        getDataRequestOrBuilderList() {
       return dataRequest_;
+    }
+    /**
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     */
+    public int getDataRequestCount() {
+      return dataRequest_.size();
+    }
+    /**
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     */
+    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest getDataRequest(int index) {
+      return dataRequest_.get(index);
+    }
+    /**
+     * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+     */
+    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder getDataRequestOrBuilder(
+        int index) {
+      return dataRequest_.get(index);
     }
 
     public static final int PUBLICKEY_FIELD_NUMBER = 16;
@@ -4008,7 +4031,7 @@ public final class StudyMessage {
      * <code>required bytes publicKey = 16;</code>
      */
     public boolean hasPublicKey() {
-      return ((bitField0_ & 0x00004000) == 0x00004000);
+      return ((bitField0_ & 0x00002000) == 0x00002000);
     }
     /**
      * <code>required bytes publicKey = 16;</code>
@@ -4023,7 +4046,7 @@ public final class StudyMessage {
      * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.PubkeyAlgo publicKeyAlgo = 17;</code>
      */
     public boolean hasPublicKeyAlgo() {
-      return ((bitField0_ & 0x00008000) == 0x00008000);
+      return ((bitField0_ & 0x00004000) == 0x00004000);
     }
     /**
      * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.PubkeyAlgo publicKeyAlgo = 17;</code>
@@ -4038,7 +4061,7 @@ public final class StudyMessage {
      * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.VerificationStrategy verificationStrategy = 18;</code>
      */
     public boolean hasVerificationStrategy() {
-      return ((bitField0_ & 0x00010000) == 0x00010000);
+      return ((bitField0_ & 0x00008000) == 0x00008000);
     }
     /**
      * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.VerificationStrategy verificationStrategy = 18;</code>
@@ -4050,13 +4073,13 @@ public final class StudyMessage {
     public static final int VERIFICATIONDATA_FIELD_NUMBER = 19;
     private java.lang.Object verificationData_;
     /**
-     * <code>required string verificationData = 19;</code>
+     * <code>optional string verificationData = 19;</code>
      */
     public boolean hasVerificationData() {
-      return ((bitField0_ & 0x00020000) == 0x00020000);
+      return ((bitField0_ & 0x00010000) == 0x00010000);
     }
     /**
-     * <code>required string verificationData = 19;</code>
+     * <code>optional string verificationData = 19;</code>
      */
     public java.lang.String getVerificationData() {
       java.lang.Object ref = verificationData_;
@@ -4073,7 +4096,7 @@ public final class StudyMessage {
       }
     }
     /**
-     * <code>required string verificationData = 19;</code>
+     * <code>optional string verificationData = 19;</code>
      */
     public com.google.protobuf.ByteString
         getVerificationDataBytes() {
@@ -4095,7 +4118,7 @@ public final class StudyMessage {
      * <code>required bytes kexData = 20;</code>
      */
     public boolean hasKexData() {
-      return ((bitField0_ & 0x00040000) == 0x00040000);
+      return ((bitField0_ & 0x00020000) == 0x00020000);
     }
     /**
      * <code>required bytes kexData = 20;</code>
@@ -4110,7 +4133,7 @@ public final class StudyMessage {
      * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.KexAlgo kexAlgorithm = 21;</code>
      */
     public boolean hasKexAlgorithm() {
-      return ((bitField0_ & 0x00080000) == 0x00080000);
+      return ((bitField0_ & 0x00040000) == 0x00040000);
     }
     /**
      * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.KexAlgo kexAlgorithm = 21;</code>
@@ -4125,7 +4148,7 @@ public final class StudyMessage {
      * <code>required bytes queueIdentifier = 22;</code>
      */
     public boolean hasQueueIdentifier() {
-      return ((bitField0_ & 0x00100000) == 0x00100000);
+      return ((bitField0_ & 0x00080000) == 0x00080000);
     }
     /**
      * <code>required bytes queueIdentifier = 22;</code>
@@ -4149,7 +4172,7 @@ public final class StudyMessage {
       participationAndWithdrawal_ = "";
       rights_ = "";
       investigators_ = java.util.Collections.emptyList();
-      dataRequest_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance();
+      dataRequest_ = java.util.Collections.emptyList();
       publicKey_ = com.google.protobuf.ByteString.EMPTY;
       publicKeyAlgo_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.PubkeyAlgo.PK_UNKNOWN;
       verificationStrategy_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.VerificationStrategy.VF_UNKNOWN;
@@ -4216,10 +4239,6 @@ public final class StudyMessage {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasDataRequest()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasPublicKey()) {
         memoizedIsInitialized = 0;
         return false;
@@ -4229,10 +4248,6 @@ public final class StudyMessage {
         return false;
       }
       if (!hasVerificationStrategy()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasVerificationData()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -4254,9 +4269,11 @@ public final class StudyMessage {
           return false;
         }
       }
-      if (!getDataRequest().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
+      for (int i = 0; i < getDataRequestCount(); i++) {
+        if (!getDataRequest(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -4307,28 +4324,28 @@ public final class StudyMessage {
       for (int i = 0; i < investigators_.size(); i++) {
         output.writeMessage(14, investigators_.get(i));
       }
-      if (((bitField0_ & 0x00002000) == 0x00002000)) {
-        output.writeMessage(15, dataRequest_);
+      for (int i = 0; i < dataRequest_.size(); i++) {
+        output.writeMessage(15, dataRequest_.get(i));
       }
-      if (((bitField0_ & 0x00004000) == 0x00004000)) {
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
         output.writeBytes(16, publicKey_);
       }
-      if (((bitField0_ & 0x00008000) == 0x00008000)) {
+      if (((bitField0_ & 0x00004000) == 0x00004000)) {
         output.writeEnum(17, publicKeyAlgo_.getNumber());
       }
-      if (((bitField0_ & 0x00010000) == 0x00010000)) {
+      if (((bitField0_ & 0x00008000) == 0x00008000)) {
         output.writeEnum(18, verificationStrategy_.getNumber());
       }
-      if (((bitField0_ & 0x00020000) == 0x00020000)) {
+      if (((bitField0_ & 0x00010000) == 0x00010000)) {
         output.writeBytes(19, getVerificationDataBytes());
       }
-      if (((bitField0_ & 0x00040000) == 0x00040000)) {
+      if (((bitField0_ & 0x00020000) == 0x00020000)) {
         output.writeBytes(20, kexData_);
       }
-      if (((bitField0_ & 0x00080000) == 0x00080000)) {
+      if (((bitField0_ & 0x00040000) == 0x00040000)) {
         output.writeEnum(21, kexAlgorithm_.getNumber());
       }
-      if (((bitField0_ & 0x00100000) == 0x00100000)) {
+      if (((bitField0_ & 0x00080000) == 0x00080000)) {
         output.writeBytes(22, queueIdentifier_);
       }
       getUnknownFields().writeTo(output);
@@ -4396,35 +4413,35 @@ public final class StudyMessage {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, investigators_.get(i));
       }
-      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+      for (int i = 0; i < dataRequest_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(15, dataRequest_);
+          .computeMessageSize(15, dataRequest_.get(i));
       }
-      if (((bitField0_ & 0x00004000) == 0x00004000)) {
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(16, publicKey_);
       }
-      if (((bitField0_ & 0x00008000) == 0x00008000)) {
+      if (((bitField0_ & 0x00004000) == 0x00004000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(17, publicKeyAlgo_.getNumber());
       }
-      if (((bitField0_ & 0x00010000) == 0x00010000)) {
+      if (((bitField0_ & 0x00008000) == 0x00008000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(18, verificationStrategy_.getNumber());
       }
-      if (((bitField0_ & 0x00020000) == 0x00020000)) {
+      if (((bitField0_ & 0x00010000) == 0x00010000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(19, getVerificationDataBytes());
       }
-      if (((bitField0_ & 0x00040000) == 0x00040000)) {
+      if (((bitField0_ & 0x00020000) == 0x00020000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(20, kexData_);
       }
-      if (((bitField0_ & 0x00080000) == 0x00080000)) {
+      if (((bitField0_ & 0x00040000) == 0x00040000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(21, kexAlgorithm_.getNumber());
       }
-      if (((bitField0_ & 0x00100000) == 0x00100000)) {
+      if (((bitField0_ & 0x00080000) == 0x00080000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(22, queueIdentifier_);
       }
@@ -4584,11 +4601,11 @@ public final class StudyMessage {
           investigatorsBuilder_.clear();
         }
         if (dataRequestBuilder_ == null) {
-          dataRequest_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance();
+          dataRequest_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00004000);
         } else {
           dataRequestBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00004000);
         publicKey_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00008000);
         publicKeyAlgo_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.PubkeyAlgo.PK_UNKNOWN;
@@ -4692,40 +4709,41 @@ public final class StudyMessage {
         } else {
           result.investigators_ = investigatorsBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
-          to_bitField0_ |= 0x00002000;
-        }
         if (dataRequestBuilder_ == null) {
+          if (((bitField0_ & 0x00004000) == 0x00004000)) {
+            dataRequest_ = java.util.Collections.unmodifiableList(dataRequest_);
+            bitField0_ = (bitField0_ & ~0x00004000);
+          }
           result.dataRequest_ = dataRequest_;
         } else {
           result.dataRequest_ = dataRequestBuilder_.build();
         }
         if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
-          to_bitField0_ |= 0x00004000;
+          to_bitField0_ |= 0x00002000;
         }
         result.publicKey_ = publicKey_;
         if (((from_bitField0_ & 0x00010000) == 0x00010000)) {
-          to_bitField0_ |= 0x00008000;
+          to_bitField0_ |= 0x00004000;
         }
         result.publicKeyAlgo_ = publicKeyAlgo_;
         if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
-          to_bitField0_ |= 0x00010000;
+          to_bitField0_ |= 0x00008000;
         }
         result.verificationStrategy_ = verificationStrategy_;
         if (((from_bitField0_ & 0x00040000) == 0x00040000)) {
-          to_bitField0_ |= 0x00020000;
+          to_bitField0_ |= 0x00010000;
         }
         result.verificationData_ = verificationData_;
         if (((from_bitField0_ & 0x00080000) == 0x00080000)) {
-          to_bitField0_ |= 0x00040000;
+          to_bitField0_ |= 0x00020000;
         }
         result.kexData_ = kexData_;
         if (((from_bitField0_ & 0x00100000) == 0x00100000)) {
-          to_bitField0_ |= 0x00080000;
+          to_bitField0_ |= 0x00040000;
         }
         result.kexAlgorithm_ = kexAlgorithm_;
         if (((from_bitField0_ & 0x00200000) == 0x00200000)) {
-          to_bitField0_ |= 0x00100000;
+          to_bitField0_ |= 0x00080000;
         }
         result.queueIdentifier_ = queueIdentifier_;
         result.bitField0_ = to_bitField0_;
@@ -4835,8 +4853,31 @@ public final class StudyMessage {
             }
           }
         }
-        if (other.hasDataRequest()) {
-          mergeDataRequest(other.getDataRequest());
+        if (dataRequestBuilder_ == null) {
+          if (!other.dataRequest_.isEmpty()) {
+            if (dataRequest_.isEmpty()) {
+              dataRequest_ = other.dataRequest_;
+              bitField0_ = (bitField0_ & ~0x00004000);
+            } else {
+              ensureDataRequestIsMutable();
+              dataRequest_.addAll(other.dataRequest_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.dataRequest_.isEmpty()) {
+            if (dataRequestBuilder_.isEmpty()) {
+              dataRequestBuilder_.dispose();
+              dataRequestBuilder_ = null;
+              dataRequest_ = other.dataRequest_;
+              bitField0_ = (bitField0_ & ~0x00004000);
+              dataRequestBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getDataRequestFieldBuilder() : null;
+            } else {
+              dataRequestBuilder_.addAllMessages(other.dataRequest_);
+            }
+          }
         }
         if (other.hasPublicKey()) {
           setPublicKey(other.getPublicKey());
@@ -4918,10 +4959,6 @@ public final class StudyMessage {
           
           return false;
         }
-        if (!hasDataRequest()) {
-          
-          return false;
-        }
         if (!hasPublicKey()) {
           
           return false;
@@ -4931,10 +4968,6 @@ public final class StudyMessage {
           return false;
         }
         if (!hasVerificationStrategy()) {
-          
-          return false;
-        }
-        if (!hasVerificationData()) {
           
           return false;
         }
@@ -4956,9 +4989,11 @@ public final class StudyMessage {
             return false;
           }
         }
-        if (!getDataRequest().isInitialized()) {
-          
-          return false;
+        for (int i = 0; i < getDataRequestCount(); i++) {
+          if (!getDataRequest(i).isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -6234,115 +6269,239 @@ public final class StudyMessage {
         return investigatorsBuilder_;
       }
 
-      private de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest dataRequest_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder> dataRequestBuilder_;
-      /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
-       */
-      public boolean hasDataRequest() {
-        return ((bitField0_ & 0x00004000) == 0x00004000);
+      private java.util.List<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest> dataRequest_ =
+        java.util.Collections.emptyList();
+      private void ensureDataRequestIsMutable() {
+        if (!((bitField0_ & 0x00004000) == 0x00004000)) {
+          dataRequest_ = new java.util.ArrayList<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest>(dataRequest_);
+          bitField0_ |= 0x00004000;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder> dataRequestBuilder_;
+
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest getDataRequest() {
+      public java.util.List<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest> getDataRequestList() {
         if (dataRequestBuilder_ == null) {
-          return dataRequest_;
+          return java.util.Collections.unmodifiableList(dataRequest_);
         } else {
-          return dataRequestBuilder_.getMessage();
+          return dataRequestBuilder_.getMessageList();
         }
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
-      public Builder setDataRequest(de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest value) {
+      public int getDataRequestCount() {
+        if (dataRequestBuilder_ == null) {
+          return dataRequest_.size();
+        } else {
+          return dataRequestBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest getDataRequest(int index) {
+        if (dataRequestBuilder_ == null) {
+          return dataRequest_.get(index);
+        } else {
+          return dataRequestBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public Builder setDataRequest(
+          int index, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest value) {
         if (dataRequestBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          dataRequest_ = value;
+          ensureDataRequestIsMutable();
+          dataRequest_.set(index, value);
           onChanged();
         } else {
-          dataRequestBuilder_.setMessage(value);
+          dataRequestBuilder_.setMessage(index, value);
         }
-        bitField0_ |= 0x00004000;
         return this;
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
       public Builder setDataRequest(
+          int index, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder builderForValue) {
+        if (dataRequestBuilder_ == null) {
+          ensureDataRequestIsMutable();
+          dataRequest_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataRequestBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public Builder addDataRequest(de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest value) {
+        if (dataRequestBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataRequestIsMutable();
+          dataRequest_.add(value);
+          onChanged();
+        } else {
+          dataRequestBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public Builder addDataRequest(
+          int index, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest value) {
+        if (dataRequestBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataRequestIsMutable();
+          dataRequest_.add(index, value);
+          onChanged();
+        } else {
+          dataRequestBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public Builder addDataRequest(
           de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder builderForValue) {
         if (dataRequestBuilder_ == null) {
-          dataRequest_ = builderForValue.build();
+          ensureDataRequestIsMutable();
+          dataRequest_.add(builderForValue.build());
           onChanged();
         } else {
-          dataRequestBuilder_.setMessage(builderForValue.build());
+          dataRequestBuilder_.addMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00004000;
         return this;
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
-      public Builder mergeDataRequest(de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest value) {
+      public Builder addDataRequest(
+          int index, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder builderForValue) {
         if (dataRequestBuilder_ == null) {
-          if (((bitField0_ & 0x00004000) == 0x00004000) &&
-              dataRequest_ != de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance()) {
-            dataRequest_ =
-              de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.newBuilder(dataRequest_).mergeFrom(value).buildPartial();
-          } else {
-            dataRequest_ = value;
-          }
+          ensureDataRequestIsMutable();
+          dataRequest_.add(index, builderForValue.build());
           onChanged();
         } else {
-          dataRequestBuilder_.mergeFrom(value);
+          dataRequestBuilder_.addMessage(index, builderForValue.build());
         }
-        bitField0_ |= 0x00004000;
         return this;
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public Builder addAllDataRequest(
+          java.lang.Iterable<? extends de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest> values) {
+        if (dataRequestBuilder_ == null) {
+          ensureDataRequestIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dataRequest_);
+          onChanged();
+        } else {
+          dataRequestBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
       public Builder clearDataRequest() {
         if (dataRequestBuilder_ == null) {
-          dataRequest_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance();
+          dataRequest_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00004000);
           onChanged();
         } else {
           dataRequestBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00004000);
         return this;
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder getDataRequestBuilder() {
-        bitField0_ |= 0x00004000;
-        onChanged();
-        return getDataRequestFieldBuilder().getBuilder();
+      public Builder removeDataRequest(int index) {
+        if (dataRequestBuilder_ == null) {
+          ensureDataRequestIsMutable();
+          dataRequest_.remove(index);
+          onChanged();
+        } else {
+          dataRequestBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder getDataRequestOrBuilder() {
-        if (dataRequestBuilder_ != null) {
-          return dataRequestBuilder_.getMessageOrBuilder();
-        } else {
-          return dataRequest_;
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder getDataRequestBuilder(
+          int index) {
+        return getDataRequestFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder getDataRequestOrBuilder(
+          int index) {
+        if (dataRequestBuilder_ == null) {
+          return dataRequest_.get(index);  } else {
+          return dataRequestBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>required .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
        */
-      private com.google.protobuf.SingleFieldBuilder<
+      public java.util.List<? extends de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder> 
+           getDataRequestOrBuilderList() {
+        if (dataRequestBuilder_ != null) {
+          return dataRequestBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(dataRequest_);
+        }
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder addDataRequestBuilder() {
+        return getDataRequestFieldBuilder().addBuilder(
+            de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder addDataRequestBuilder(
+          int index) {
+        return getDataRequestFieldBuilder().addBuilder(
+            index, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .de.velcommuta.denul.networking.protobuf.study.Study.DataRequest dataRequest = 15;</code>
+       */
+      public java.util.List<de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder> 
+           getDataRequestBuilderList() {
+        return getDataRequestFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
           de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder> 
           getDataRequestFieldBuilder() {
         if (dataRequestBuilder_ == null) {
-          dataRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          dataRequestBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequest.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.DataRequestOrBuilder>(
-                  getDataRequest(),
+                  dataRequest_,
+                  ((bitField0_ & 0x00004000) == 0x00004000),
                   getParentForChildren(),
                   isClean());
           dataRequest_ = null;
@@ -6457,13 +6616,13 @@ public final class StudyMessage {
 
       private java.lang.Object verificationData_ = "";
       /**
-       * <code>required string verificationData = 19;</code>
+       * <code>optional string verificationData = 19;</code>
        */
       public boolean hasVerificationData() {
         return ((bitField0_ & 0x00040000) == 0x00040000);
       }
       /**
-       * <code>required string verificationData = 19;</code>
+       * <code>optional string verificationData = 19;</code>
        */
       public java.lang.String getVerificationData() {
         java.lang.Object ref = verificationData_;
@@ -6480,7 +6639,7 @@ public final class StudyMessage {
         }
       }
       /**
-       * <code>required string verificationData = 19;</code>
+       * <code>optional string verificationData = 19;</code>
        */
       public com.google.protobuf.ByteString
           getVerificationDataBytes() {
@@ -6496,7 +6655,7 @@ public final class StudyMessage {
         }
       }
       /**
-       * <code>required string verificationData = 19;</code>
+       * <code>optional string verificationData = 19;</code>
        */
       public Builder setVerificationData(
           java.lang.String value) {
@@ -6509,7 +6668,7 @@ public final class StudyMessage {
         return this;
       }
       /**
-       * <code>required string verificationData = 19;</code>
+       * <code>optional string verificationData = 19;</code>
        */
       public Builder clearVerificationData() {
         bitField0_ = (bitField0_ & ~0x00040000);
@@ -6518,7 +6677,7 @@ public final class StudyMessage {
         return this;
       }
       /**
-       * <code>required string verificationData = 19;</code>
+       * <code>optional string verificationData = 19;</code>
        */
       public Builder setVerificationDataBytes(
           com.google.protobuf.ByteString value) {
@@ -7288,7 +7447,7 @@ public final class StudyMessage {
       "ithdrawal\030\014 \002(\t\022\016\n\006rights\030\r \002(\t\022X\n\rinves",
       "tigators\030\016 \003(\0132A.de.velcommuta.denul.net" +
       "working.protobuf.study.Study.Investigato" +
-      "r\022U\n\013dataRequest\030\017 \002(\0132@.de.velcommuta.d" +
+      "r\022U\n\013dataRequest\030\017 \003(\0132@.de.velcommuta.d" +
       "enul.networking.protobuf.study.Study.Dat" +
       "aRequest\022\021\n\tpublicKey\030\020 \002(\014\022V\n\rpublicKey" +
       "Algo\030\021 \002(\0162?.de.velcommuta.denul.network" +
@@ -7296,7 +7455,7 @@ public final class StudyMessage {
       "erificationStrategy\030\022 \002(\0162I.de.velcommut" +
       "a.denul.networking.protobuf.study.Study." +
       "VerificationStrategy\022\030\n\020verificationData",
-      "\030\023 \002(\t\022\017\n\007kexData\030\024 \002(\014\022R\n\014kexAlgorithm\030" +
+      "\030\023 \001(\t\022\017\n\007kexData\030\024 \002(\014\022R\n\014kexAlgorithm\030" +
       "\025 \002(\0162<.de.velcommuta.denul.networking.p" +
       "rotobuf.study.Study.KexAlgo\022\027\n\017queueIden" +
       "tifier\030\026 \002(\014\032R\n\014Investigator\022\014\n\004name\030\001 \002" +

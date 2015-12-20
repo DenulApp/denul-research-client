@@ -27,8 +27,6 @@ import org.jetbrains.annotations.Nullable;
  * Protocol employing Protobuf for message generation and parsing.
  */
 public class ProtobufProtocol implements Protocol {
-    private static final String TAG = "ProtobufProtocol";
-
     private static final Logger logger = Logger.getLogger(ProtobufProtocol.class.getName());
 
 

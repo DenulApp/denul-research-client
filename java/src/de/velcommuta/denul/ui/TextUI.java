@@ -5,6 +5,7 @@ import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.networking.DNSVerifier;
+import de.velcommuta.denul.networking.HttpsVerifier;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 
 import java.net.MalformedURLException;
@@ -24,6 +25,7 @@ import static de.velcommuta.denul.util.Input.readSelection;
 import static de.velcommuta.denul.util.Input.readHttpsURL;
 import static de.velcommuta.denul.util.Input.yes;
 import static de.velcommuta.denul.util.Input.confirm;
+import static de.velcommuta.denul.util.Input.confirmCancel;
 
 /**
  * Text-based UI for use on the console
@@ -168,6 +170,9 @@ public class TextUI {
                 return addVerifyFile();
             case StudyRequest.VERIFY_META:
                 return addVerifyMeta();
+            case StudyRequest.VERIFY_SKIP:
+                println("Verification skipped on your request");
+                return -1337;
             default:
                 return -42;
         }
@@ -199,11 +204,21 @@ public class TextUI {
             boolean okay = DNSVerifier.verify(request);
             while (!okay) {
                 println("Something seems to be wrong, I could not find the correct TXT record...");
-                confirm("Please double-check and hit enter to try again");
+                if (confirmCancel("Please double-check and hit enter to try again")) {
+                    break;
+                }
+                okay = DNSVerifier.verify(request);
             }
-            // Verification was successful
-            println("Verification successful.");
-            return 0;  // TODO Switch this over to an ENUM field once they are established
+            if (okay) {
+                // Verification was successful
+                println("Verification successful.");
+                return 0;  // TODO Switch this over to an ENUM field once they are established
+            } else {
+                // Verification was cancelled
+                println("Verification cancelled.\n");
+                return addVerificationStrategy();
+            }
+
         } catch (MalformedURLException e) {
             // This should not happen, as the URL has been verified already
             e.printStackTrace();
@@ -220,8 +235,38 @@ public class TextUI {
     private int addVerifyFile() {
         assert request != null;
         assert request.pubkey != null;
-        // TODO
-        println("NotImplemented");
+        try {
+            println(String.format(StudyRequest.VERIFY_FILE_DESC_LONG,
+                    new URL(new URL(request.webpage), ".study.txt"),
+                    RSA.fingerprint(request.pubkey) + " # " + request.name));
+            // Ask if method should be used
+            if (!yes("Are you sure you want to use this verification system?")) {
+                return addVerificationStrategy();
+            }
+            // Give the user time to add the DNS entry
+            confirm("Please add the file now. Afterwards, hit enter to check if it works");
+            // Check DNS entry, and keep checking until it works
+            boolean okay = HttpsVerifier.verifyFile(request);
+            while (!okay) {
+                println("Something seems to be wrong, I could not find the correct file...");
+                if (confirmCancel("Please double-check and hit enter to try again")) {
+                    break;
+                }
+                okay = HttpsVerifier.verifyFile(request);
+            }
+            if (okay) {
+                // Verification was successful
+                println("Verification successful.");
+                return 0;  // TODO Switch this over to an ENUM field once they are established
+            } else {
+                // Verification was cancelled
+                println("Verification cancelled.\n");
+                return addVerificationStrategy();
+            }
+        } catch (MalformedURLException e) {
+            // This should not happen, as the URL was already verified before
+            e.printStackTrace();
+        }
         return addVerificationStrategy();
     }
 

@@ -7,15 +7,15 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
 /**
- * Test cases for the HttpsConnection class
+ * Test cases for the HttpsVerifier class
  */
-public class HttpsConnectionTest extends TestCase {
+public class HttpsVerifierTest extends TestCase {
     /**
      * Test if a valid URL is recognized as valid
      */
     public void testExistsValid() {
         try {
-            assertTrue(HttpsConnection.exists("https://www.google.de/intl/en/about/"));
+            assertTrue(HttpsVerifier.exists("https://www.google.de/intl/en/about/"));
         } catch (MalformedURLException e) {
             fail(e.toString());
         } catch (SSLProtocolException e) {
@@ -30,7 +30,7 @@ public class HttpsConnectionTest extends TestCase {
      */
     public void testExistsValidButNotTLS() {
         try {
-            HttpsConnection.exists("http://example.com");
+            HttpsVerifier.exists("http://example.com");
             fail("No exception thrown");
         } catch (MalformedURLException e) {
             fail(e.toString());
@@ -48,7 +48,7 @@ public class HttpsConnectionTest extends TestCase {
      */
     public void testExistsInvalidURL() {
         try {
-            HttpsConnection.exists("This is not a URL :(");
+            HttpsVerifier.exists("This is not a URL :(");
             fail("No exception was thrown");
         } catch (MalformedURLException e) {
             assertTrue(true);
@@ -64,7 +64,7 @@ public class HttpsConnectionTest extends TestCase {
      */
     public void testExistsValidURL404() {
         try {
-            assertFalse(HttpsConnection.exists("https://google.com/thisdoesnotexist"));
+            assertFalse(HttpsVerifier.exists("https://google.com/thisdoesnotexist"));
         } catch (MalformedURLException e) {
             fail("Unexpected Exception " + e.toString());
         } catch (SSLProtocolException e) {
@@ -79,7 +79,7 @@ public class HttpsConnectionTest extends TestCase {
      */
     public void testExistsValidURLWithoutPrefix() {
         try {
-            HttpsConnection.exists("google.com");
+            HttpsVerifier.exists("google.com");
             fail("No exception thrown - even though it would be nice :(");
         } catch (MalformedURLException e) {
             assertTrue(true);
@@ -95,7 +95,7 @@ public class HttpsConnectionTest extends TestCase {
      */
     public void testExistsValidURLBadCert() {
         try {
-            HttpsConnection.exists("https://cacert.org");
+            HttpsVerifier.exists("https://cacert.org");
             fail("No exception thrown");
         } catch (MalformedURLException e) {
             fail("Unexpected Exception");
@@ -111,7 +111,7 @@ public class HttpsConnectionTest extends TestCase {
      */
     public void testExistsPlausibleButNonexistantURL() {
         try {
-            HttpsConnection.exists("https://thisurlseemslegitbutisinfactinvalid.org");
+            HttpsVerifier.exists("https://thisurlseemslegitbutisinfactinvalid.org");
             fail("No exception thrown");
         } catch (MalformedURLException e) {
             fail("Unexpected Exception");

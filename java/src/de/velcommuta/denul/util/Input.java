@@ -1,6 +1,6 @@
 package de.velcommuta.denul.util;
 
-import de.velcommuta.denul.networking.HttpsConnection;
+import de.velcommuta.denul.networking.HttpsVerifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.SSLProtocolException;
@@ -167,7 +167,7 @@ public class Input {
         assert prompt != null;
         String url = readLine(prompt);
         try {
-            if (HttpsConnection.exists(url)) {
+            if (HttpsVerifier.exists(url)) {
                 return url;
             } else {
                 return readHttpsURL("The URL does not exist. Please enter a valid https:// URL");
@@ -189,5 +189,16 @@ public class Input {
     public static void confirm(String prompt) {
         assert prompt != null;
         readLine(prompt);
+    }
+
+
+    /**
+     * Wait for the user to press enter, optionally cancelling whatever they are supposed to confirm by typing "c"+Enter
+     * @param prompt The prompt to display, Will be postfixed with ". Type c to cancel"
+     * @return true if the user has typed "c" to cancel, false otherwise
+     */
+    public static boolean confirmCancel(String prompt) {
+        assert prompt != null;
+        return readLine(prompt + ". Type c to cancel").toLowerCase().equals("c");
     }
 }

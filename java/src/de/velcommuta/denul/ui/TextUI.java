@@ -117,7 +117,7 @@ public class TextUI {
         request.exchange = exchange;
 
         // Get verification strategy
-        int vs = addVerificationStrategy();
+        request.verification = addVerificationStrategy();
     }
 
 
@@ -180,8 +180,7 @@ public class TextUI {
 
     /**
      * Ask the user which verification strategy she wants to use to authenticate the study request
-     * @return TODO
-     * TODO Better language
+     * @return One of the VERIFY_* constants defined in {@link StudyRequest} indicating the chosen verification strategy
      */
     private int addVerificationStrategy() {
         // Ensure values are sane
@@ -193,16 +192,17 @@ public class TextUI {
         assert selection != null;
         // Call helper functions depending on selection
         switch (selection) {
-            case StudyRequest.VERIFY_DNS:
+            case StudyRequest.VERIFY_DNS_TITLE:
                 return addVerifyDNS();
-            case StudyRequest.VERIFY_FILE:
+            case StudyRequest.VERIFY_FILE_TITLE:
                 return addVerifyFile();
-            case StudyRequest.VERIFY_META:
+            case StudyRequest.VERIFY_META_TITLE:
                 return addVerifyMeta();
             case StudyRequest.VERIFY_SKIP:
                 println("Verification skipped on your request");
                 return -1337;
             default:
+                println("NotImplemented");
                 return -42;
         }
     }
@@ -211,7 +211,7 @@ public class TextUI {
     /**
      * Inform the user about DNS verification, check if she still wants to use it, and verify that the verification
      * token was actually placed in the DNS
-     * @return TODO
+     * @return One of the VERIFY_* constants defined in {@link StudyRequest} indicating the chosen verification strategy
      */
     private int addVerifyDNS() {
         // Ensure variables are sane
@@ -229,7 +229,6 @@ public class TextUI {
             // Give the user time to add the DNS entry
             confirm("Please add the DNS record now. Afterwards, hit enter to check if it works");
             // Check DNS entry, and keep checking until it works
-            // TODO Give a way to cancel out
             boolean okay = DNSVerifier.verify(request);
             while (!okay) {
                 println("Something seems to be wrong, I could not find the correct TXT record...");
@@ -241,7 +240,7 @@ public class TextUI {
             if (okay) {
                 // Verification was successful
                 println("Verification successful.");
-                return 0;  // TODO Switch this over to an ENUM field once they are established
+                return StudyRequest.VERIFY_DNS;
             } else {
                 // Verification was cancelled
                 println("Verification cancelled.\n");
@@ -251,15 +250,16 @@ public class TextUI {
         } catch (MalformedURLException e) {
             // This should not happen, as the URL has been verified already
             e.printStackTrace();
+            println("This was unexpected. Starting over...\n");
         }
-        return -42;
+        return addVerificationStrategy();
     }
 
 
     /**
      * Inform the user about how file-based verification works, check if she still wants to use it, and verify that the
      * verification token was placed in the correct location
-     * @return TODO
+     * @return One of the VERIFY_* constants defined in {@link StudyRequest} indicating the chosen verification strategy
      */
     private int addVerifyFile() {
         assert request != null;
@@ -286,7 +286,7 @@ public class TextUI {
             if (okay) {
                 // Verification was successful
                 println("Verification successful.");
-                return 0;  // TODO Switch this over to an ENUM field once they are established
+                return StudyRequest.VERIFY_FILE;
             } else {
                 // Verification was cancelled
                 println("Verification cancelled.\n");
@@ -295,6 +295,7 @@ public class TextUI {
         } catch (MalformedURLException e) {
             // This should not happen, as the URL was already verified before
             e.printStackTrace();
+            println("This was unexpected, starting over...\n");
         }
         return addVerificationStrategy();
     }
@@ -303,14 +304,42 @@ public class TextUI {
     /**
      * Inform the user about how meta-tag-based verification works, check if she still wants to use it, and verify that
      * the verification token was placed in the correct location
-     * @return TODO
+     * @return One of the VERIFY_* constants defined in {@link StudyRequest} indicating the chosen verification strategy
      */
     private int addVerifyMeta() {
         assert request != null;
         assert request.pubkey != null;
-        // TODO
-        println("NotImplemented");
-        return addVerificationStrategy();
+        assert request.webpage != null;
+
+        // Print information
+        println(String.format(StudyRequest.VERIFY_META_DESC_LONG,
+                request.webpage,
+                RSA.fingerprint(request.pubkey)));
+
+        // Ask if method should be used
+        if (!yes("Are you sure you want to use this verification system?")) {
+            return addVerificationStrategy();
+        }
+        // Give the user time to add the DNS entry
+        confirm("Please add the <meta> tag now. Afterwards, hit enter to check if it works");
+        // Check DNS entry, and keep checking until it works
+        boolean okay = HttpsVerifier.verifyMeta(request);
+        while (!okay) {
+            println("Something seems to be wrong, I could not find the <meta> tag...");
+            if (confirmCancel("Please double-check and hit enter to try again")) {
+                break;
+            }
+            okay = HttpsVerifier.verifyMeta(request);
+        }
+        if (okay) {
+            // Verification was successful
+            println("Verification successful.");
+            return StudyRequest.VERIFY_META;
+        } else {
+            // Verification was cancelled
+            println("Verification cancelled.\n");
+            return addVerificationStrategy();
+        }
     }
 
 

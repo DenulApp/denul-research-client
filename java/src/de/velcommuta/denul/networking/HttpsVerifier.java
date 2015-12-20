@@ -88,7 +88,7 @@ public class HttpsVerifier {
     public static boolean verifyFile(StudyRequest request) {
         assert request != null;
         assert request.webpage != null;
-        //assert request.pubkey != null;
+        assert request.pubkey != null;
         try {
             // Build base URL to verify it works
             URL url = new URL(request.webpage);
@@ -100,6 +100,40 @@ public class HttpsVerifier {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.split(" ")[0].equals(RSA.fingerprint(request.pubkey))) {
+                    return true;
+                }
+            }
+            // If this statement is reached, the file did not contain the verification token in the right format
+        } catch (ClassCastException | UnknownHostException | SSLProtocolException | SSLHandshakeException | MalformedURLException | FileNotFoundException e) {
+            // We're not interested in a stack trace here
+        } catch (IOException e) {
+            // A stacktrace could be helpful, print it
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    /**
+     * Perform a <meta>-Tag-based verification
+     * @param request The request object
+     * @return true if verification was successful, false otherwise
+     */
+    public static boolean verifyMeta(StudyRequest request) {
+        assert request != null;
+        assert request.webpage != null;
+        assert request.pubkey != null;
+        try {
+            // Build base URL to verify it works
+            URL url = new URL(request.webpage);
+            // Ensure the URL is https
+            assert url.getProtocol().equals("https");
+            // Read the code from the website
+            InputStream in = url.openStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(String.format("<meta name='study-key' content='%s'>", RSA.fingerprint(request.pubkey)))) {
                     return true;
                 }
             }

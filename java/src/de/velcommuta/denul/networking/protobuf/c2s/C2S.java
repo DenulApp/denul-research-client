@@ -347,7 +347,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.Store.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.Store.Builder.class);
       }
 
-      // Construct using C2S.Store.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.Store.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1046,7 +1046,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.StoreReply.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.StoreReply.Builder.class);
       }
 
-      // Construct using C2S.StoreReply.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.StoreReply.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1550,7 +1550,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.Get.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.Get.Builder.class);
       }
 
-      // Construct using C2S.Get.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.Get.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2238,7 +2238,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.GetReply.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.GetReply.Builder.class);
       }
 
-      // Construct using C2S.GetReply.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.GetReply.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2859,7 +2859,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.Delete.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.Delete.Builder.class);
       }
 
-      // Construct using C2S.Delete.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.Delete.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3575,7 +3575,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReply.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReply.Builder.class);
       }
 
-      // Construct using C2S.DeleteReply.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReply.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4181,7 +4181,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.ClientHello.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.ClientHello.Builder.class);
       }
 
-      // Construct using C2S.ClientHello.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.ClientHello.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4987,7 +4987,7 @@ public final class C2S {
                 de.velcommuta.denul.networking.protobuf.c2s.C2S.ServerHello.class, de.velcommuta.denul.networking.protobuf.c2s.C2S.ServerHello.Builder.class);
       }
 
-      // Construct using C2S.ServerHello.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.c2s.C2S.ServerHello.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }

@@ -343,7 +343,7 @@ public final class DataContainer {
                 de.velcommuta.denul.data.proto.DataContainer.Wrapper.class, de.velcommuta.denul.data.proto.DataContainer.Wrapper.Builder.class);
       }
 
-      // Construct using DataContainer.Wrapper.newBuilder()
+      // Construct using de.velcommuta.denul.data.proto.DataContainer.Wrapper.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1426,7 +1426,7 @@ public final class DataContainer {
                   de.velcommuta.denul.data.proto.DataContainer.Track.Entry.class, de.velcommuta.denul.data.proto.DataContainer.Track.Entry.Builder.class);
         }
 
-        // Construct using DataContainer.Track.Entry.newBuilder()
+        // Construct using de.velcommuta.denul.data.proto.DataContainer.Track.Entry.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -2184,7 +2184,7 @@ public final class DataContainer {
                 de.velcommuta.denul.data.proto.DataContainer.Track.class, de.velcommuta.denul.data.proto.DataContainer.Track.Builder.class);
       }
 
-      // Construct using DataContainer.Track.newBuilder()
+      // Construct using de.velcommuta.denul.data.proto.DataContainer.Track.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }

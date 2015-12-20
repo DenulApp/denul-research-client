@@ -115,6 +115,19 @@ public final class MetaMessage {
      * <code>optional .de.velcommuta.denul.networking.protobuf.c2s.DeleteReply DeleteReply = 8;</code>
      */
     de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReplyOrBuilder getDeleteReplyOrBuilder();
+
+    /**
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+     */
+    boolean hasStudyWrapper();
+    /**
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+     */
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper getStudyWrapper();
+    /**
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+     */
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder getStudyWrapperOrBuilder();
   }
   /**
    * Protobuf type {@code de.velcommuta.denul.networking.protobuf.meta.Wrapper}
@@ -279,6 +292,19 @@ public final class MetaMessage {
               messageCase_ = 8;
               break;
             }
+            case 74: {
+              de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.Builder subBuilder = null;
+              if (messageCase_ == 9) {
+                subBuilder = ((de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_).toBuilder();
+              }
+              message_ = input.readMessage(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_);
+                message_ = subBuilder.buildPartial();
+              }
+              messageCase_ = 9;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -331,6 +357,7 @@ public final class MetaMessage {
       GETREPLY(6),
       DELETE(7),
       DELETEREPLY(8),
+      STUDYWRAPPER(9),
       MESSAGE_NOT_SET(0);
       private int value = 0;
       private MessageCase(int value) {
@@ -346,6 +373,7 @@ public final class MetaMessage {
           case 6: return GETREPLY;
           case 7: return DELETE;
           case 8: return DELETEREPLY;
+          case 9: return STUDYWRAPPER;
           case 0: return MESSAGE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -570,6 +598,32 @@ public final class MetaMessage {
       return de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReply.getDefaultInstance();
     }
 
+    public static final int STUDYWRAPPER_FIELD_NUMBER = 9;
+    /**
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+     */
+    public boolean hasStudyWrapper() {
+      return messageCase_ == 9;
+    }
+    /**
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+     */
+    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper getStudyWrapper() {
+      if (messageCase_ == 9) {
+         return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_;
+      }
+      return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance();
+    }
+    /**
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+     */
+    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder getStudyWrapperOrBuilder() {
+      if (messageCase_ == 9) {
+         return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_;
+      }
+      return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance();
+    }
+
     private void initFields() {
     }
     private byte memoizedIsInitialized = -1;
@@ -626,6 +680,12 @@ public final class MetaMessage {
           return false;
         }
       }
+      if (hasStudyWrapper()) {
+        if (!getStudyWrapper().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -656,6 +716,9 @@ public final class MetaMessage {
       }
       if (messageCase_ == 8) {
         output.writeMessage(8, (de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReply) message_);
+      }
+      if (messageCase_ == 9) {
+        output.writeMessage(9, (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -697,6 +760,10 @@ public final class MetaMessage {
       if (messageCase_ == 8) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(8, (de.velcommuta.denul.networking.protobuf.c2s.C2S.DeleteReply) message_);
+      }
+      if (messageCase_ == 9) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(9, (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -802,7 +869,7 @@ public final class MetaMessage {
                 de.velcommuta.denul.networking.protobuf.meta.MetaMessage.Wrapper.class, de.velcommuta.denul.networking.protobuf.meta.MetaMessage.Wrapper.Builder.class);
       }
 
-      // Construct using MetaMessage.Wrapper.newBuilder()
+      // Construct using de.velcommuta.denul.networking.protobuf.meta.MetaMessage.Wrapper.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -908,6 +975,13 @@ public final class MetaMessage {
             result.message_ = deleteReplyBuilder_.build();
           }
         }
+        if (messageCase_ == 9) {
+          if (studyWrapperBuilder_ == null) {
+            result.message_ = message_;
+          } else {
+            result.message_ = studyWrapperBuilder_.build();
+          }
+        }
         result.bitField0_ = to_bitField0_;
         result.messageCase_ = messageCase_;
         onBuilt();
@@ -956,6 +1030,10 @@ public final class MetaMessage {
           }
           case DELETEREPLY: {
             mergeDeleteReply(other.getDeleteReply());
+            break;
+          }
+          case STUDYWRAPPER: {
+            mergeStudyWrapper(other.getStudyWrapper());
             break;
           }
           case MESSAGE_NOT_SET: {
@@ -1011,6 +1089,12 @@ public final class MetaMessage {
         }
         if (hasDeleteReply()) {
           if (!getDeleteReply().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasStudyWrapper()) {
+          if (!getStudyWrapper().isInitialized()) {
             
             return false;
           }
@@ -2132,6 +2216,141 @@ public final class MetaMessage {
         return deleteReplyBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilder<
+          de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder> studyWrapperBuilder_;
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public boolean hasStudyWrapper() {
+        return messageCase_ == 9;
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper getStudyWrapper() {
+        if (studyWrapperBuilder_ == null) {
+          if (messageCase_ == 9) {
+            return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_;
+          }
+          return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance();
+        } else {
+          if (messageCase_ == 9) {
+            return studyWrapperBuilder_.getMessage();
+          }
+          return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public Builder setStudyWrapper(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper value) {
+        if (studyWrapperBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          message_ = value;
+          onChanged();
+        } else {
+          studyWrapperBuilder_.setMessage(value);
+        }
+        messageCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public Builder setStudyWrapper(
+          de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.Builder builderForValue) {
+        if (studyWrapperBuilder_ == null) {
+          message_ = builderForValue.build();
+          onChanged();
+        } else {
+          studyWrapperBuilder_.setMessage(builderForValue.build());
+        }
+        messageCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public Builder mergeStudyWrapper(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper value) {
+        if (studyWrapperBuilder_ == null) {
+          if (messageCase_ == 9 &&
+              message_ != de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance()) {
+            message_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.newBuilder((de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            message_ = value;
+          }
+          onChanged();
+        } else {
+          if (messageCase_ == 9) {
+            studyWrapperBuilder_.mergeFrom(value);
+          }
+          studyWrapperBuilder_.setMessage(value);
+        }
+        messageCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public Builder clearStudyWrapper() {
+        if (studyWrapperBuilder_ == null) {
+          if (messageCase_ == 9) {
+            messageCase_ = 0;
+            message_ = null;
+            onChanged();
+          }
+        } else {
+          if (messageCase_ == 9) {
+            messageCase_ = 0;
+            message_ = null;
+          }
+          studyWrapperBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.Builder getStudyWrapperBuilder() {
+        return getStudyWrapperFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder getStudyWrapperOrBuilder() {
+        if ((messageCase_ == 9) && (studyWrapperBuilder_ != null)) {
+          return studyWrapperBuilder_.getMessageOrBuilder();
+        } else {
+          if (messageCase_ == 9) {
+            return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_;
+          }
+          return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyWrapper StudyWrapper = 9;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder> 
+          getStudyWrapperFieldBuilder() {
+        if (studyWrapperBuilder_ == null) {
+          if (!(messageCase_ == 9)) {
+            message_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.getDefaultInstance();
+          }
+          studyWrapperBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder>(
+                  (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper) message_,
+                  getParentForChildren(),
+                  isClean());
+          message_ = null;
+        }
+        messageCase_ = 9;
+        return studyWrapperBuilder_;
+      }
+
       // @@protoc_insertion_point(builder_scope:de.velcommuta.denul.networking.protobuf.meta.Wrapper)
     }
 
@@ -2158,23 +2377,26 @@ public final class MetaMessage {
   static {
     java.lang.String[] descriptorData = {
       "\n\021metaMessage.proto\022,de.velcommuta.denul" +
-      ".networking.protobuf.meta\032\tc2s.proto\"\356\004\n" +
-      "\007Wrapper\022O\n\013ClientHello\030\001 \001(\01328.de.velco" +
-      "mmuta.denul.networking.protobuf.c2s.Clie" +
-      "ntHelloH\000\022O\n\013ServerHello\030\002 \001(\01328.de.velc" +
-      "ommuta.denul.networking.protobuf.c2s.Ser" +
-      "verHelloH\000\022C\n\005Store\030\003 \001(\01322.de.velcommut" +
-      "a.denul.networking.protobuf.c2s.StoreH\000\022" +
-      "M\n\nStoreReply\030\004 \001(\01327.de.velcommuta.denu" +
-      "l.networking.protobuf.c2s.StoreReplyH\000\022?",
-      "\n\003Get\030\005 \001(\01320.de.velcommuta.denul.networ" +
-      "king.protobuf.c2s.GetH\000\022I\n\010GetReply\030\006 \001(" +
-      "\01325.de.velcommuta.denul.networking.proto" +
-      "buf.c2s.GetReplyH\000\022E\n\006Delete\030\007 \001(\01323.de." +
-      "velcommuta.denul.networking.protobuf.c2s" +
-      ".DeleteH\000\022O\n\013DeleteReply\030\010 \001(\01328.de.velc" +
-      "ommuta.denul.networking.protobuf.c2s.Del" +
-      "eteReplyH\000B\t\n\007message"
+      ".networking.protobuf.meta\032\tc2s.proto\032\022st" +
+      "udyMessage.proto\"\303\005\n\007Wrapper\022O\n\013ClientHe" +
+      "llo\030\001 \001(\01328.de.velcommuta.denul.networki" +
+      "ng.protobuf.c2s.ClientHelloH\000\022O\n\013ServerH" +
+      "ello\030\002 \001(\01328.de.velcommuta.denul.network" +
+      "ing.protobuf.c2s.ServerHelloH\000\022C\n\005Store\030" +
+      "\003 \001(\01322.de.velcommuta.denul.networking.p" +
+      "rotobuf.c2s.StoreH\000\022M\n\nStoreReply\030\004 \001(\0132" +
+      "7.de.velcommuta.denul.networking.protobu",
+      "f.c2s.StoreReplyH\000\022?\n\003Get\030\005 \001(\01320.de.vel" +
+      "commuta.denul.networking.protobuf.c2s.Ge" +
+      "tH\000\022I\n\010GetReply\030\006 \001(\01325.de.velcommuta.de" +
+      "nul.networking.protobuf.c2s.GetReplyH\000\022E" +
+      "\n\006Delete\030\007 \001(\01323.de.velcommuta.denul.net" +
+      "working.protobuf.c2s.DeleteH\000\022O\n\013DeleteR" +
+      "eply\030\010 \001(\01328.de.velcommuta.denul.network" +
+      "ing.protobuf.c2s.DeleteReplyH\000\022S\n\014StudyW" +
+      "rapper\030\t \001(\0132;.de.velcommuta.denul.netwo" +
+      "rking.protobuf.study.StudyWrapperH\000B\t\n\007m",
+      "essage"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2188,14 +2410,16 @@ public final class MetaMessage {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           de.velcommuta.denul.networking.protobuf.c2s.C2S.getDescriptor(),
+          de.velcommuta.denul.networking.protobuf.study.StudyMessage.getDescriptor(),
         }, assigner);
     internal_static_de_velcommuta_denul_networking_protobuf_meta_Wrapper_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_de_velcommuta_denul_networking_protobuf_meta_Wrapper_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_meta_Wrapper_descriptor,
-        new java.lang.String[] { "ClientHello", "ServerHello", "Store", "StoreReply", "Get", "GetReply", "Delete", "DeleteReply", "Message", });
+        new java.lang.String[] { "ClientHello", "ServerHello", "Store", "StoreReply", "Get", "GetReply", "Delete", "DeleteReply", "StudyWrapper", "Message", });
     de.velcommuta.denul.networking.protobuf.c2s.C2S.getDescriptor();
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

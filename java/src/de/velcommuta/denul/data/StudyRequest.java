@@ -56,6 +56,7 @@ public class StudyRequest {
     public String participationAndWithdrawal;
     public String rights;
     public List<Investigator> investigators = new LinkedList<>();
+    public List<DataRequest> requests = new LinkedList<>();
 
     // Cryptographic material
     public PublicKey pubkey;
@@ -124,6 +125,89 @@ public class StudyRequest {
             builder.append("\n");
         }
 
+        builder.append("\n");
+        for (int i = 0; i < requests.size(); i++) {
+            builder.append("Data Request #");
+            builder.append(i+1);
+            builder.append(":\n");
+            builder.append(requests.get(i).toString());
+            builder.append("\n");
+        }
+
         return builder.toString();
+    }
+
+    /**
+     * Data holder class for Investigators associated with a study
+     */
+    public static class Investigator {
+        public String name;
+        public String institution;
+        public String group;
+        public String position;
+
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Investigator Name: ");
+            builder.append(name);
+
+            builder.append("\nInstitution: ");
+            builder.append(institution);
+
+            builder.append("\nGroup: ");
+            builder.append(group);
+
+            builder.append("\nPosition: ");
+            builder.append(position);
+
+            builder.append("\n");
+            return builder.toString();
+        }
+    }
+
+    /**
+     * Data holder class for information about what data is requested in what granularity
+     */
+    public static class DataRequest {
+        public static final String[] TYPES = {"GPS Tracks"};
+        public static final int TYPE_GPS = 0;
+
+        public static final String[] GRANULARITIES_GPS = {"Full GPS tracks", "Duration, time and distance only"};
+        public static final int GRANULARITY_FINE = 0;
+        public static final int GRANULARITY_COARSE = 1;
+        public static final int GRANULARITY_VERY_COARSE = 2;
+
+        public Integer type;
+        public Integer granularity;
+        public Integer frequency;
+
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Data type: ");
+            if (type != null) {
+                builder.append(TYPES[type]);
+            } else {
+                builder.append("unset");
+            }
+
+            builder.append("\nGranularity: ");
+            if (granularity != null) {
+                if (type == TYPE_GPS) {
+                    builder.append(GRANULARITIES_GPS[granularity]);
+                }
+            } else {
+                builder.append("unset");
+            }
+
+            if (frequency != null) {
+                builder.append("\nFrequency: Updated every ");
+                builder.append(frequency);
+                builder.append(" hour(s)");
+            } else {
+                builder.append("\nFrequency: unset");
+            }
+
+            return builder.toString();
+        }
     }
 }

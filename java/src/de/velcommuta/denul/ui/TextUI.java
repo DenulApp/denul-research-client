@@ -2,7 +2,6 @@ package de.velcommuta.denul.ui;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
-import de.velcommuta.denul.data.Investigator;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.networking.DNSVerifier;
 import de.velcommuta.denul.networking.HttpsVerifier;
@@ -18,11 +17,9 @@ import java.util.concurrent.FutureTask;
 
 // Static-import a bunch of methods for more concise code
 import static de.velcommuta.denul.util.Output.println;
-import static de.velcommuta.denul.util.Output.print;
 import static de.velcommuta.denul.util.Input.readLine;
 import static de.velcommuta.denul.util.Input.readLines;
 import static de.velcommuta.denul.util.Input.readSelection;
-import static de.velcommuta.denul.util.Input.readHttpsURL;
 import static de.velcommuta.denul.util.Input.yes;
 import static de.velcommuta.denul.util.Input.confirm;
 import static de.velcommuta.denul.util.Input.confirmCancel;
@@ -81,9 +78,12 @@ public class TextUI {
         request.rights      = readLines("Please describe the rights of study participants");
 
         // Add investigator details
-        println("You will now be asked to add at least one investigator to the study.");
-        println("");
+        println("You will now be asked to add at least one investigator to the study.\n");
         request.investigators.addAll(addInvestigators());
+
+        // Add data requests
+        println("Now, you will be asked to add at least one type of data you are interested in.\n");
+        request.requests.addAll(addDataRequests());
 
         // Review information
         println("\n\nPlease review the following information:\n");
@@ -123,13 +123,13 @@ public class TextUI {
 
     /**
      * Ask the user to input the details of at least one, potentially more, Investigator(s)
-     * @return A List of {@link Investigator}s
+     * @return A List of {@link StudyRequest.Investigator}s
      */
-    private List<Investigator> addInvestigators() {
+    private List<StudyRequest.Investigator> addInvestigators() {
         // Prepare List to return
-        List<Investigator> rv = new LinkedList<>();
+        List<StudyRequest.Investigator> rv = new LinkedList<>();
         // Create new investigator object
-        Investigator investigator = new Investigator();
+        StudyRequest.Investigator investigator = new StudyRequest.Investigator();
 
         // Query the user for the details
         investigator.name = readLine("Please enter the investigators full name");
@@ -146,6 +146,35 @@ public class TextUI {
             rv.addAll(addInvestigators());
         }
         // return
+        return rv;
+    }
+
+
+    /**
+     * Ask the user to input the details of at least one, potentially more, types of data required for the study
+     * @return A List of {@link de.velcommuta.denul.data.StudyRequest.DataRequest}s
+     */
+    private List<StudyRequest.DataRequest> addDataRequests() {
+        // Prepare List to return
+        List<StudyRequest.DataRequest> rv = new LinkedList<>();
+        // Create DataRequest object
+        StudyRequest.DataRequest request = new StudyRequest.DataRequest();
+
+        // Query the user for the details
+        request.type = readSelection("Please select which type of data you are interested in", StudyRequest.DataRequest.TYPES);
+        if (request.type == StudyRequest.DataRequest.TYPE_GPS) {
+            request.granularity = readSelection("Please select the granularity you need the data in", StudyRequest.DataRequest.GRANULARITIES_GPS);
+        } else {
+            println("NotImplemented :(");
+        }
+        // TODO Add frequency
+        rv.add(request);
+
+        if (yes("Do you want to add another type of data?")) {
+            println("");
+            rv.addAll(addDataRequests());
+        }
+        // Return
         return rv;
     }
 

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.security.KeyPair;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import static org.junit.Assert.*;
@@ -25,12 +26,42 @@ public class StudyRequestTest extends TestCase {
      * @throws Exception Whenever it bloody feels like it
      */
     public void testSignAndSerialize() throws Exception {
+
+        StudyRequest req = getRandomStudyRequest();
+
+        // Serialize
+        byte[] serialized = req.signAndSerialize();
+        assertNotNull(serialized);
+
+        // Deserialize
+        StudyMessage.StudyWrapper wrapper = StudyMessage.StudyWrapper.parseFrom(serialized);
+        assertNotNull(wrapper);
+        assertTrue(RSA.verify(wrapper.getMessage().toByteArray(), wrapper.getSignature().toByteArray(), req.pubkey));
+
+        StudyMessage.Study study = StudyMessage.Study.parseFrom(wrapper.getMessage().toByteArray());
+        assertNotNull(study);
+    }
+
+    /**
+     * Helper function to generate a random String
+     * @return A random string
+     */
+    private static String getRandomString() {
+        byte[] rand = new byte[20];
+        new Random().nextBytes(rand);
+        return FormatHelper.bytesToHex(rand);
+    }
+
+    /**
+     * Generate a random study request and return it
+     * @return The study request
+     */
+    public static StudyRequest getRandomStudyRequest() {
         // Start key generation in background
         FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA(1024);
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
 
         StudyRequest req = new StudyRequest();
-
         // Random request data
         req.name = getRandomString();
         req.institution = getRandomString();
@@ -65,31 +96,15 @@ public class StudyRequestTest extends TestCase {
         req.requests.add(dr);
 
         // Add keys
-        req.exchange = ecdhgen.get();
-        KeyPair keys = rsagen.get();
-        req.pubkey = keys.getPublic();
-        req.privkey = keys.getPrivate();
-
-        // Serialize
-        byte[] serialized = req.signAndSerialize();
-        assertNotNull(serialized);
-
-        // Deserialize
-        StudyMessage.StudyWrapper wrapper = StudyMessage.StudyWrapper.parseFrom(serialized);
-        assertNotNull(wrapper);
-        assertTrue(RSA.verify(wrapper.getMessage().toByteArray(), wrapper.getSignature().toByteArray(), keys.getPublic()));
-
-        StudyMessage.Study study = StudyMessage.Study.parseFrom(wrapper.getMessage().toByteArray());
-        assertNotNull(study);
-    }
-
-    /**
-     * Helper function to generate a random String
-     * @return A random string
-     */
-    private String getRandomString() {
-        byte[] rand = new byte[20];
-        new Random().nextBytes(rand);
-        return FormatHelper.bytesToHex(rand);
+        try {
+            req.exchange = ecdhgen.get();
+            KeyPair keys = rsagen.get();
+            req.pubkey = keys.getPublic();
+            req.privkey = keys.getPrivate();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return req;
     }
 }

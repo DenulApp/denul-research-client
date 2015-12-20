@@ -154,4 +154,9 @@ public class ECDHKeyExchange implements KeyExchange {
             return null;
         }
     }
+
+    @Override
+    public KeyPair getKeypair() {
+        return mKeypair;
+    }
 }

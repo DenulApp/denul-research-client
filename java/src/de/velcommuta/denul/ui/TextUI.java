@@ -3,6 +3,7 @@ package de.velcommuta.denul.ui;
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.database.SQLiteDatabase;
 import de.velcommuta.denul.networking.DNSVerifier;
 import de.velcommuta.denul.networking.HttpsVerifier;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
@@ -35,7 +36,7 @@ public class TextUI {
      * @return true if the database was successfully opened, false otherwise
      */
     private boolean openDatabase() {
-        // TODO
+        new SQLiteDatabase();
         return true;
     }
 
@@ -168,6 +169,7 @@ public class TextUI {
             println("NotImplemented :(");
         }
         // TODO Add frequency
+        request.frequency = 0;
         rv.add(request);
 
         if (yes("Do you want to add another type of data?")) {
@@ -365,6 +367,7 @@ public class TextUI {
      */
     public void mainMenu() {
         // Define the main menu options
+        // TODO Add imprint with license information for used libraries
         String[] menuOptions = {"New research request", "View active research data", "Settings", "Quit"};
         // Print the program header
         println("    Denul Research Client\n");

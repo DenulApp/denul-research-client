@@ -36,21 +36,16 @@ public class SQLiteDatabaseTest extends TestCase {
 
 
     /**
-     * Test the adding of study requests
+     * Test the adding and retrieving of study requests
      */
-    public void testAddStudyRequest() {
+    public void testAddReadStudyRequest() {
         StudyRequest req = StudyRequestTest.getRandomStudyRequest();
         long rv = mDB.addStudyRequest(req);
         assertTrue(rv >= 0);
+        StudyRequest read = mDB.getStudyRequestByID(rv);
+        assertEquals(req, read);
     }
 
-    /**
-     * Test the "get by ID" function
-     */
-    public void testGetStudyRequestByID() {
-        // TODO
-        assertTrue(true);
-    }
 
     /**
      * Test the "get all" function

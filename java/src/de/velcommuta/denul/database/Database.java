@@ -25,7 +25,7 @@ public interface Database {
      * @param id The ID
      * @return The study request
      */
-    StudyRequest getStudyRequestByID(int id);
+    StudyRequest getStudyRequestByID(long id);
 
     /**
      * Retrieve all {@link StudyRequest}s from the database

@@ -78,12 +78,42 @@ public class ECDHKeyExchange implements KeyExchange {
             // We need to catch these exception, but they should never occur, as we are bundling
             // a Spongycastle version that includes these algorithms
             logger.severe("Constructor: NoSuchAlgorithm: " + e.getMessage());
+            throw new IllegalArgumentException(e);
         } catch (NoSuchProviderException e) {
             logger.severe("Constructor: NoSuchProvider: " + e.getMessage());
+            throw new IllegalArgumentException(e);
         } catch (InvalidAlgorithmParameterException e) {
             logger.severe("Constructor: InvalidAlgorithmParameterException: " + e.getMessage());
+            throw new IllegalArgumentException(e);
         } catch (InvalidKeyException e) {
             logger.severe("Constructor: InvalidKeyException: " + e.getMessage());
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Initialize an ECDHKeyExchange with an existing {@link KeyPair}
+     * @param pair The KeyPair
+     */
+    public ECDHKeyExchange(KeyPair pair) {
+        // Get Curve25519 in X9.62 form
+        X9ECParameters ecP = CustomNamedCurves.getByName("curve25519");
+        // convert to JCE form
+        ECParameterSpec ecSpec = new ECParameterSpec(ecP.getCurve(), ecP.getG(),
+                ecP.getN(), ecP.getH(), ecP.getSeed());
+        mKeypair = pair;
+        try {
+            mKeyAgree = KeyAgreement.getInstance("ECDH", "BC");
+            mKeyAgree.init(mKeypair.getPrivate());
+        } catch (NoSuchAlgorithmException e) {
+            logger.severe("Constructor: NoSuchAlgorithm: " + e.getMessage());
+            throw new IllegalArgumentException(e);
+        } catch (NoSuchProviderException e) {
+            logger.severe("Constructor: NoSuchProvider: " + e.getMessage());
+            throw new IllegalArgumentException(e);
+        } catch (InvalidKeyException e) {
+            logger.severe("Constructor: InvalidKeyException: " + e.getMessage());
+            throw new IllegalArgumentException(e);
         }
     }
 

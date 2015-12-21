@@ -402,7 +402,9 @@ public class StudyRequest {
                 (other.verification == verification )&&
                 (other.pubkey.equals(pubkey)) &&
                 (other.privkey.equals(privkey)) &&
-                (other.exchange.equals(exchange)) &&
+                (Arrays.equals(other.exchange.getPublicKexData(), exchange.getPublicKexData())) &&
+                (Arrays.equals(exchange.getKeypair().getPrivate().getEncoded(),
+                        other.exchange.getKeypair().getPrivate().getEncoded())) &&
                 (Arrays.equals(other.queue, queue)) &&
                 (other.investigators.equals(investigators)) &&
                 (other.requests.equals(requests));

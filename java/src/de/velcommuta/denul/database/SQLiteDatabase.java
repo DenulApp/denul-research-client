@@ -1,5 +1,6 @@
 package de.velcommuta.denul.database;
 
+import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.data.StudyRequest;
 
@@ -96,7 +97,7 @@ public class SQLiteDatabase implements Database {
             stmt.setString(10, req.conflicts);
             stmt.setString(11, req.confidentiality);
             stmt.setString(12, req.participationAndWithdrawal);
-            stmt.setString(13, req.risks);
+            stmt.setString(13, req.rights);
             stmt.setInt   (14, req.verification);
             stmt.setString(15, RSA.encodeKey(req.privkey));
             stmt.setString(16, RSA.encodeKey(req.pubkey));
@@ -116,6 +117,8 @@ public class SQLiteDatabase implements Database {
                 throw new IllegalArgumentException("Insert failed, no record created");
             }
             stmt.close();
+            // Set ID on object
+            req.id = rv;
             // Insert Investigators
             stmt = mConnection.prepareStatement(Investigators.INSERT);
             for (StudyRequest.Investigator inv : req.investigators) {
@@ -154,9 +157,49 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
-    public StudyRequest getStudyRequestByID(int id) {
+    public StudyRequest getStudyRequestByID(long id) {
         assert isOpen();
-        return null;
+        assert id >= 0;
+        StudyRequest rv = null;
+        try {
+            // Prepare query
+            PreparedStatement stmt = mConnection.prepareStatement(Studies.SELECT_ID);
+            stmt.setLong(1, id);
+            // Execute query
+            ResultSet rs = stmt.executeQuery();
+            // We expect only one result
+            if (!rs.next()) {
+                // No result => ID is not in the database
+                return null;
+            }
+            rv = studyRequestFromResultSet(rs);
+            stmt.close();
+            rs.close();
+
+            // Retrieve Investigators
+            stmt = mConnection.prepareStatement(Investigators.SELECT_STUDY_ID);
+            stmt.setLong(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                rv.investigators.add(investigatorFromResultSet(rs));
+            }
+            rs.close();
+            stmt.close();
+
+            // Retrieve DataRequests
+            stmt = mConnection.prepareStatement(DataRequests.SELECT_STUDY_ID);
+            stmt.setLong(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                rv.requests.add(dataRequestFromResultSet(rs));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
     }
 
     @Override
@@ -175,6 +218,89 @@ public class SQLiteDatabase implements Database {
         } catch (SQLException e) {
             return false;
         }
+    }
+
+    ///// Helper function
+    /**
+     * Read a {@link StudyRequest} from a {@link ResultSet} and return it. Will NOT have the investigators and requests
+     * fields set. Will not modify the ResultSet
+     * @param rs The ResultSet
+     * @return A StudyRequest
+     */
+    private StudyRequest studyRequestFromResultSet(ResultSet rs) {
+        // Create object
+        StudyRequest rv = new StudyRequest();
+        try {
+            rv.id = rs.getLong(Studies.COLUMN_ID);
+            rv.name = rs.getString(Studies.COLUMN_NAME);
+            rv.institution = rs.getString(Studies.COLUMN_INSTITUTION);
+            rv.webpage = rs.getString(Studies.COLUMN_WEB);
+            rv.description = rs.getString(Studies.COLUMN_DESCRIPTION);
+            rv.purpose = rs.getString(Studies.COLUMN_PURPOSE);
+            rv.procedures = rs.getString(Studies.COLUMN_PROCEDURES);
+            rv.risks = rs.getString(Studies.COLUMN_RISKS);
+            rv.benefits = rs.getString(Studies.COLUMN_BENEFITS);
+            rv.payment = rs.getString(Studies.COLUMN_PAYMENT);
+            rv.conflicts = rs.getString(Studies.COLUMN_CONFLICTS);
+            rv.confidentiality = rs.getString(Studies.COLUMN_CONFIDENTIALITY);
+            rv.participationAndWithdrawal = rs.getString(Studies.COLUMN_PARTICIPATION);
+            rv.rights = rs.getString(Studies.COLUMN_RIGHTS);
+            rv.verification = rs.getInt(Studies.COLUMN_VERIFICATION);
+            rv.pubkey = RSA.decodePublicKey(rs.getString(Studies.COLUMN_PUBKEY));
+            rv.privkey = RSA.decodePrivateKey(rs.getString(Studies.COLUMN_PRIVKEY));
+            rv.exchange = new ECDHKeyExchange(deserializeKeyPair(rs.getBytes(Studies.COLUMN_KEX)));
+            rv.queue = rs.getBytes(Studies.COLUMN_QUEUE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("ResultSet seems bad: ", e);
+        }
+        return rv;
+    }
+
+    /**
+     * Read a {@link de.velcommuta.denul.data.StudyRequest.Investigator} from a {@link ResultSet} and return it.
+     * Will not modify the ResultSet
+     * @param rs The ResultSet
+     * @return An {@link de.velcommuta.denul.data.StudyRequest.Investigator}
+     */
+    private StudyRequest.Investigator investigatorFromResultSet(ResultSet rs) {
+        // Initialize reply object
+        StudyRequest.Investigator rv = new StudyRequest.Investigator();
+        try {
+            // Set fields
+            rv.name = rs.getString(Investigators.COLUMN_NAME);
+            rv.institution = rs.getString(Investigators.COLUMN_INSTITUTION);
+            rv.group = rs.getString(Investigators.COLUMN_GROUP);
+            rv.position = rs.getString(Investigators.COLUMN_POSITION);
+        } catch (SQLException e) {
+            // Something is very wrong
+            e.printStackTrace();
+            throw new IllegalArgumentException("ResultSet seems bad: ", e);
+        }
+        return rv;
+    }
+
+
+    /**
+     * Read a {@link de.velcommuta.denul.data.StudyRequest.DataRequest} from a {@link ResultSet} and return it.
+     * Will not modify the ResultSet
+     * @param rs The ResultSet
+     * @return A {@link de.velcommuta.denul.data.StudyRequest.DataRequest}
+     */
+    private StudyRequest.DataRequest dataRequestFromResultSet(ResultSet rs) {
+        // Initialize reply object
+        StudyRequest.DataRequest rv = new StudyRequest.DataRequest();
+        try {
+            // Set fields
+            rv.type = rs.getInt(DataRequests.COLUMN_DATATYPE);
+            rv.granularity = rs.getInt(DataRequests.COLUMN_GRANULARITY);
+            rv.frequency = rs.getInt(DataRequests.COLUMN_FREQUENCY);
+        } catch (SQLException e) {
+            // Something is very wrong
+            e.printStackTrace();
+            throw new IllegalArgumentException("ResultSet seems bad: ", e);
+        }
+        return rv;
     }
 
     /**

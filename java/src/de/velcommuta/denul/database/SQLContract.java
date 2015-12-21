@@ -68,6 +68,8 @@ public class SQLContract {
                 ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         public static final String DROP = "DROP TABLE " + TABLE_NAME + ";";
+
+        public static final String SELECT_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " LIKE ?;";
     }
 
     public static class Investigators {
@@ -93,6 +95,8 @@ public class SQLContract {
         public static final String INSERT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_STUDY + COMMA_SEP +
                 COLUMN_NAME + COMMA_SEP + COLUMN_INSTITUTION + COMMA_SEP + COLUMN_GROUP + COMMA_SEP +
                 COLUMN_POSITION + ") VALUES (?, ?, ?, ?, ?);";
+
+        public static final String SELECT_STUDY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STUDY + " LIKE ?;";
     }
 
     public static class DataRequests {
@@ -115,6 +119,8 @@ public class SQLContract {
         public static final String INSERT = "INSERT INTO " + TABLE_NAME + "(" + COLUMN_STUDY + COMMA_SEP +
                 COLUMN_DATATYPE + COMMA_SEP + COLUMN_GRANULARITY + COMMA_SEP + COLUMN_FREQUENCY +
                 ") VALUES (?, ?, ?, ?);";
+
+        public static final String SELECT_STUDY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STUDY + " LIKE ?;";
     }
 
 }

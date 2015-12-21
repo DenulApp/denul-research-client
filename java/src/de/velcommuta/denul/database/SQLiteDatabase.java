@@ -7,6 +7,7 @@ import de.velcommuta.denul.data.StudyRequest;
 import java.io.*;
 import java.security.KeyPair;
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
 
 // Static import contract classes
@@ -160,10 +161,10 @@ public class SQLiteDatabase implements Database {
     public StudyRequest getStudyRequestByID(long id) {
         assert isOpen();
         assert id >= 0;
-        StudyRequest rv = null;
+        StudyRequest rv;
         try {
             // Prepare query
-            PreparedStatement stmt = mConnection.prepareStatement(Studies.SELECT_ID);
+            PreparedStatement stmt = mConnection.prepareStatement(Studies.SELECT_BY_ID);
             stmt.setLong(1, id);
             // Execute query
             ResultSet rs = stmt.executeQuery();
@@ -177,24 +178,10 @@ public class SQLiteDatabase implements Database {
             rs.close();
 
             // Retrieve Investigators
-            stmt = mConnection.prepareStatement(Investigators.SELECT_STUDY_ID);
-            stmt.setLong(1, id);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                rv.investigators.add(investigatorFromResultSet(rs));
-            }
-            rs.close();
-            stmt.close();
+            rv.investigators.addAll(getInvestigatorsForStudyID(id));
 
             // Retrieve DataRequests
-            stmt = mConnection.prepareStatement(DataRequests.SELECT_STUDY_ID);
-            stmt.setLong(1, id);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                rv.requests.add(dataRequestFromResultSet(rs));
-            }
-            rs.close();
-            stmt.close();
+            rv.requests.addAll(getDataRequesstsForStudyID(id));
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("SQL Error: ", e);
@@ -205,7 +192,21 @@ public class SQLiteDatabase implements Database {
     @Override
     public List<StudyRequest> getStudyRequests() {
         assert isOpen();
-        return null;
+        List<StudyRequest> rv = new LinkedList<>();
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(Studies.SELECT_ALL);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                StudyRequest req = studyRequestFromResultSet(rs);
+                req.investigators.addAll(getInvestigatorsForStudyID(req.id));
+                req.requests.addAll(getDataRequesstsForStudyID(req.id));
+                rv.add(req);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
     }
 
     /**
@@ -221,6 +222,56 @@ public class SQLiteDatabase implements Database {
     }
 
     ///// Helper function
+
+    /**
+     * Retrieve all {@link de.velcommuta.denul.data.StudyRequest.Investigator}s for a specific study ID
+     * @param id The Study ID
+     * @return A List of {@link de.velcommuta.denul.data.StudyRequest.Investigator}s, or an empty List if no Investigators
+     * are saved in the database
+     */
+    private List<StudyRequest.Investigator> getInvestigatorsForStudyID(long id) {
+        List<StudyRequest.Investigator> rv = new LinkedList<>();
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(Investigators.SELECT_STUDY_ID);
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                rv.add(investigatorFromResultSet(rs));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
+    }
+
+
+    /**
+     * Retrieve all {@link de.velcommuta.denul.data.StudyRequest.DataRequest}s for a specific study ID
+     * @param id The Study ID
+     * @return A List of DataRequests, or an empty List if no such requests are saved
+     */
+    private List<StudyRequest.DataRequest> getDataRequesstsForStudyID(long id) {
+        List<StudyRequest.DataRequest> rv = new LinkedList<>();
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(DataRequests.SELECT_STUDY_ID);
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                rv.add(dataRequestFromResultSet(rs));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
+    }
+
+
     /**
      * Read a {@link StudyRequest} from a {@link ResultSet} and return it. Will NOT have the investigators and requests
      * fields set. Will not modify the ResultSet

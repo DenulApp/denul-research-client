@@ -5,12 +5,10 @@ import de.velcommuta.denul.data.StudyRequestTest;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.File;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Test the SQLite database backend
@@ -22,6 +20,7 @@ public class SQLiteDatabaseTest extends TestCase {
     public void setUp() {
         mDB = new SQLiteDatabase("test.db");
     }
+
 
     @After
     public void tearDown() {
@@ -48,10 +47,19 @@ public class SQLiteDatabaseTest extends TestCase {
 
 
     /**
-     * Test the "get all" function
+     * Test the adding and retrieving of study requests
      */
-    public void testGetStudyRequests() {
-        // TODO
-        assertTrue(true);
+    public void testAddReadMultiple() {
+        StudyRequest req1 = StudyRequestTest.getRandomStudyRequest();
+        long rv1 = mDB.addStudyRequest(req1);
+        assertTrue(rv1 >= 0);
+        StudyRequest req2 = StudyRequestTest.getRandomStudyRequest();
+        long rv2 = mDB.addStudyRequest(req2);
+        assertTrue(rv2 >= 0);
+        List<StudyRequest> reqs = new LinkedList<>();
+        reqs.add(req1);
+        reqs.add(req2);
+        List<StudyRequest> reps = mDB.getStudyRequests();
+        assertEquals(reps, reqs);
     }
 }

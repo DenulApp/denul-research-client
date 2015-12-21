@@ -69,7 +69,8 @@ public class SQLContract {
 
         public static final String DROP = "DROP TABLE " + TABLE_NAME + ";";
 
-        public static final String SELECT_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " LIKE ?;";
+        public static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " LIKE ?;";
+        public static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME + ";";
     }
 
     public static class Investigators {

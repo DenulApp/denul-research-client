@@ -32,7 +32,8 @@ public class SQLiteDatabaseTest extends TestCase {
      */
     public void testAddStudyRequest() {
         StudyRequest req = StudyRequestTest.getRandomStudyRequest();
-        mDB.addStudyRequest(req);
+        long rv = mDB.addStudyRequest(req);
+        assertTrue(rv != -1);
     }
 
     /**

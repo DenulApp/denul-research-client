@@ -16,8 +16,9 @@ public interface Database {
     /**
      * Add a {@link StudyRequest} to the database
      * @param studyRequest The study request
+     * @return The ID of the inserted record, or -1 in case of an error
      */
-    void addStudyRequest(StudyRequest studyRequest);
+    long addStudyRequest(StudyRequest studyRequest);
 
     /**
      * Retrieve a specific {@link StudyRequest} by its ID

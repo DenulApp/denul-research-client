@@ -74,12 +74,13 @@ public class SQLiteDatabase implements Database {
     // (name, institution, webpage, description, purpose, procedures, risks, benefits, payment, conflicts, confidentiality, participationAndWithdrawal, rights,
     // verification, privkey, pubkey, keyalgo, kex, kexalgo, queue)
     @Override
-    public void addStudyRequest(StudyRequest req) {
+    public long addStudyRequest(StudyRequest req) {
         assert isOpen();
+        long rv = -2;
         Savepoint before = null;
         try {
             before = mConnection.setSavepoint();
-            PreparedStatement stmt = mConnection.prepareStatement(Studies.INSERT);
+            PreparedStatement stmt = mConnection.prepareStatement(Studies.INSERT, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,  req.name);
             stmt.setString(2,  req.institution);
             stmt.setString(3,  req.webpage);
@@ -100,8 +101,21 @@ public class SQLiteDatabase implements Database {
             stmt.setBytes (18, serializeKeyPair(req.exchange.getKeypair()));
             stmt.setInt   (19, 1);  // TODO Change constants
             stmt.setBytes (20, req.queue);
-            stmt.execute();
+            int affected_rows = stmt.executeUpdate();
             mConnection.commit();
+            if (affected_rows == 0) {
+                throw new IllegalArgumentException("Insert failed");
+            }
+            try {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    rv = generatedKeys.getLong(1);
+                } else {
+                    throw new IllegalArgumentException("Insert failed, no record created");
+                }
+            } catch (SQLException e) {
+                throw new IllegalArgumentException("Exception occured: " + e);
+            }
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,6 +125,7 @@ public class SQLiteDatabase implements Database {
                 e1.printStackTrace();
             }
         }
+        return rv;
     }
 
     @Override

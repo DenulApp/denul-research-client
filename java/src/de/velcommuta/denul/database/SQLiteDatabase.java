@@ -76,7 +76,7 @@ public class SQLiteDatabase implements Database {
     @Override
     public long addStudyRequest(StudyRequest req) {
         assert isOpen();
-        long rv = -2;
+        long rv = -1;
         Savepoint before = null;
         try {
             before = mConnection.setSavepoint();
@@ -103,6 +103,7 @@ public class SQLiteDatabase implements Database {
             stmt.setBytes (20, req.queue);
             int affected_rows = stmt.executeUpdate();
             mConnection.commit();
+            // Inserted object ID identification based on http://stackoverflow.com/a/1915197/1232833
             if (affected_rows == 0) {
                 throw new IllegalArgumentException("Insert failed");
             }
@@ -117,6 +118,27 @@ public class SQLiteDatabase implements Database {
                 throw new IllegalArgumentException("Exception occured: " + e);
             }
             stmt.close();
+            stmt = mConnection.prepareStatement(Investigators.INSERT);
+            for (StudyRequest.Investigator inv : req.investigators) {
+                stmt.setLong(1, rv);
+                stmt.setString(2, inv.name);
+                stmt.setString(3, inv.institution);
+                stmt.setString(4, inv.group);
+                stmt.setString(5, inv.position);
+                affected_rows = stmt.executeUpdate();
+                assert affected_rows > 0;
+            }
+            stmt.close();
+            stmt = mConnection.prepareStatement(DataRequests.INSERT);
+            for (StudyRequest.DataRequest data : req.requests) {
+                stmt.setLong(1, rv);
+                stmt.setInt(2, data.type);
+                stmt.setInt(3, data.granularity);
+                stmt.setInt(4, data.frequency);
+                affected_rows = stmt.executeUpdate();
+                assert affected_rows > 0;
+            }
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             if (before != null) try {
@@ -124,6 +146,7 @@ public class SQLiteDatabase implements Database {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
+            throw new IllegalArgumentException("SQL Exception: ", e);
         }
         return rv;
     }

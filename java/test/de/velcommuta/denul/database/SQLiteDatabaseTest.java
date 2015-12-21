@@ -7,6 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
@@ -15,6 +17,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class SQLiteDatabaseTest extends TestCase {
     private SQLiteDatabase mDB;
+
     @Before
     public void setUp() {
         mDB = new SQLiteDatabase("test.db");
@@ -24,6 +27,11 @@ public class SQLiteDatabaseTest extends TestCase {
     public void tearDown() {
         mDB.close();
         mDB = null;
+        // Delete database file
+        File f = new File("test.db");
+        if (f.isFile()) {
+            f.delete();
+        }
     }
 
 
@@ -33,7 +41,7 @@ public class SQLiteDatabaseTest extends TestCase {
     public void testAddStudyRequest() {
         StudyRequest req = StudyRequestTest.getRandomStudyRequest();
         long rv = mDB.addStudyRequest(req);
-        assertTrue(rv != -1);
+        assertTrue(rv >= 0);
     }
 
     /**

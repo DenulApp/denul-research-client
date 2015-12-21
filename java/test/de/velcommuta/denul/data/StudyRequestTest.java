@@ -43,6 +43,17 @@ public class StudyRequestTest extends TestCase {
     }
 
     /**
+     * Test the equals function
+     */
+    public void testEquals() {
+        StudyRequest req1 = getRandomStudyRequest();
+        StudyRequest req2 = getRandomStudyRequest();
+        assertEquals(req1, req1);
+        assertNotEquals(req1, req2);
+        assertEquals(req2, req2);
+    }
+
+    /**
      * Helper function to generate a random String
      * @return A random string
      */

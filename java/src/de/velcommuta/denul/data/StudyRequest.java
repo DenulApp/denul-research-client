@@ -7,6 +7,7 @@ import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,6 +50,7 @@ public class StudyRequest {
     }
 
     // Value holder fields
+    public long id;
     public String name;
     public String institution;
     public String webpage;
@@ -175,6 +177,16 @@ public class StudyRequest {
             return builder.toString();
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || !(o instanceof Investigator)) return false;
+            Investigator other = (Investigator) o;
+            return ((other.name.equals(name)) &&
+                    (other.institution.equals(institution)) &&
+                    (other.group.equals(group)) &&
+                    (other.position.equals(position)));
+        }
+
         /**
          * Serialize the Investigator object into a protocol buffer and return it
          * @return A protocol buffer {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.Investigator}
@@ -238,6 +250,15 @@ public class StudyRequest {
             }
 
             return builder.toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || !(o instanceof DataRequest)) return false;
+            DataRequest other = (DataRequest) o;
+            return other.frequency.equals(frequency) &&
+                    other.type.equals(type) &&
+                    other.granularity.equals(granularity);
         }
 
 
@@ -357,5 +378,33 @@ public class StudyRequest {
         wrapper.setSignature(ByteString.copyFrom(signature));
 
         return wrapper.build().toByteArray();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof StudyRequest)) return false;
+        StudyRequest other = (StudyRequest) o;
+        return (other.id == id) &&
+                (other.name.equals(name)) &&
+                (other.institution.equals(institution)) &&
+                (other.webpage.equals(webpage)) &&
+                (other.description.equals(description)) &&
+                (other.purpose.equals(purpose)) &&
+                (other.procedures.equals(procedures)) &&
+                (other.risks.equals(risks)) &&
+                (other.benefits.equals(benefits)) &&
+                (other.payment.equals(payment)) &&
+                (other.conflicts.equals(conflicts)) &&
+                (other.confidentiality.equals(confidentiality)) &&
+                (other.participationAndWithdrawal.equals(participationAndWithdrawal)) &&
+                (other.rights.equals(rights)) &&
+                (other.verification == verification )&&
+                (other.pubkey.equals(pubkey)) &&
+                (other.privkey.equals(privkey)) &&
+                (other.exchange.equals(exchange)) &&
+                (Arrays.equals(other.queue, queue)) &&
+                (other.investigators.equals(investigators)) &&
+                (other.requests.equals(requests));
     }
 }

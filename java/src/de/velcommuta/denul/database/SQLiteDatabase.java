@@ -76,10 +76,13 @@ public class SQLiteDatabase implements Database {
     @Override
     public long addStudyRequest(StudyRequest req) {
         assert isOpen();
-        long rv = -1;
+        assert req != null;
+        long rv;
         Savepoint before = null;
         try {
+            // Set up a savepoint to roll back to in case of problems
             before = mConnection.setSavepoint();
+            // Insert the StudyRequest itself
             PreparedStatement stmt = mConnection.prepareStatement(Studies.INSERT, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,  req.name);
             stmt.setString(2,  req.institution);
@@ -102,22 +105,18 @@ public class SQLiteDatabase implements Database {
             stmt.setInt   (19, 1);  // TODO Change constants
             stmt.setBytes (20, req.queue);
             int affected_rows = stmt.executeUpdate();
-            mConnection.commit();
-            // Inserted object ID identification based on http://stackoverflow.com/a/1915197/1232833
-            if (affected_rows == 0) {
-                throw new IllegalArgumentException("Insert failed");
-            }
-            try {
-                ResultSet generatedKeys = stmt.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    rv = generatedKeys.getLong(1);
-                } else {
-                    throw new IllegalArgumentException("Insert failed, no record created");
-                }
-            } catch (SQLException e) {
-                throw new IllegalArgumentException("Exception occured: " + e);
+            // Determine the ID of the inserted column
+            // Inserted object ID identification loosely based on http://stackoverflow.com/a/1915197/1232833
+            assert affected_rows > 0;
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                rv = generatedKeys.getLong(1);
+            } else {
+                mConnection.rollback(before);
+                throw new IllegalArgumentException("Insert failed, no record created");
             }
             stmt.close();
+            // Insert Investigators
             stmt = mConnection.prepareStatement(Investigators.INSERT);
             for (StudyRequest.Investigator inv : req.investigators) {
                 stmt.setLong(1, rv);
@@ -129,6 +128,7 @@ public class SQLiteDatabase implements Database {
                 assert affected_rows > 0;
             }
             stmt.close();
+            // Insert DataRequests
             stmt = mConnection.prepareStatement(DataRequests.INSERT);
             for (StudyRequest.DataRequest data : req.requests) {
                 stmt.setLong(1, rv);
@@ -139,6 +139,8 @@ public class SQLiteDatabase implements Database {
                 assert affected_rows > 0;
             }
             stmt.close();
+            // Commit
+            mConnection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
             if (before != null) try {

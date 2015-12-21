@@ -114,7 +114,7 @@ public class StudyRequestTest extends TestCase {
             req.privkey = keys.getPrivate();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-            return null;
+            throw new IllegalArgumentException("Exception during key retrieval:", e);
         }
         return req;
     }

@@ -92,19 +92,23 @@ public class StudyRequestTest extends TestCase {
         req.queue = new byte[] {0x00};
 
         // Random investigator
-        StudyRequest.Investigator inv = new StudyRequest.Investigator();
-        inv.position = getRandomString();
-        inv.name = getRandomString();
-        inv.group = getRandomString();
-        inv.institution = getRandomString();
-        req.investigators.add(inv);
+        for (int i = 0; i < 2; i++) {
+            StudyRequest.Investigator inv = new StudyRequest.Investigator();
+            inv.position = getRandomString();
+            inv.name = getRandomString();
+            inv.group = getRandomString();
+            inv.institution = getRandomString();
+            req.investigators.add(inv);
+        }
 
         // Add datarequest
-        StudyRequest.DataRequest dr = new StudyRequest.DataRequest();
-        dr.granularity = StudyRequest.DataRequest.GRANULARITY_FINE;
-        dr.type = StudyRequest.DataRequest.TYPE_GPS;
-        dr.frequency = 0;
-        req.requests.add(dr);
+        for (int i = 0; i < 2; i++) {
+            StudyRequest.DataRequest dr = new StudyRequest.DataRequest();
+            dr.granularity = StudyRequest.DataRequest.GRANULARITY_FINE;
+            dr.type = StudyRequest.DataRequest.TYPE_GPS;
+            dr.frequency = 0;
+            req.requests.add(dr);
+        }
 
         // Add keys
         try {

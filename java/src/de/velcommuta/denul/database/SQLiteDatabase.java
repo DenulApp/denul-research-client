@@ -8,56 +8,18 @@ import java.security.KeyPair;
 import java.sql.*;
 import java.util.List;
 
+// Static import contract classes
+import static de.velcommuta.denul.database.SQLContract.Studies;
+import static de.velcommuta.denul.database.SQLContract.Investigators;
+import static de.velcommuta.denul.database.SQLContract.DataRequests;
+
 /**
  * A database backend utilizing SQLite with SQLite-JDBC by Xerial.
  * https://github.com/xerial/sqlite-jdbc
  * (The library is licensed Apache v2)
  */
 public class SQLiteDatabase implements Database {
-    // Constants
-    private static final String CREATE_STUDIES = "CREATE TABLE IF NOT EXISTS Studies (" +
-            "id INTEGER PRIMARY KEY, " +
-            "name TEXT, " +
-            "institution TEXT, " +
-            "webpage TEXT, " +
-            "description TEXT, " +
-            "purpose TEXT, " +
-            "procedures TEXT, " +
-            "risks TEXT, " +
-            "benefits TEXT, " +
-            "payment TEXT, " +
-            "conflicts TEXT, " +
-            "confidentiality TEXT, " +
-            "participationAndWithdrawal TEXT, " +
-            "rights TEXT, " +
-            "verification INT, " +
-            "privkey STRING, " +
-            "pubkey STRING, " +
-            "keyalgo INTEGER, " +
-            "kex BLOB, " +
-            "kexalgo INTEGER, " +
-            "queue BLOB" +
-            ");";
-    private static final String INSERT_STUDY = "INSERT INTO Studies (name, institution, webpage, description, purpose, "+
-            "procedures, risks, benefits, payment, conflicts, confidentiality, participationAndWithdrawal, rights, " +
-            "verification, privkey, pubkey, keyalgo, kex, kexalgo, queue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String CREATE_INVESTIGATORS = "CREATE TABLE IF NOT EXISTS Investigators (" +
-            "id INTEGER PRIMARY KEY, " +
-            "study INTEGER NOT NULL, " +
-            "name TEXT NOT NULL, " +
-            "institution TEXT NOT NULL, " +
-            "wg TEXT NOT NULL, " + // Working group, because "group" is a keyword
-            "pos TEXT NOT NULL, " + // Position
-            "FOREIGN KEY (study) REFERENCES Study(id) ON DELETE CASCADE" +
-            ");";
-    private static final String CREATE_DATAREQUESTS = "CREATE TABLE IF NOT EXISTS DataRequest (" +
-            "id INTEGER PRIMARY KEY, " +
-            "study INTEGER NOT NULL, " +
-            "datatype INTEGER NOT NULL, " +
-            "granularity INTEGER NOT NULL, " +
-            "frequency INTEGER NOT NULL, " +
-            "FOREIGN KEY (study) REFERENCES Study(id) ON DELETE CASCADE" +
-            ");";
+
 
 
     // Instance variables
@@ -83,18 +45,20 @@ public class SQLiteDatabase implements Database {
                 // Create a statement object
                 stmt = mConnection.createStatement();
                 stmt.execute("PRAGMA FOREIGN_KEYS = ON;");
-                stmt.execute(CREATE_STUDIES);
-                stmt.execute(CREATE_INVESTIGATORS);
-                stmt.execute(CREATE_DATAREQUESTS);
+                stmt.execute(Studies.CREATE);
+                stmt.execute(Investigators.CREATE);
+                stmt.execute(DataRequests.CREATE);
             } catch (SQLException e) {
                 // Something went wrong, print stacktrace
                 e.printStackTrace();
+                throw new IllegalArgumentException("Database error: " + e);
             } finally {
                 // Close statement to free up memory
                 if (stmt != null) stmt.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new IllegalArgumentException("Database error: " + e);
         }
     }
 
@@ -115,7 +79,7 @@ public class SQLiteDatabase implements Database {
         Savepoint before = null;
         try {
             before = mConnection.setSavepoint();
-            PreparedStatement stmt = mConnection.prepareStatement(INSERT_STUDY);
+            PreparedStatement stmt = mConnection.prepareStatement(Studies.INSERT);
             stmt.setString(1,  req.name);
             stmt.setString(2,  req.institution);
             stmt.setString(3,  req.webpage);

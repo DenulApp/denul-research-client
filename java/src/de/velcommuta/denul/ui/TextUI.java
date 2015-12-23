@@ -51,6 +51,8 @@ public class TextUI {
 
         // Create new study request
         request = new StudyRequest();
+        // randomize Queue Identifier
+        request.randomizeQueueIdentifier();
 
         // Give basic information
         println("");

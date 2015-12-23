@@ -38,7 +38,7 @@ public class StudyRequestTest extends TestCase {
         assertNotNull(wrapper);
         assertTrue(RSA.verify(wrapper.getMessage().toByteArray(), wrapper.getSignature().toByteArray(), req.pubkey));
 
-        StudyMessage.Study study = StudyMessage.Study.parseFrom(wrapper.getMessage().toByteArray());
+        StudyMessage.StudyCreate study = StudyMessage.StudyCreate.parseFrom(wrapper.getMessage().toByteArray());
         assertNotNull(study);
     }
 
@@ -73,6 +73,7 @@ public class StudyRequestTest extends TestCase {
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
 
         StudyRequest req = new StudyRequest();
+        req.randomizeQueueIdentifier();
         // Random request data
         req.name = getRandomString();
         req.institution = getRandomString();
@@ -89,7 +90,6 @@ public class StudyRequestTest extends TestCase {
         req.rights = getRandomString();
 
         req.verification = StudyRequest.VERIFY_DNS;
-        req.queue = new byte[] {0x00};
 
         // Random investigator
         for (int i = 0; i < 2; i++) {

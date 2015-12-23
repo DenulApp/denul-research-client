@@ -7,10 +7,7 @@ import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Data holder class for study requests
@@ -75,6 +72,14 @@ public class StudyRequest {
 
     // Queue identifier on the server
     public byte[] queue;
+
+    /**
+     * Randomize the queue identifier
+     */
+    public void randomizeQueueIdentifier() {
+        queue = new byte[16];
+        new Random().nextBytes(queue);
+    }
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -189,16 +194,16 @@ public class StudyRequest {
 
         /**
          * Serialize the Investigator object into a protocol buffer and return it
-         * @return A protocol buffer {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study.Investigator}
+         * @return A protocol buffer {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreate.Investigator}
          * object
          */
-        public StudyMessage.Study.Investigator toProtobuf() {
+        public StudyMessage.StudyCreate.Investigator toProtobuf() {
             assert name != null;
             assert institution != null;
             assert group != null;
             assert position != null;
 
-            StudyMessage.Study.Investigator.Builder builder = StudyMessage.Study.Investigator.newBuilder();
+            StudyMessage.StudyCreate.Investigator.Builder builder = StudyMessage.StudyCreate.Investigator.newBuilder();
             builder.setName(name);
             builder.setInstitution(institution);
             builder.setGroup(group);
@@ -266,29 +271,29 @@ public class StudyRequest {
          * Serialize the object into a protocol buffer
          * @return A protocol buffer representation of the DataRequest
          */
-        public StudyMessage.Study.DataRequest toProtobuf() {
+        public StudyMessage.StudyCreate.DataRequest toProtobuf() {
             assert type != null;
             assert granularity != null;
             assert frequency != null;
 
             // Get builder and add values
-            StudyMessage.Study.DataRequest.Builder builder = StudyMessage.Study.DataRequest.newBuilder();
+            StudyMessage.StudyCreate.DataRequest.Builder builder = StudyMessage.StudyCreate.DataRequest.newBuilder();
             switch (type) {
                 case TYPE_GPS:
-                    builder.setDatatype(StudyMessage.Study.DataType.DATA_GPS_TRACK);
+                    builder.setDatatype(StudyMessage.StudyCreate.DataType.DATA_GPS_TRACK);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown data type");
             }
             switch (granularity) {
                 case GRANULARITY_FINE:
-                    builder.setGranularity(StudyMessage.Study.DataGranularity.GRAN_FINE);
+                    builder.setGranularity(StudyMessage.StudyCreate.DataGranularity.GRAN_FINE);
                     break;
                 case GRANULARITY_COARSE:
-                    builder.setGranularity(StudyMessage.Study.DataGranularity.GRAN_COARSE);
+                    builder.setGranularity(StudyMessage.StudyCreate.DataGranularity.GRAN_COARSE);
                     break;
                 case GRANULARITY_VERY_COARSE:
-                    builder.setGranularity(StudyMessage.Study.DataGranularity.GRAN_VERY_COARSE);
+                    builder.setGranularity(StudyMessage.StudyCreate.DataGranularity.GRAN_VERY_COARSE);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown granularity");
@@ -301,7 +306,7 @@ public class StudyRequest {
 
     /**
      * Serialize a StudyRequest into a byte[] containing a {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper}
-     * with a signed serialized {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.Study} message inside,
+     * with a signed serialized {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreate} message inside,
      * @return A serialized version of this object
      */
     public byte[] signAndSerialize() {
@@ -326,7 +331,7 @@ public class StudyRequest {
         assert exchange != null;
 
         // Get a builder
-        StudyMessage.Study.Builder builder = StudyMessage.Study.newBuilder();
+        StudyMessage.StudyCreate.Builder builder = StudyMessage.StudyCreate.newBuilder();
         builder.setStudyName(name);
         builder.setInstitution(institution);
         builder.setWebpage(webpage);
@@ -349,19 +354,19 @@ public class StudyRequest {
         }
 
         builder.setPublicKey(ByteString.copyFrom(pubkey.getEncoded()));
-        builder.setPublicKeyAlgo(StudyMessage.Study.PubkeyAlgo.PK_RSA);
+        builder.setPublicKeyAlgo(StudyMessage.StudyCreate.PubkeyAlgo.PK_RSA);
         builder.setKexData(ByteString.copyFrom(exchange.getPublicKexData()));
-        builder.setKexAlgorithm(StudyMessage.Study.KexAlgo.KEX_ECDH_CURVE25519);
+        builder.setKexAlgorithm(StudyMessage.StudyCreate.KexAlgo.KEX_ECDH_CURVE25519);
 
         switch (verification) {
             case VERIFY_DNS:
-                builder.setVerificationStrategy(StudyMessage.Study.VerificationStrategy.VF_DNS_TXT);
+                builder.setVerificationStrategy(StudyMessage.StudyCreate.VerificationStrategy.VF_DNS_TXT);
                 break;
             case VERIFY_FILE:
-                builder.setVerificationStrategy(StudyMessage.Study.VerificationStrategy.VF_FILE);
+                builder.setVerificationStrategy(StudyMessage.StudyCreate.VerificationStrategy.VF_FILE);
                 break;
             case VERIFY_META:
-                builder.setVerificationStrategy(StudyMessage.Study.VerificationStrategy.VF_META);
+                builder.setVerificationStrategy(StudyMessage.StudyCreate.VerificationStrategy.VF_META);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown verification strategy");
@@ -376,6 +381,7 @@ public class StudyRequest {
         byte[] signature = RSA.sign(serialized, privkey);
         assert signature != null;
         wrapper.setSignature(ByteString.copyFrom(signature));
+        wrapper.setType(StudyMessage.StudyWrapper.MessageType.MSG_STUDYCREATE);
 
         return wrapper.build().toByteArray();
     }

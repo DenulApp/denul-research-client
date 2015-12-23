@@ -21,9 +21,6 @@ import static de.velcommuta.denul.database.SQLContract.DataRequests;
  * (The library is licensed Apache v2)
  */
 public class SQLiteDatabase implements Database {
-
-
-
     // Instance variables
     private Connection mConnection;
 

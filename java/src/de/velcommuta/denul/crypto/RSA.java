@@ -151,7 +151,7 @@ public class RSA {
     ///// Signatures
 
     /**
-     * Sign data with a private RSA key
+     * Sign data with a private RSA key, using PKCS1
      * @param data The data to sign
      * @param privateKey The private key to use
      * @return The signature, as a byte[], or null if an error occured

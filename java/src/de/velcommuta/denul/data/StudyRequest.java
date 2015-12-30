@@ -309,7 +309,7 @@ public class StudyRequest {
      * with a signed serialized {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreate} message inside,
      * @return A serialized version of this object
      */
-    public byte[] signAndSerialize() {
+    public StudyMessage.StudyWrapper signAndSerialize() {
         // Ensure all fields are set
         assert name != null;
         assert institution != null;
@@ -383,7 +383,7 @@ public class StudyRequest {
         wrapper.setSignature(ByteString.copyFrom(signature));
         wrapper.setType(StudyMessage.StudyWrapper.MessageType.MSG_STUDYCREATE);
 
-        return wrapper.build().toByteArray();
+        return wrapper.build();
     }
 
     @Override

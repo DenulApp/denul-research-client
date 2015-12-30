@@ -30,7 +30,7 @@ public class StudyRequestTest extends TestCase {
         StudyRequest req = getRandomStudyRequest();
 
         // Serialize
-        byte[] serialized = req.signAndSerialize();
+        byte[] serialized = req.signAndSerialize().toByteArray();
         assertNotNull(serialized);
 
         // Deserialize

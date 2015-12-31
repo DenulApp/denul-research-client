@@ -307,7 +307,7 @@ public class StudyRequest {
     /**
      * Serialize a StudyRequest into a byte[] containing a {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper}
      * with a signed serialized {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreate} message inside,
-     * @return A serialized version of this object
+     * @return A {@link de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapper} containing the data structure
      */
     public StudyMessage.StudyWrapper signAndSerialize() {
         // Ensure all fields are set

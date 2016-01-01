@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.velcommuta.denul.data.DataBlock;
+import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.data.TokenPair;
 
 /**
@@ -69,6 +70,16 @@ public interface Protocol {
     byte[] GET_FAIL_PROTOCOL_ERROR = new byte[] {0x01};
     // Get failed, bad key format
     byte[] GET_FAIL_KEY_FMT = new byte[] {0x02};
+
+    // Return values for the study registration function
+    // Registration okay
+    int REG_OK = 0;
+    // Incorrect signature
+    int REG_FAIL_SIGNATURE = 1;
+    // Incorrect identifier
+    int REG_FAIL_IDENTIFIER = 2;
+    // Incorrect verification data
+    int REG_FAIL_VERIFICATION = 3;
 
     /**
      * Establish a connection using this protocol, via the provided Connection
@@ -152,4 +163,11 @@ public interface Protocol {
      * the interface, indicating the result of the operation
      */
     Map<TokenPair, Integer> revokeMany(List<TokenPair> pairs);
+
+    /**
+     * Register a new study with the server
+     * @param req The {@link StudyRequest} that should be registered
+     * @return One of the REG_* constants defined in the interface, indicating the result of the operation
+     */
+    int registerStudy(StudyRequest req);
 }

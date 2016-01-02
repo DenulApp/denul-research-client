@@ -74,12 +74,16 @@ public interface Protocol {
     // Return values for the study registration function
     // Registration okay
     int REG_OK = 0;
+    // No connection
+    int REG_FAIL_NO_CONNECTION = 1;
+    // Protocol error
+    int REG_FAIL_PROTOCOL_ERROR = 2;
     // Incorrect signature
-    int REG_FAIL_SIGNATURE = 1;
+    int REG_FAIL_SIGNATURE = 3;
     // Incorrect identifier
-    int REG_FAIL_IDENTIFIER = 2;
+    int REG_FAIL_IDENTIFIER = 4;
     // Incorrect verification data
-    int REG_FAIL_VERIFICATION = 3;
+    int REG_FAIL_VERIFICATION = 5;
 
     /**
      * Establish a connection using this protocol, via the provided Connection

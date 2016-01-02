@@ -16,9 +16,11 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import de.velcommuta.denul.data.DataBlock;
+import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.data.TokenPair;
 import de.velcommuta.denul.networking.protobuf.c2s.C2S;
 import de.velcommuta.denul.networking.protobuf.meta.MetaMessage;
+import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 import de.velcommuta.denul.util.FormatHelper;
 import de.velcommuta.libvicbf.VICBF;
 import org.jetbrains.annotations.Nullable;
@@ -341,6 +343,46 @@ public class ProtobufProtocol implements Protocol {
         return rv;
     }
 
+    @Override
+    public int registerStudy(StudyRequest req) {
+        // Get a wrapper message
+        MetaMessage.Wrapper.Builder wrapper = MetaMessage.Wrapper.newBuilder();
+        // Serialize the StudyRequest into a StudyWrapper and insert it into the Wrapper message
+        wrapper.setStudyWrapper(req.signAndSerialize());
+        // try to send the request
+        MetaMessage.Wrapper reply = transceiveWrapper(wrapper.build());
+        // Read reply
+        if (reply == null) {
+            logger.severe("registerStudy: Reply is null, something is wrong");
+            return REG_FAIL_NO_CONNECTION;
+        }
+        // Parse into StudyCreateReply
+        StudyMessage.StudyCreateReply scr = toStudyCreateReply(reply);
+        if (scr == null) {
+            logger.severe("registerStudy: Reply did not contain StudyCreateReply, something is wrong");
+            return REG_FAIL_PROTOCOL_ERROR;
+        } else if (!Arrays.equals(scr.getQueueIdentifier().toByteArray(), req.queue)) {
+            logger.severe("registerStudy: Reply for different queue identifier");
+            return REG_FAIL_PROTOCOL_ERROR;
+        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_OK) {
+            // Everything is fine
+            return REG_OK;
+        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_IDENTIFIER) {
+            logger.warning("registerStudy: Bad identifier");
+            return REG_FAIL_IDENTIFIER;
+        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_SIGNATURE) {
+            logger.warning("registerStudy: Bad signature");
+            return REG_FAIL_SIGNATURE;
+        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_VERIFICATION) {
+            logger.warning("registerStudy: Verification data incorrect / verification failed");
+            return REG_FAIL_VERIFICATION;
+        } else {
+            // Unknown value
+            logger.severe("registerStudy: Unknown value for status code");
+            return REG_FAIL_PROTOCOL_ERROR;
+        }
+    }
+
     // Helper functions
     /**
      * Send a wrapper message to the server and receive and parse a wrapper message in return
@@ -495,6 +537,21 @@ public class ProtobufProtocol implements Protocol {
             return wrapper.getDeleteReply();
         } else {
             logger.severe("toDeleteReply: Wrapper message did not contain a StoreReply message");
+            return null;
+        }
+    }
+
+
+    /**
+     * Extract a StudyCreateReply message from a wrapper
+     * @param wrapper The wrapper containing a StudyCreateReply message
+     * @return The StudyCreateReply, or null, if the bytes did not represent a StudyCreateReply message
+     */
+    private StudyMessage.StudyCreateReply toStudyCreateReply(MetaMessage.Wrapper wrapper) {
+        if (wrapper.hasStudyCreatereply()) {
+            return wrapper.getStudyCreatereply();
+        } else {
+            logger.severe("toStudyCreateReply: Wrapper message did not contain a StudyCreateReply message");
             return null;
         }
     }

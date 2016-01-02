@@ -130,17 +130,17 @@ public final class MetaMessage {
     de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyWrapperOrBuilder getStudyWrapperOrBuilder();
 
     /**
-     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
      */
-    boolean hasStudyCreatereply();
+    boolean hasStudyCreateReply();
     /**
-     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
      */
-    de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply getStudyCreatereply();
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply getStudyCreateReply();
     /**
-     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
      */
-    de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder getStudyCreatereplyOrBuilder();
+    de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder getStudyCreateReplyOrBuilder();
 
     /**
      * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyJoinQueryReply StudyJoinQueryReply = 13;</code>
@@ -710,24 +710,24 @@ public final class MetaMessage {
 
     public static final int STUDYCREATEREPLY_FIELD_NUMBER = 10;
     /**
-     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
      */
-    public boolean hasStudyCreatereply() {
+    public boolean hasStudyCreateReply() {
       return messageCase_ == 10;
     }
     /**
-     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
      */
-    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply getStudyCreatereply() {
+    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply getStudyCreateReply() {
       if (messageCase_ == 10) {
          return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply) message_;
       }
       return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.getDefaultInstance();
     }
     /**
-     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+     * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
      */
-    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder getStudyCreatereplyOrBuilder() {
+    public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder getStudyCreateReplyOrBuilder() {
       if (messageCase_ == 10) {
          return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply) message_;
       }
@@ -848,8 +848,8 @@ public final class MetaMessage {
           return false;
         }
       }
-      if (hasStudyCreatereply()) {
-        if (!getStudyCreatereply().isInitialized()) {
+      if (hasStudyCreateReply()) {
+        if (!getStudyCreateReply().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -1184,10 +1184,10 @@ public final class MetaMessage {
           }
         }
         if (messageCase_ == 10) {
-          if (studyCreatereplyBuilder_ == null) {
+          if (studyCreateReplyBuilder_ == null) {
             result.message_ = message_;
           } else {
-            result.message_ = studyCreatereplyBuilder_.build();
+            result.message_ = studyCreateReplyBuilder_.build();
           }
         }
         if (messageCase_ == 13) {
@@ -1259,7 +1259,7 @@ public final class MetaMessage {
             break;
           }
           case STUDYCREATEREPLY: {
-            mergeStudyCreatereply(other.getStudyCreatereply());
+            mergeStudyCreateReply(other.getStudyCreateReply());
             break;
           }
           case STUDYJOINQUERYREPLY: {
@@ -1333,8 +1333,8 @@ public final class MetaMessage {
             return false;
           }
         }
-        if (hasStudyCreatereply()) {
-          if (!getStudyCreatereply().isInitialized()) {
+        if (hasStudyCreateReply()) {
+          if (!getStudyCreateReply().isInitialized()) {
             
             return false;
           }
@@ -2604,64 +2604,64 @@ public final class MetaMessage {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder> studyCreatereplyBuilder_;
+          de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder> studyCreateReplyBuilder_;
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public boolean hasStudyCreatereply() {
+      public boolean hasStudyCreateReply() {
         return messageCase_ == 10;
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply getStudyCreatereply() {
-        if (studyCreatereplyBuilder_ == null) {
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply getStudyCreateReply() {
+        if (studyCreateReplyBuilder_ == null) {
           if (messageCase_ == 10) {
             return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply) message_;
           }
           return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.getDefaultInstance();
         } else {
           if (messageCase_ == 10) {
-            return studyCreatereplyBuilder_.getMessage();
+            return studyCreateReplyBuilder_.getMessage();
           }
           return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public Builder setStudyCreatereply(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply value) {
-        if (studyCreatereplyBuilder_ == null) {
+      public Builder setStudyCreateReply(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply value) {
+        if (studyCreateReplyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           message_ = value;
           onChanged();
         } else {
-          studyCreatereplyBuilder_.setMessage(value);
+          studyCreateReplyBuilder_.setMessage(value);
         }
         messageCase_ = 10;
         return this;
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public Builder setStudyCreatereply(
+      public Builder setStudyCreateReply(
           de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder builderForValue) {
-        if (studyCreatereplyBuilder_ == null) {
+        if (studyCreateReplyBuilder_ == null) {
           message_ = builderForValue.build();
           onChanged();
         } else {
-          studyCreatereplyBuilder_.setMessage(builderForValue.build());
+          studyCreateReplyBuilder_.setMessage(builderForValue.build());
         }
         messageCase_ = 10;
         return this;
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public Builder mergeStudyCreatereply(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply value) {
-        if (studyCreatereplyBuilder_ == null) {
+      public Builder mergeStudyCreateReply(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply value) {
+        if (studyCreateReplyBuilder_ == null) {
           if (messageCase_ == 10 &&
               message_ != de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.getDefaultInstance()) {
             message_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.newBuilder((de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply) message_)
@@ -2672,18 +2672,18 @@ public final class MetaMessage {
           onChanged();
         } else {
           if (messageCase_ == 10) {
-            studyCreatereplyBuilder_.mergeFrom(value);
+            studyCreateReplyBuilder_.mergeFrom(value);
           }
-          studyCreatereplyBuilder_.setMessage(value);
+          studyCreateReplyBuilder_.setMessage(value);
         }
         messageCase_ = 10;
         return this;
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public Builder clearStudyCreatereply() {
-        if (studyCreatereplyBuilder_ == null) {
+      public Builder clearStudyCreateReply() {
+        if (studyCreateReplyBuilder_ == null) {
           if (messageCase_ == 10) {
             messageCase_ = 0;
             message_ = null;
@@ -2694,22 +2694,22 @@ public final class MetaMessage {
             messageCase_ = 0;
             message_ = null;
           }
-          studyCreatereplyBuilder_.clear();
+          studyCreateReplyBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder getStudyCreatereplyBuilder() {
-        return getStudyCreatereplyFieldBuilder().getBuilder();
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder getStudyCreateReplyBuilder() {
+        return getStudyCreateReplyFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder getStudyCreatereplyOrBuilder() {
-        if ((messageCase_ == 10) && (studyCreatereplyBuilder_ != null)) {
-          return studyCreatereplyBuilder_.getMessageOrBuilder();
+      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder getStudyCreateReplyOrBuilder() {
+        if ((messageCase_ == 10) && (studyCreateReplyBuilder_ != null)) {
+          return studyCreateReplyBuilder_.getMessageOrBuilder();
         } else {
           if (messageCase_ == 10) {
             return (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply) message_;
@@ -2718,16 +2718,16 @@ public final class MetaMessage {
         }
       }
       /**
-       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreatereply = 10;</code>
+       * <code>optional .de.velcommuta.denul.networking.protobuf.study.StudyCreateReply StudyCreateReply = 10;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder> 
-          getStudyCreatereplyFieldBuilder() {
-        if (studyCreatereplyBuilder_ == null) {
+          getStudyCreateReplyFieldBuilder() {
+        if (studyCreateReplyBuilder_ == null) {
           if (!(messageCase_ == 10)) {
             message_ = de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.getDefaultInstance();
           }
-          studyCreatereplyBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          studyCreateReplyBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply.Builder, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReplyOrBuilder>(
                   (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyCreateReply) message_,
                   getParentForChildren(),
@@ -2735,7 +2735,7 @@ public final class MetaMessage {
           message_ = null;
         }
         messageCase_ = 10;
-        return studyCreatereplyBuilder_;
+        return studyCreateReplyBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilder<
@@ -3053,7 +3053,7 @@ public final class MetaMessage {
       "ing.protobuf.c2s.DeleteReplyH\000\022S\n\014StudyW" +
       "rapper\030\t \001(\0132;.de.velcommuta.denul.netwo" +
       "rking.protobuf.study.StudyWrapperH\000\022[\n\020S",
-      "tudyCreatereply\030\n \001(\0132?.de.velcommuta.de" +
+      "tudyCreateReply\030\n \001(\0132?.de.velcommuta.de" +
       "nul.networking.protobuf.study.StudyCreat" +
       "eReplyH\000\022a\n\023StudyJoinQueryReply\030\r \001(\0132B." +
       "de.velcommuta.denul.networking.protobuf." +
@@ -3081,7 +3081,7 @@ public final class MetaMessage {
     internal_static_de_velcommuta_denul_networking_protobuf_meta_Wrapper_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_meta_Wrapper_descriptor,
-        new java.lang.String[] { "ClientHello", "ServerHello", "Store", "StoreReply", "Get", "GetReply", "Delete", "DeleteReply", "StudyWrapper", "StudyCreatereply", "StudyJoinQueryReply", "StudyDeleteReply", "Message", });
+        new java.lang.String[] { "ClientHello", "ServerHello", "Store", "StoreReply", "Get", "GetReply", "Delete", "DeleteReply", "StudyWrapper", "StudyCreateReply", "StudyJoinQueryReply", "StudyDeleteReply", "Message", });
     de.velcommuta.denul.networking.protobuf.c2s.C2S.getDescriptor();
     de.velcommuta.denul.networking.protobuf.study.StudyMessage.getDescriptor();
   }

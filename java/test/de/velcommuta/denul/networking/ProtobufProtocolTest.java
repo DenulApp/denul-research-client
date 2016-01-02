@@ -1,5 +1,7 @@
 package de.velcommuta.denul.networking;
 
+import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.data.StudyRequestTest;
 import junit.framework.TestCase;
 
 import java.io.IOException;
@@ -291,6 +293,21 @@ public class ProtobufProtocolTest extends TestCase {
         } catch (IOException e) {
             e.printStackTrace();
             fail("IOException - are you sure the server is running?");
+        }
+    }
+
+    public void testRegisterStudy() {
+        try {
+            Connection c = new TLSConnection(host, port);
+            Protocol p = new ProtobufProtocol();
+            p.connect(c);
+
+            StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+
+            assertEquals(p.registerStudy(req), Protocol.REG_OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
         }
     }
 

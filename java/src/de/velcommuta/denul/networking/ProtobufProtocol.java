@@ -548,8 +548,8 @@ public class ProtobufProtocol implements Protocol {
      * @return The StudyCreateReply, or null, if the bytes did not represent a StudyCreateReply message
      */
     private StudyMessage.StudyCreateReply toStudyCreateReply(MetaMessage.Wrapper wrapper) {
-        if (wrapper.hasStudyCreatereply()) {
-            return wrapper.getStudyCreatereply();
+        if (wrapper.hasStudyCreateReply()) {
+            return wrapper.getStudyCreateReply();
         } else {
             logger.severe("toStudyCreateReply: Wrapper message did not contain a StudyCreateReply message");
             return null;

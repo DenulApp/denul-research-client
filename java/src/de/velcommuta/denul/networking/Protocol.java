@@ -174,4 +174,10 @@ public interface Protocol {
      * @return One of the REG_* constants defined in the interface, indicating the result of the operation
      */
     int registerStudy(StudyRequest req);
+
+    /**
+     * Retrieve all registered studies from the server and return them as a List of StudyRequests
+     * @return A List of StudyRequests, or an empty list if no requests have been registered. Null if an error occured
+     */
+    List<StudyRequest> listRegisteredStudies();
 }

@@ -296,6 +296,9 @@ public class ProtobufProtocolTest extends TestCase {
         }
     }
 
+    /**
+     * Test the study registration networking code
+     */
     public void testRegisterStudy() {
         try {
             Connection c = new TLSConnection(host, port);
@@ -305,6 +308,27 @@ public class ProtobufProtocolTest extends TestCase {
             StudyRequest req = StudyRequestTest.getRandomStudyRequest();
 
             assertEquals(p.registerStudy(req), Protocol.REG_OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /**
+     * Test if study list retrieval works
+     */
+    public void testRetrieveStudies() {
+        try {
+            Connection c = new TLSConnection(host, port);
+            Protocol p = new ProtobufProtocol();
+            p.connect(c);
+
+            List<StudyRequest> reqs = p.listRegisteredStudies();
+            assertNotNull(reqs);
+            assertTrue(reqs.size() != 0);
+            for (StudyRequest r : reqs) {
+                assertNotNull(r.name);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             fail();

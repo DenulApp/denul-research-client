@@ -1,6 +1,9 @@
 package de.velcommuta.denul.data;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import de.velcommuta.denul.crypto.ECDHKeyExchange;
+import de.velcommuta.denul.crypto.KexStub;
 import de.velcommuta.denul.crypto.KeyExchange;
 import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
@@ -210,6 +213,21 @@ public class StudyRequest {
             builder.setPosition(position);
             return builder.build();
         }
+
+
+        /**
+         * Deserialize an Investigator from a Protocol Buffer
+         * @param inv The serialized investigator
+         * @return The deserialized investigator
+         */
+        public static Investigator fromProtobuf(StudyMessage.StudyCreate.Investigator inv) {
+            Investigator rv = new Investigator();
+            rv.name = inv.getName();
+            rv.institution = inv.getInstitution();
+            rv.position = inv.getPosition();
+            rv.group = inv.getGroup();
+            return rv;
+        }
     }
 
     /**
@@ -302,6 +320,28 @@ public class StudyRequest {
 
             return builder.build();
         }
+
+
+        /**
+         * Deserialize a DataRequest from a protocol buffer
+         * @param req The protocol buffer
+         * @return The deserialized data request
+         */
+        public static DataRequest fromProtobuf(StudyMessage.StudyCreate.DataRequest req) {
+            DataRequest rv = new DataRequest();
+            if (req.getDatatype() == StudyMessage.StudyCreate.DataType.DATA_GPS_TRACK) {
+                rv.type = TYPE_GPS;
+            } // TODO Add further data types here
+            if (req.getGranularity() == StudyMessage.StudyCreate.DataGranularity.GRAN_FINE) {
+                rv.granularity = GRANULARITY_FINE;
+            } else if (req.getGranularity() == StudyMessage.StudyCreate.DataGranularity.GRAN_COARSE) {
+                rv.granularity = GRANULARITY_COARSE;
+            } else if (req.getGranularity() == StudyMessage.StudyCreate.DataGranularity.GRAN_VERY_COARSE) {
+                rv.granularity = GRANULARITY_VERY_COARSE;
+            }
+            rv.frequency = req.getFrequency();
+            return rv;
+        }
     }
 
     /**
@@ -388,6 +428,8 @@ public class StudyRequest {
 
     @Override
     public boolean equals(Object o) {
+        // Reminder: This code will return false when comparing a local StudyRequest with its deserialized StudyCreate
+        // message, as the StudyCreate does not contain the private key
         if (o == null) return false;
         if (!(o instanceof StudyRequest)) return false;
         StudyRequest other = (StudyRequest) o;
@@ -405,7 +447,7 @@ public class StudyRequest {
                 (other.confidentiality.equals(confidentiality)) &&
                 (other.participationAndWithdrawal.equals(participationAndWithdrawal)) &&
                 (other.rights.equals(rights)) &&
-                (other.verification == verification )&&
+                (other.verification == verification) &&
                 (other.pubkey.equals(pubkey)) &&
                 (other.privkey.equals(privkey)) &&
                 (Arrays.equals(other.exchange.getPublicKexData(), exchange.getPublicKexData())) &&
@@ -414,5 +456,62 @@ public class StudyRequest {
                 (Arrays.equals(other.queue, queue)) &&
                 (other.investigators.equals(investigators)) &&
                 (other.requests.equals(requests));
+    }
+
+    /**
+     * Deserialize a wrapped StudyCreate message into a StudyRequest, verifying its signature
+     * @param wrapper The wrapper containing the StudyCreate message
+     * @return The deserialized StudyRequest, or null if an error occured
+     */
+    public static StudyRequest fromStudyWrapper(StudyMessage.StudyWrapper wrapper) {
+        StudyRequest rv = new StudyRequest();
+        try {
+            // Decode into StudyCreate message
+            StudyMessage.StudyCreate scr = StudyMessage.StudyCreate.parseFrom(wrapper.getMessage());
+            // Load the public key
+            rv.pubkey = RSA.decodePublicKey(scr.getPublicKey().toByteArray());
+            // Verify the signature
+            if (!RSA.verify(wrapper.getMessage().toByteArray(), wrapper.getSignature().toByteArray(), rv.pubkey)) {
+                return null;
+            }
+            // Extract the data
+            rv.name = scr.getStudyName();
+            rv.institution = scr.getInstitution();
+            rv.webpage = scr.getWebpage();
+            rv.description = scr.getDescription();
+            rv.purpose = scr.getPurpose();
+            rv.procedures = scr.getProcedures();
+            rv.risks = scr.getRisks();
+            rv.benefits = scr.getBenefits();
+            rv.payment = scr.getPayment();
+            rv.conflicts = scr.getConflicts();
+            rv.confidentiality = scr.getConfidentiality();
+            rv.participationAndWithdrawal = scr.getParticipationAndWithdrawal();
+            rv.rights = scr.getRights();
+            // Extract investigators
+            for (StudyMessage.StudyCreate.Investigator inv : scr.getInvestigatorsList()) {
+                rv.investigators.add(Investigator.fromProtobuf(inv));
+            }
+            // Extract DataRequests
+            for (StudyMessage.StudyCreate.DataRequest req : scr.getDataRequestList()) {
+                rv.requests.add(DataRequest.fromProtobuf(req));
+            }
+            // Extract keys
+            rv.exchange = new KexStub(scr.getKexData().toByteArray());
+            // Queue identifier
+            rv.queue = scr.getQueueIdentifier().toByteArray();
+            // Verification system
+            if (scr.getVerificationStrategy() == StudyMessage.StudyCreate.VerificationStrategy.VF_DNS_TXT) {
+                rv.verification = VERIFY_DNS;
+            } else if (scr.getVerificationStrategy() == StudyMessage.StudyCreate.VerificationStrategy.VF_FILE) {
+                rv.verification = VERIFY_FILE;
+            } else if (scr.getVerificationStrategy() == StudyMessage.StudyCreate.VerificationStrategy.VF_META) {
+                rv.verification = VERIFY_META;
+            }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return rv;
     }
 }

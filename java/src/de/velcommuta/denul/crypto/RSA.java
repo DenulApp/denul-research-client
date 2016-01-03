@@ -102,6 +102,24 @@ public class RSA {
     }
 
 
+    /**
+     * Decode the byte-encoded public key data into a PublicKey object
+     * @param encoded The byte-encoded public key
+     * @return The PublicKey
+     */
+    public static PublicKey decodePublicKey(byte[] encoded) {
+        try {
+            KeyFactory kFactory = KeyFactory.getInstance("RSA", new BouncyCastleProvider());
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+            return kFactory.generatePublic(keySpec);
+        } catch (Exception e) {
+            logger.severe("decodePublicKey: Error decoding public key: "+ e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     ///// Encryption
     /**
      * Encrypt a piece of data using RSA public key encryption

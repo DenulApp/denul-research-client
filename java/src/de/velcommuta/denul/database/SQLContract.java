@@ -195,6 +195,9 @@ public class SQLContract {
 
             public static final String INSERT = "INSERT INTO " + TABLE_NAME + " (" + COLUMN_SESSION + COMMA_SEP +
                     COLUMN_TIMESTAMP + COMMA_SEP + COLUMN_LAT + COMMA_SEP + COLUMN_LONG + ") VALUES (?,?,?,?);";
+
+            public static final String SELECT_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_SESSION +
+                    " LIKE ?;";
         }
 
         public static class LocationSessions {
@@ -239,6 +242,8 @@ public class SQLContract {
                     COLUMN_NAME + COMMA_SEP + COLUMN_OWNER + COMMA_SEP + COLUMN_SESSION_START + COMMA_SEP +
                     COLUMN_SESSION_END + COMMA_SEP + COLUMN_TIMEZONE + COMMA_SEP + COLUMN_DISTANCE + COMMA_SEP +
                     COLUMN_MODE + COMMA_SEP + COLUMN_DESCRIPTION + ") VALUES (?,?,?,?,?,?,?,?);";
+
+            public static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME + ";";
         }
     }
 

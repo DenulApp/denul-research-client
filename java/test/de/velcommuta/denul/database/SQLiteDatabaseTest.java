@@ -105,7 +105,8 @@ public class SQLiteDatabaseTest extends TestCase {
     /**
      * Test the insert of location data
      */
-    public void testInsertLocationLog() {
+    public void testInsertRetrieveLocationLog() {
+        assertEquals(mDB.getGPSTracks().size(), 0);
         // prepare study
         StudyRequest req = StudyRequestTest.getRandomStudyRequest();
         long rv = mDB.addStudyRequest(req);
@@ -128,7 +129,16 @@ public class SQLiteDatabaseTest extends TestCase {
         loc.setTime(10f);
         loclist.add(loc);
         GPSTrack track = new GPSTrack(loclist, "bla", GPSTrack.VALUE_CYCLING, 0, 1, "GMT+1", 1000.0f);
+        track.setDescription("Here be descriptions");
         // Perform insert
         mDB.addGPSTrack(track, part);
+        // Retrieve GPS Tracks
+        List<GPSTrack> tracks = mDB.getGPSTracks();
+        GPSTrack first = tracks.get(0);
+        assertEquals(first.getSessionName(), track.getSessionName());
+        assertEquals(first.getDescription(), track.getDescription());
+        assertEquals(first.getDistance(), track.getDistance());
+        assertEquals(first.getModeOfTransportation(), track.getModeOfTransportation());
+        assertEquals(first.getPosition(), track.getPosition());
     }
 }

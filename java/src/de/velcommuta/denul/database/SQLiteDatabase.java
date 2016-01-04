@@ -2,10 +2,7 @@ package de.velcommuta.denul.database;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
-import de.velcommuta.denul.data.GPSTrack;
-import de.velcommuta.denul.data.KeySet;
-import de.velcommuta.denul.data.Location;
-import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.data.*;
 
 import java.io.*;
 import java.security.KeyPair;
@@ -362,6 +359,60 @@ public class SQLiteDatabase implements Database {
             e.printStackTrace();
             throw new IllegalArgumentException("SQL Error: ", e);
         }
+    }
+
+    @Override
+    public List<GPSTrack> getGPSTracks() {
+        assert isOpen();
+        List<GPSTrack> rv = new LinkedList<>();
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(LocationSessions.SELECT_ALL);
+            PreparedStatement innerstmt = mConnection.prepareStatement(LocationLog.SELECT_ID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                long id = rs.getLong(1);
+                innerstmt.setLong(1, id);
+                ResultSet irs = innerstmt.executeQuery();
+                List<Location> loclist = new LinkedList<>();
+                while (irs.next()) {
+                    Location loc = new Location();
+                    loc.setTime(irs.getDouble(3));
+                    loc.setLatitude(irs.getDouble(4));
+                    loc.setLongitude(irs.getDouble(5));
+                    loclist.add(loc);
+                }
+                GPSTrack track = new GPSTrack(loclist, // locations
+                        rs.getString(2), // Name
+                        rs.getInt(8), // Mode
+                        rs.getLong(4),  // Timestamp start
+                        rs.getLong(5),  // Timestamp end
+                        rs.getString(6),  // Timezone
+                        rs.getFloat(7)); // Distance
+                track.setDescription(rs.getString(9)); // Description
+                track.setID((int) rs.getLong(1)); // ID
+                irs.close();
+                rv.add(track);
+            }
+            rs.close();
+            stmt.close();
+            innerstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
+    }
+
+    @Override
+    public List<Shareable> getDataByParticipantID(long participantID) {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public List<Shareable> getDataByStudyID(long studyid) {
+        // TODO
+        return null;
     }
 
     /**

@@ -2,6 +2,7 @@ package de.velcommuta.denul.database;
 
 import de.velcommuta.denul.data.GPSTrack;
 import de.velcommuta.denul.data.KeySet;
+import de.velcommuta.denul.data.Shareable;
 import de.velcommuta.denul.data.StudyRequest;
 
 import java.util.List;
@@ -69,4 +70,24 @@ public interface Database {
      * @param ownerid The Database ID of the owner (i.e. participant)
      */
     void addGPSTrack(GPSTrack track, long ownerid);
+
+    /**
+     * Get a List of all saved GPS tracks
+     * @return A List of GPS Tracks
+     */
+    List<GPSTrack> getGPSTracks();
+
+    /**
+     * Get a List of Shareables shared by a specific study participant, identified by its ID
+     * @param participantID The Participant ID
+     * @return A List of Shareables, or an empty List if no shares have been sent yet
+     */
+    List<Shareable> getDataByParticipantID(long participantID);
+
+    /**
+     * Get a List of all Shareables sent for a specific study
+     * @param studyid The Study ID
+     * @return A List of shareables, or an empty list if no shareables have been received for the study
+     */
+    List<Shareable> getDataByStudyID(long studyid);
 }

@@ -1,8 +1,6 @@
 package de.velcommuta.denul.database;
 
-import de.velcommuta.denul.data.KeySet;
-import de.velcommuta.denul.data.StudyRequest;
-import de.velcommuta.denul.data.StudyRequestTest;
+import de.velcommuta.denul.data.*;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +8,7 @@ import org.junit.Before;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -93,5 +92,35 @@ public class SQLiteDatabaseTest extends TestCase {
         new Random().nextBytes(ctr2);
         KeySet ks = new KeySet(key1, key2, ctr1, ctr2, true);
         mDB.addParticipant(ks, rv);
+    }
+
+    /**
+     * Test the insert of location data
+     */
+    public void testInsertLocationLog() {
+        // prepare study
+        StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+        long rv = mDB.addStudyRequest(req);
+        // Prepare owner
+        byte[] key1 = new byte[32];
+        byte[] key2 = new byte[32];
+        byte[] ctr1 = new byte[32];
+        byte[] ctr2 = new byte[32];
+        new Random().nextBytes(key1);
+        new Random().nextBytes(key2);
+        new Random().nextBytes(ctr1);
+        new Random().nextBytes(ctr2);
+        KeySet ks = new KeySet(key1, key2, ctr1, ctr2, true);
+        long part = mDB.addParticipant(ks, rv);
+        // Prepare data
+        List<Location> loclist = new LinkedList<>();
+        Location loc = new Location();
+        loc.setLatitude(0);
+        loc.setLongitude(1);
+        loc.setTime(10f);
+        loclist.add(loc);
+        GPSTrack track = new GPSTrack(loclist, "bla", GPSTrack.VALUE_CYCLING, 0, 1, "GMT+1", 1000.0f);
+        // Perform insert
+        mDB.addGPSTrack(track, part);
     }
 }

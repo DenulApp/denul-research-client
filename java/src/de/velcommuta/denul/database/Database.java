@@ -1,5 +1,6 @@
 package de.velcommuta.denul.database;
 
+import de.velcommuta.denul.data.GPSTrack;
 import de.velcommuta.denul.data.KeySet;
 import de.velcommuta.denul.data.StudyRequest;
 
@@ -45,6 +46,14 @@ public interface Database {
      * Add a new participant to a study
      * @param keys The keys that were negotiated with the participant
      * @param studyid The ID of the study the participant is associated with
+     * @return The Database ID of the inserted participant
      */
-    void addParticipant(KeySet keys, long studyid);
+    long addParticipant(KeySet keys, long studyid);
+
+    /**
+     * Add a GPS track to the database
+     * @param track The GPS track
+     * @param ownerid The Database ID of the owner (i.e. participant)
+     */
+    void addGPSTrack(GPSTrack track, long ownerid);
 }

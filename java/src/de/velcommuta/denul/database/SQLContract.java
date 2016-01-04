@@ -159,4 +159,79 @@ public class SQLContract {
                 " LIKE ?;";
     }
 
+    public static class Data {
+        public static class LocationLog {
+            // Name of the SQLite Table to be created
+            public static final String TABLE_NAME = "LocationLog";
+
+            public static final String COLUMN_ID = "id";
+
+            // Session this coordinate belongs to
+            public static final String COLUMN_SESSION = "session";
+
+            // Timestamp when the coordinates were taken
+            public static final String COLUMN_TIMESTAMP = "timestamp";
+
+            // GPS Latitude and Longitude
+            public static final String COLUMN_LAT = "latitude";
+            public static final String COLUMN_LONG = "longitude";
+
+            public static final String CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                    COLUMN_SESSION + " INTEGER NOT NULL, " + // FOREIGN KEY
+                    COLUMN_TIMESTAMP + " DATETIME, " +
+                    COLUMN_LAT + " REAL," +
+                    COLUMN_LONG + " REAL, " +
+                    "FOREIGN KEY (" + COLUMN_SESSION + ") REFERENCES " + LocationSessions.TABLE_NAME + " (" +
+                    LocationSessions.COLUMN_ID + ") ON DELETE CASCADE);";
+
+            public static final String INSERT = "INSERT INTO " + TABLE_NAME + " (" + COLUMN_SESSION + COMMA_SEP +
+                    COLUMN_TIMESTAMP + COMMA_SEP + COLUMN_LAT + COMMA_SEP + COLUMN_LONG + ") VALUES (?,?,?,?);";
+        }
+
+        public static class LocationSessions {
+            // Name of the SQLite Table to be created
+            public static final String TABLE_NAME = "LocationSession";
+
+            public static final String COLUMN_ID = "id";
+
+            // Session Name
+            public static final String COLUMN_NAME = "name";
+            // Owner of the session - References Friend ID, or set to -1 if user is owner.
+            public static final String COLUMN_OWNER = "owner";
+
+            // Session start and end timestamp
+            public static final String COLUMN_SESSION_START = "session_start";
+            public static final String COLUMN_SESSION_END = "session_end";
+            public static final String COLUMN_TIMEZONE = "timezone";
+
+            // Distance
+            public static final String COLUMN_DISTANCE = "distance";
+
+            // Mode of transportation
+            public static final String COLUMN_MODE = "modeoftransport";
+
+            // Description
+            public static final String COLUMN_DESCRIPTION = "description";
+
+            public static final String CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                    COLUMN_NAME + " TEXT, " +
+                    COLUMN_OWNER + " INTEGER, " + // FOREIGN KEY
+                    COLUMN_SESSION_START + " DATETIME, " +
+                    COLUMN_SESSION_END + " DATETIME, " +
+                    COLUMN_TIMEZONE + " TEXT, " +
+                    COLUMN_DISTANCE + " REAL, " +
+                    COLUMN_MODE + " INTEGER, " +
+                    COLUMN_DESCRIPTION + " TEXT, " +
+                    "FOREIGN KEY (" + COLUMN_OWNER + ") REFERENCES " + StudyParticipants.TABLE_NAME + " (" +
+                    StudyParticipants.COLUMN_ID + ") ON DELETE CASCADE);";
+
+            public static final String INSERT = "INSERT INTO " + TABLE_NAME + " (" +
+                    COLUMN_NAME + COMMA_SEP + COLUMN_OWNER + COMMA_SEP + COLUMN_SESSION_START + COMMA_SEP +
+                    COLUMN_SESSION_END + COMMA_SEP + COLUMN_TIMEZONE + COMMA_SEP + COLUMN_DISTANCE + COMMA_SEP +
+                    COLUMN_MODE + COMMA_SEP + COLUMN_DESCRIPTION + ") VALUES (?,?,?,?,?,?,?,?);";
+        }
+    }
+
 }

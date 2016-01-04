@@ -2,7 +2,9 @@ package de.velcommuta.denul.database;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
+import de.velcommuta.denul.data.GPSTrack;
 import de.velcommuta.denul.data.KeySet;
+import de.velcommuta.denul.data.Location;
 import de.velcommuta.denul.data.StudyRequest;
 
 import java.io.*;
@@ -16,6 +18,8 @@ import static de.velcommuta.denul.database.SQLContract.Studies;
 import static de.velcommuta.denul.database.SQLContract.Investigators;
 import static de.velcommuta.denul.database.SQLContract.DataRequests;
 import static de.velcommuta.denul.database.SQLContract.StudyParticipants;
+import static de.velcommuta.denul.database.SQLContract.Data.LocationLog;
+import static de.velcommuta.denul.database.SQLContract.Data.LocationSessions;
 
 /**
  * A database backend utilizing SQLite with SQLite-JDBC by Xerial.
@@ -50,6 +54,8 @@ public class SQLiteDatabase implements Database {
                 stmt.execute(Investigators.CREATE);
                 stmt.execute(DataRequests.CREATE);
                 stmt.execute(StudyParticipants.CREATE);
+                stmt.execute(LocationSessions.CREATE);
+                stmt.execute(LocationLog.CREATE);
             } catch (SQLException e) {
                 // Something went wrong, print stacktrace
                 e.printStackTrace();
@@ -236,10 +242,11 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
-    public void addParticipant(KeySet keys, long studyid) {
+    public long addParticipant(KeySet keys, long studyid) {
         assert isOpen();
         assert keys != null;
         assert studyid >= 0;
+        long rv = -1;
         try {
             // Prepare insert
             PreparedStatement stmt = mConnection.prepareStatement(StudyParticipants.INSERT);
@@ -253,7 +260,60 @@ public class SQLiteDatabase implements Database {
             int affected_rows = stmt.executeUpdate();
             // Ensure update worked
             assert affected_rows > 0;
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                rv = generatedKeys.getLong(1);
+            } else {
+                throw new IllegalArgumentException("Insert failed, no record created");
+            }
             // Commit changes to DB
+            mConnection.commit();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
+    }
+
+    @Override
+    public void addGPSTrack(GPSTrack track, long ownerid) {
+        assert isOpen();
+        assert track != null;
+        assert ownerid >= 0;
+        try {
+            long rv;
+            // Prepare insert
+            PreparedStatement stmt = mConnection.prepareStatement(LocationSessions.INSERT);
+            // Set parameters
+            stmt.setString(1, track.getSessionName());
+            stmt.setLong(2, ownerid);
+            stmt.setLong(3, track.getTimestamp());
+            stmt.setLong(4, track.getTimestampEnd());
+            stmt.setString(5, track.getTimezone());
+            stmt.setFloat(6, track.getDistance());
+            stmt.setInt(7, track.getModeOfTransportation());
+            stmt.setString(8, track.getDescription());
+            // Execute
+            int changed = stmt.executeUpdate();
+            assert changed > 0;
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                rv = generatedKeys.getLong(1);
+            } else {
+                throw new IllegalArgumentException("Insert failed, no record created");
+            }
+            stmt.close();
+            PreparedStatement innerstmt = mConnection.prepareStatement(LocationLog.INSERT);
+            for (Location loc : track.getPosition()) {
+                innerstmt.setLong(1, rv);
+                innerstmt.setDouble(2, loc.getTime());
+                innerstmt.setDouble(3, loc.getLatitude());
+                innerstmt.setDouble(4, loc.getLongitude());
+                changed = innerstmt.executeUpdate();
+                assert changed > 0;
+            }
+            innerstmt.close();
             mConnection.commit();
         } catch (SQLException e) {
             e.printStackTrace();

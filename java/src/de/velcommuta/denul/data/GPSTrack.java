@@ -129,6 +129,13 @@ public class GPSTrack implements Shareable {
     }
 
     /**
+     * @return Distance
+     */
+    public float getDistance() {
+        return mDistance;
+    }
+
+    /**
      * @return Defined name of session, if any
      */
     public String getSessionName() {

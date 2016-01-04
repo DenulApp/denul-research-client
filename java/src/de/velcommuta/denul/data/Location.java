@@ -33,4 +33,12 @@ public class Location {
     public double getTime() {
         return time;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Location)) return false;
+        Location cmp = (Location) o;
+        return (getLatitude() == cmp.getLatitude() && getLongitude() == cmp.getLongitude() && getTime() == cmp.getTime());
+    }
 }

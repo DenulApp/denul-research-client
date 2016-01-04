@@ -439,14 +439,22 @@ public class SQLiteDatabase implements Database {
 
     @Override
     public List<Shareable> getDataByParticipantID(long participantID) {
-        // TODO
-        return null;
+        assert isOpen();
+        assert participantID >= 0;
+        List<Shareable> rv = new LinkedList<>();
+        rv.addAll(getGPSTracksByParticipantID(participantID));
+        // TODO Add further shareable types here
+        return rv;
     }
 
     @Override
     public List<Shareable> getDataByStudyID(long studyid) {
-        // TODO
-        return null;
+        assert isOpen();
+        assert studyid >= 0;
+        List<Shareable> rv = new LinkedList<>();
+        rv.addAll(getGPSTracksByStudyID(studyid));
+        // TODO Add further shareable types here
+        return rv;
     }
 
     /**

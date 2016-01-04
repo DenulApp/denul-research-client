@@ -277,6 +277,48 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
+    public List<KeySet> getParticipants() {
+        assert isOpen();
+        List<KeySet> rv = new LinkedList<>();
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(StudyParticipants.SELECT_ALL);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                KeySet ks = keySetFromResultSet(rs);
+                rv.add(ks);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Exception: ", e);
+        }
+        return rv;
+    }
+
+    @Override
+    public long getParticipantIDByKeySet(KeySet keys) {
+        assert isOpen();
+        assert keys != null;
+        long rv = -1;
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(StudyParticipants.SELECT_KEYS);
+            stmt.setBytes(1, keys.getOutboundKey());
+            stmt.setBytes(2, keys.getOutboundCtr());
+            stmt.setBytes(3, keys.getInboundKey());
+            stmt.setBytes(4, keys.getInboundCtr());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                rv = rs.getLong(1);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Exception: ", e);
+        }
+        return rv;
+    }
+
+    @Override
     public void addGPSTrack(GPSTrack track, long ownerid) {
         assert isOpen();
         assert track != null;
@@ -391,6 +433,7 @@ public class SQLiteDatabase implements Database {
      * @return A StudyRequest
      */
     private StudyRequest studyRequestFromResultSet(ResultSet rs) {
+        assert rs != null;
         // Create object
         StudyRequest rv = new StudyRequest();
         try {
@@ -418,6 +461,24 @@ public class SQLiteDatabase implements Database {
             throw new IllegalArgumentException("ResultSet seems bad: ", e);
         }
         return rv;
+    }
+
+    /**
+     * Read a KeySet from a ResultSet
+     * @param rs The ResultSet
+     * @return The KeySet
+     * @throws SQLException If the ResultSet throws it
+     */
+    private KeySet keySetFromResultSet(ResultSet rs) throws SQLException {
+        assert rs != null;
+        return new KeySet( // KeyIn, KeyOut, CtrIn, CtrOut, initiated, databaseID
+                rs.getBytes(5),
+                rs.getBytes(3),
+                rs.getBytes(6),
+                rs.getBytes(4),
+                true,
+                rs.getInt(1)
+        );
     }
 
     /**

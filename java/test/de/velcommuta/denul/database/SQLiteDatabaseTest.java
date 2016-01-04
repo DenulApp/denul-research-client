@@ -6,10 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Test the SQLite database backend
@@ -79,7 +76,7 @@ public class SQLiteDatabaseTest extends TestCase {
     /**
      * Test if adding study participants works
      */
-    public void testInsertParticipant() {
+    public void testInsertQueryRetrieveParticipant() {
         StudyRequest req = StudyRequestTest.getRandomStudyRequest();
         long rv = mDB.addStudyRequest(req);
         byte[] key1 = new byte[32];
@@ -91,7 +88,18 @@ public class SQLiteDatabaseTest extends TestCase {
         new Random().nextBytes(ctr1);
         new Random().nextBytes(ctr2);
         KeySet ks = new KeySet(key1, key2, ctr1, ctr2, true);
-        mDB.addParticipant(ks, rv);
+        long ksid = mDB.addParticipant(ks, rv);
+        // Retrieve ID of participant
+        long ksid2 = mDB.getParticipantIDByKeySet(ks);
+        assertEquals(ksid, ksid2);
+        // Retrieve List of Participants (should only be this one)
+        List<KeySet> list = mDB.getParticipants();
+        KeySet first = list.get(0);
+        assertTrue(Arrays.equals(ks.getInboundCtr(), first.getInboundCtr()));
+        assertTrue(Arrays.equals(ks.getOutboundCtr(), first.getOutboundCtr()));
+        assertTrue(Arrays.equals(ks.getInboundKey(), first.getInboundKey()));
+        assertTrue(Arrays.equals(ks.getOutboundKey(), first.getOutboundKey()));
+        assertEquals(ksid, first.getID());
     }
 
     /**

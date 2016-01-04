@@ -157,6 +157,14 @@ public class SQLContract {
                 " LIKE ?;";
         public static final String SELECT_PARTICIPANT_STUDY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STUDY +
                 " LIKE ?;";
+
+        public static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME + ";";
+
+        public static final String SELECT_KEYS = "SELECT * FROM " + TABLE_NAME + " WHERE " +
+                COLUMN_KEY_OUT + " LIKE ? AND " +
+                COLUMN_CTR_OUT + " LIKE ? AND " +
+                COLUMN_KEY_IN + " LIKE ? AND " +
+                COLUMN_CTR_IN + " LIKE ?;";
     }
 
     public static class Data {

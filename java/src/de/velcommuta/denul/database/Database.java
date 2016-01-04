@@ -51,6 +51,19 @@ public interface Database {
     long addParticipant(KeySet keys, long studyid);
 
     /**
+     * Get a List of all active participants
+     * @return A List of participants
+     */
+    List<KeySet> getParticipants();
+
+    /**
+     * Get the database ID of a participant, identified by the KeySet
+     * @param keys The KeySet
+     * @return The database ID, or -1 if the keyset is not in the database
+     */
+    long getParticipantIDByKeySet(KeySet keys);
+
+    /**
      * Add a GPS track to the database
      * @param track The GPS track
      * @param ownerid The Database ID of the owner (i.e. participant)

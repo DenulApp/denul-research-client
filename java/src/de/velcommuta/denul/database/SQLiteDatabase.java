@@ -366,36 +366,70 @@ public class SQLiteDatabase implements Database {
         assert isOpen();
         List<GPSTrack> rv = new LinkedList<>();
         try {
+            // Query for all LocationSessions
             PreparedStatement stmt = mConnection.prepareStatement(LocationSessions.SELECT_ALL);
-            PreparedStatement innerstmt = mConnection.prepareStatement(LocationLog.SELECT_ID);
+            // Execute query
             ResultSet rs = stmt.executeQuery();
+            // Iterate over resultset
             while (rs.next()) {
-                long id = rs.getLong(1);
-                innerstmt.setLong(1, id);
-                ResultSet irs = innerstmt.executeQuery();
-                List<Location> loclist = new LinkedList<>();
-                while (irs.next()) {
-                    Location loc = new Location();
-                    loc.setTime(irs.getDouble(3));
-                    loc.setLatitude(irs.getDouble(4));
-                    loc.setLongitude(irs.getDouble(5));
-                    loclist.add(loc);
-                }
-                GPSTrack track = new GPSTrack(loclist, // locations
-                        rs.getString(2), // Name
-                        rs.getInt(8), // Mode
-                        rs.getLong(4),  // Timestamp start
-                        rs.getLong(5),  // Timestamp end
-                        rs.getString(6),  // Timezone
-                        rs.getFloat(7)); // Distance
-                track.setDescription(rs.getString(9)); // Description
-                track.setID((int) rs.getLong(1)); // ID
-                irs.close();
-                rv.add(track);
+                // Parse into GPSTrack and add to return list
+                rv.add(GPSTrackFromResultSet(rs));
             }
+            // Close ResultSet and PreparedStatement
             rs.close();
             stmt.close();
-            innerstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
+    }
+
+    @Override
+    public List<GPSTrack> getGPSTracksByParticipantID(long participantID) {
+        assert isOpen();
+        assert participantID >= 0;
+        List<GPSTrack> rv = new LinkedList<>();
+        try {
+            // Query for all LocationSessions
+            PreparedStatement stmt = mConnection.prepareStatement(LocationSessions.SELECT_PARTICIPANT_ID);
+            stmt.setLong(1, participantID);
+            // Execute query
+            ResultSet rs = stmt.executeQuery();
+            // Iterate over resultset
+            while (rs.next()) {
+                // Parse into GPSTrack and add to return list
+                rv.add(GPSTrackFromResultSet(rs));
+            }
+            // Close ResultSet and PreparedStatement
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+        return rv;
+    }
+
+    @Override
+    public List<GPSTrack> getGPSTracksByStudyID(long studyID) {
+        assert isOpen();
+        assert studyID >= 0;
+        List<GPSTrack> rv = new LinkedList<>();
+        try {
+            // Query for all LocationSessions
+            PreparedStatement stmt = mConnection.prepareStatement(LocationSessions.SELECT_STUDY_ID);
+            stmt.setLong(1, studyID);
+            // Execute query
+            ResultSet rs = stmt.executeQuery();
+            // Iterate over resultset
+            while (rs.next()) {
+                // Parse into GPSTrack and add to return list
+                rv.add(GPSTrackFromResultSet(rs));
+            }
+            // Close ResultSet and PreparedStatement
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("SQL Error: ", e);
@@ -531,6 +565,39 @@ public class SQLiteDatabase implements Database {
                 true,
                 rs.getInt(1)
         );
+    }
+
+    /**
+     * Retrieve data from a ResultSet and query the database for additional data on a GPSTrack
+     * @param rs A ResultSet containing all fields of a LocationSession query
+     * @return A GPSTrack
+     * @throws SQLException If the database encounters an error
+     */
+    private GPSTrack GPSTrackFromResultSet(ResultSet rs) throws SQLException {
+        assert isOpen();
+        PreparedStatement innerstmt = mConnection.prepareStatement(LocationLog.SELECT_ID);
+        innerstmt.setLong(1, rs.getLong(1));
+        ResultSet irs = innerstmt.executeQuery();
+        List<Location> loclist = new LinkedList<>();
+        while (irs.next()) {
+            Location loc = new Location();
+            loc.setTime(irs.getDouble(3));
+            loc.setLatitude(irs.getDouble(4));
+            loc.setLongitude(irs.getDouble(5));
+            loclist.add(loc);
+        }
+        GPSTrack track = new GPSTrack(loclist, // locations
+                rs.getString(2), // Name
+                rs.getInt(8), // Mode
+                rs.getLong(4),  // Timestamp start
+                rs.getLong(5),  // Timestamp end
+                rs.getString(6),  // Timezone
+                rs.getFloat(7)); // Distance
+        track.setDescription(rs.getString(9)); // Description
+        track.setID((int) rs.getLong(1)); // ID
+        irs.close();
+        innerstmt.close();
+        return track;
     }
 
     /**

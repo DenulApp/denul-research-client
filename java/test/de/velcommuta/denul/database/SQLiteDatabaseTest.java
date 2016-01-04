@@ -140,5 +140,21 @@ public class SQLiteDatabaseTest extends TestCase {
         assertEquals(first.getDistance(), track.getDistance());
         assertEquals(first.getModeOfTransportation(), track.getModeOfTransportation());
         assertEquals(first.getPosition(), track.getPosition());
+        // Retrieve by study ID
+        tracks = mDB.getGPSTracksByStudyID(rv);
+        first = tracks.get(0);
+        assertEquals(first.getSessionName(), track.getSessionName());
+        assertEquals(first.getDescription(), track.getDescription());
+        assertEquals(first.getDistance(), track.getDistance());
+        assertEquals(first.getModeOfTransportation(), track.getModeOfTransportation());
+        assertEquals(first.getPosition(), track.getPosition());
+        // Retrieve by participant ID
+        tracks = mDB.getGPSTracksByParticipantID(part);
+        first = tracks.get(0);
+        assertEquals(first.getSessionName(), track.getSessionName());
+        assertEquals(first.getDescription(), track.getDescription());
+        assertEquals(first.getDistance(), track.getDistance());
+        assertEquals(first.getModeOfTransportation(), track.getModeOfTransportation());
+        assertEquals(first.getPosition(), track.getPosition());
     }
 }

@@ -78,6 +78,20 @@ public interface Database {
     List<GPSTrack> getGPSTracks();
 
     /**
+     * Get all GPS tracks shared by a sepcific participant
+     * @param participantID The participants database ID
+     * @return A List of GPSTracks, or an empty list if no tracks were shared
+     */
+    List<GPSTrack> getGPSTracksByParticipantID(long participantID);
+
+    /**
+     * Get all GPS tracks associated with a specific study
+     * @param studyID The study ID
+     * @return A list of all GPS tracks associated with that study, or an empty list if none exist
+     */
+    List<GPSTrack> getGPSTracksByStudyID(long studyID);
+
+    /**
      * Get a List of Shareables shared by a specific study participant, identified by its ID
      * @param participantID The Participant ID
      * @return A List of Shareables, or an empty List if no shares have been sent yet

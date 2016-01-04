@@ -244,6 +244,14 @@ public class SQLContract {
                     COLUMN_MODE + COMMA_SEP + COLUMN_DESCRIPTION + ") VALUES (?,?,?,?,?,?,?,?);";
 
             public static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME + ";";
+
+            public static final String SELECT_PARTICIPANT_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " +
+                    COLUMN_OWNER + " LIKE ?;";
+
+            public static final String SELECT_STUDY_ID = "SELECT " + TABLE_NAME + ".* FROM " + TABLE_NAME + ", " +
+                    StudyParticipants.TABLE_NAME + " WHERE " +
+                    TABLE_NAME + "." + COLUMN_OWNER + " LIKE " + StudyParticipants.TABLE_NAME + "." + StudyParticipants.COLUMN_ID +
+                    " AND " + StudyParticipants.TABLE_NAME + "." + StudyParticipants.COLUMN_STUDY + " LIKE ?;";
         }
     }
 

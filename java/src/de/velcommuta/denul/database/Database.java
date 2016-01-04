@@ -58,6 +58,13 @@ public interface Database {
     List<KeySet> getParticipants();
 
     /**
+     * Get a List of all participants in a particular study
+     * @param studyID The ID of the study
+     * @return A List of KeySets, or an empty list if the study has no participants
+     */
+    List<KeySet> getParticipantsForStudy(long studyID);
+
+    /**
      * Get the database ID of a participant, identified by the KeySet
      * @param keys The KeySet
      * @return The database ID, or -1 if the keyset is not in the database

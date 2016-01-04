@@ -100,6 +100,16 @@ public class SQLiteDatabaseTest extends TestCase {
         assertTrue(Arrays.equals(ks.getInboundKey(), first.getInboundKey()));
         assertTrue(Arrays.equals(ks.getOutboundKey(), first.getOutboundKey()));
         assertEquals(ksid, first.getID());
+        // Retrieve List of participants of the study the participant joined (should again only contain this one participant)
+        list = mDB.getParticipantsForStudy(rv);
+        first = list.get(0);
+        assertTrue(Arrays.equals(ks.getInboundCtr(), first.getInboundCtr()));
+        assertTrue(Arrays.equals(ks.getOutboundCtr(), first.getOutboundCtr()));
+        assertTrue(Arrays.equals(ks.getInboundKey(), first.getInboundKey()));
+        assertTrue(Arrays.equals(ks.getOutboundKey(), first.getOutboundKey()));
+        assertEquals(ksid, first.getID());
+        // Assert that a non-existant study does not have any participants
+        assertEquals(mDB.getParticipantsForStudy(rv+1).size(), 0);
     }
 
     /**

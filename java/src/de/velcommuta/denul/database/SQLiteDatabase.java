@@ -294,6 +294,27 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
+    public List<KeySet> getParticipantsForStudy(long studyID) {
+        assert isOpen();
+        assert studyID >= 0;
+        List<KeySet> rv = new LinkedList<>();
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(StudyParticipants.SELECT_PARTICIPANT_STUDY);
+            stmt.setLong(1, studyID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                KeySet ks = keySetFromResultSet(rs);
+                rv.add(ks);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Exception: ", e);
+        }
+        return rv;
+    }
+
+    @Override
     public long getParticipantIDByKeySet(KeySet keys) {
         assert isOpen();
         assert keys != null;

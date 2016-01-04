@@ -27,7 +27,7 @@ public class SQLiteDatabaseTest extends TestCase {
         // Delete database file
         File f = new File("test.db");
         if (f.isFile()) {
-            f.delete();
+            assertTrue(f.delete());
         }
     }
 

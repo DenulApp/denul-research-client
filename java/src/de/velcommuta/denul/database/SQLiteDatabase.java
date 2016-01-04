@@ -260,6 +260,7 @@ public class SQLiteDatabase implements Database {
             int affected_rows = stmt.executeUpdate();
             // Ensure update worked
             assert affected_rows > 0;
+            // Retrieve ID of inserted row
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 rv = generatedKeys.getLong(1);

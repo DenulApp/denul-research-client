@@ -2,6 +2,7 @@ package de.velcommuta.denul.database;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
+import de.velcommuta.denul.data.KeySet;
 import de.velcommuta.denul.data.StudyRequest;
 
 import java.io.*;
@@ -14,6 +15,7 @@ import java.util.List;
 import static de.velcommuta.denul.database.SQLContract.Studies;
 import static de.velcommuta.denul.database.SQLContract.Investigators;
 import static de.velcommuta.denul.database.SQLContract.DataRequests;
+import static de.velcommuta.denul.database.SQLContract.StudyParticipants;
 
 /**
  * A database backend utilizing SQLite with SQLite-JDBC by Xerial.
@@ -47,6 +49,7 @@ public class SQLiteDatabase implements Database {
                 stmt.execute(Studies.CREATE);
                 stmt.execute(Investigators.CREATE);
                 stmt.execute(DataRequests.CREATE);
+                stmt.execute(StudyParticipants.CREATE);
             } catch (SQLException e) {
                 // Something went wrong, print stacktrace
                 e.printStackTrace();
@@ -187,6 +190,31 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
+    public long getStudyIDByQueueIdentifier(byte[] identifier) {
+        assert isOpen();
+        assert identifier != null;
+        long rv = -1;
+        try {
+            // Prepare statement
+            PreparedStatement stmt = mConnection.prepareStatement(Studies.SELECT_BY_QUEUE);
+            // Set parameters
+            stmt.setBytes(1, identifier);
+            // Perform query
+            ResultSet rs = stmt.executeQuery();
+            // We expect only one result, as Queue Identifiers should be unique
+            if (rs.next()) {
+                rv = rs.getLong(1);
+            }
+            // Close resultset
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Exception: ", e);
+        }
+        return rv;
+    }
+
+    @Override
     public List<StudyRequest> getStudyRequests() {
         assert isOpen();
         List<StudyRequest> rv = new LinkedList<>();
@@ -199,11 +227,38 @@ public class SQLiteDatabase implements Database {
                 req.requests.addAll(getDataRequesstsForStudyID(req.id));
                 rv.add(req);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("SQL Error: ", e);
         }
         return rv;
+    }
+
+    @Override
+    public void addParticipant(KeySet keys, long studyid) {
+        assert isOpen();
+        assert keys != null;
+        assert studyid >= 0;
+        try {
+            // Prepare insert
+            PreparedStatement stmt = mConnection.prepareStatement(StudyParticipants.INSERT);
+            // Set parameters
+            stmt.setLong(1, studyid);
+            stmt.setBytes(2, keys.getOutboundKey());
+            stmt.setBytes(3, keys.getOutboundCtr());
+            stmt.setBytes(4, keys.getInboundKey());
+            stmt.setBytes(5, keys.getInboundCtr());
+            // Execute update
+            int affected_rows = stmt.executeUpdate();
+            // Ensure update worked
+            assert affected_rows > 0;
+            // Commit changes to DB
+            mConnection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
     }
 
     /**

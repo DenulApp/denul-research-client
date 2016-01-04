@@ -1,5 +1,6 @@
 package de.velcommuta.denul.database;
 
+import de.velcommuta.denul.data.KeySet;
 import de.velcommuta.denul.data.StudyRequest;
 
 import java.util.List;
@@ -28,8 +29,22 @@ public interface Database {
     StudyRequest getStudyRequestByID(long id);
 
     /**
+     * Retrieve the ID of the study identified by the provided queue identifier
+     * @param identifier The Queue identifier
+     * @return The database ID of the study, or -1 if no study with that identifier exists
+     */
+    long getStudyIDByQueueIdentifier(byte[] identifier);
+
+    /**
      * Retrieve all {@link StudyRequest}s from the database
      * @return A List of study requests
      */
     List<StudyRequest> getStudyRequests();
+
+    /**
+     * Add a new participant to a study
+     * @param keys The keys that were negotiated with the participant
+     * @param studyid The ID of the study the participant is associated with
+     */
+    void addParticipant(KeySet keys, long studyid);
 }

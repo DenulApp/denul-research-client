@@ -1,5 +1,6 @@
 package de.velcommuta.denul.database;
 
+import de.velcommuta.denul.data.KeySet;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.data.StudyRequestTest;
 import junit.framework.TestCase;
@@ -9,6 +10,7 @@ import org.junit.Before;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Test the SQLite database backend
@@ -61,5 +63,35 @@ public class SQLiteDatabaseTest extends TestCase {
         reqs.add(req2);
         List<StudyRequest> reps = mDB.getStudyRequests();
         assertEquals(reps, reqs);
+    }
+
+    /**
+     * Test if the getIDByQueue function works as intended
+     */
+    public void testGetIDByQueue() {
+        StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+        long rv = mDB.addStudyRequest(req);
+        long rv2 = mDB.getStudyIDByQueueIdentifier(req.queue);
+        assertEquals(rv, rv2);
+        long rv3 = mDB.getStudyIDByQueueIdentifier(new byte[] {0x00, 0x00});
+        assertEquals(rv3, -1);
+    }
+
+    /**
+     * Test if adding study participants works
+     */
+    public void testInsertParticipant() {
+        StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+        long rv = mDB.addStudyRequest(req);
+        byte[] key1 = new byte[32];
+        byte[] key2 = new byte[32];
+        byte[] ctr1 = new byte[32];
+        byte[] ctr2 = new byte[32];
+        new Random().nextBytes(key1);
+        new Random().nextBytes(key2);
+        new Random().nextBytes(ctr1);
+        new Random().nextBytes(ctr2);
+        KeySet ks = new KeySet(key1, key2, ctr1, ctr2, true);
+        mDB.addParticipant(ks, rv);
     }
 }

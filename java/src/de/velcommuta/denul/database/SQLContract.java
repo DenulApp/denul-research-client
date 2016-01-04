@@ -1,7 +1,5 @@
 package de.velcommuta.denul.database;
 
-import com.sun.org.apache.bcel.internal.generic.TABLESWITCH;
-
 /**
  * Constract class holding the constants for the SQLite Database
  */
@@ -71,6 +69,8 @@ public class SQLContract {
 
         public static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " LIKE ?;";
         public static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME + ";";
+        public static final String SELECT_BY_QUEUE = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " +
+                COLUMN_QUEUE + " LIKE ?;";
     }
 
     public static class Investigators {
@@ -122,6 +122,41 @@ public class SQLContract {
                 ") VALUES (?, ?, ?, ?);";
 
         public static final String SELECT_STUDY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STUDY + " LIKE ?;";
+    }
+
+    public static class StudyParticipants {
+        public static final String TABLE_NAME = "StudyParticipants";
+
+        public static final String COLUMN_ID = "id";
+        // Which study is this participant associated with? (Foreign key)
+        public static final String COLUMN_STUDY = "study";
+        // Key to use when encrypting FOR this person
+        public static final String COLUMN_KEY_OUT = "key_out";
+        // Counter to use when encrypting FOR this person
+        public static final String COLUMN_CTR_OUT = "ctr_out";
+        // Key to use when decrypting FROM this person
+        public static final String COLUMN_KEY_IN = "key_in";
+        // Counter to use when decrypting FROM this person
+        public static final String COLUMN_CTR_IN = "ctr_in";
+
+        public static final String CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                COLUMN_STUDY + " INTEGER NOT NULL, " +
+                COLUMN_KEY_OUT + " BLOB NOT NULL, " +
+                COLUMN_CTR_OUT + " BLOB NOT NULL, " +
+                COLUMN_KEY_IN + " BLOB NOT NULL, " +
+                COLUMN_CTR_IN + " BLOB NOT NULL, " +
+                "FOREIGN KEY (" + COLUMN_STUDY + ") REFERENCES " + Studies.TABLE_NAME + "(" + Studies.COLUMN_ID + ") " +
+                "ON DELETE CASCADE);";
+
+        public static final String INSERT = "INSERT INTO " + TABLE_NAME + " (" + COLUMN_STUDY + COMMA_SEP +
+                COLUMN_KEY_OUT + COMMA_SEP + COLUMN_CTR_OUT + COMMA_SEP + COLUMN_KEY_IN + COMMA_SEP + COLUMN_CTR_IN +
+                ") VALUES (?,?,?,?,?);";
+
+        public static final String SELECT_PARTICIPANT_ID = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID +
+                " LIKE ?;";
+        public static final String SELECT_PARTICIPANT_STUDY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STUDY +
+                " LIKE ?;";
     }
 
 }

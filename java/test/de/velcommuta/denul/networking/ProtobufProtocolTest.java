@@ -318,6 +318,33 @@ public class ProtobufProtocolTest extends TestCase {
     }
 
     /**
+     * Test duplicate study registration
+     */
+    public void testRegisterDuplicateStudy() {
+        try {
+            Connection c = new TLSConnection(host, port);
+            Protocol p = new ProtobufProtocol();
+            p.connect(c);
+            StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+            // Register study
+            byte[] queueIdentifier = Arrays.copyOf(req.queue, req.queue.length);
+            assertEquals(p.registerStudy(req), Protocol.REG_OK);
+            assertTrue(Arrays.equals(req.queue, queueIdentifier));
+            assertEquals(p.registerStudy(req), Protocol.REG_OK);
+            // We expect that this modified the Queue identifier, as the old one was already taken
+            assertFalse(Arrays.equals(req.queue, queueIdentifier));
+            // Delete study
+            assertEquals(p.deleteStudy(req), Protocol.SDEL_OK);
+            // Change queue identifier to delete other study
+            req.queue = queueIdentifier;
+            assertEquals(p.deleteStudy(req), Protocol.SDEL_OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /**
      * Test if study list retrieval works
      */
     public void testRetrieveStudies() {

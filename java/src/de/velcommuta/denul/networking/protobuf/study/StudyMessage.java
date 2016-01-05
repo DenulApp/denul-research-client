@@ -7150,13 +7150,17 @@ public final class StudyMessage {
        */
       CREATE_FAIL_SIGNATURE(2, 2),
       /**
-       * <code>CREATE_FAIL_IDENTIFIER = 3;</code>
+       * <code>CREATE_FAIL_BAD_IDENTIFIER = 3;</code>
        */
-      CREATE_FAIL_IDENTIFIER(3, 3),
+      CREATE_FAIL_BAD_IDENTIFIER(3, 3),
       /**
-       * <code>CREATE_FAIL_VERIFICATION = 4;</code>
+       * <code>CREATE_FAIL_IDENTIFIER_TAKEN = 4;</code>
        */
-      CREATE_FAIL_VERIFICATION(4, 4),
+      CREATE_FAIL_IDENTIFIER_TAKEN(4, 4),
+      /**
+       * <code>CREATE_FAIL_VERIFICATION = 5;</code>
+       */
+      CREATE_FAIL_VERIFICATION(5, 5),
       ;
 
       /**
@@ -7172,13 +7176,17 @@ public final class StudyMessage {
        */
       public static final int CREATE_FAIL_SIGNATURE_VALUE = 2;
       /**
-       * <code>CREATE_FAIL_IDENTIFIER = 3;</code>
+       * <code>CREATE_FAIL_BAD_IDENTIFIER = 3;</code>
        */
-      public static final int CREATE_FAIL_IDENTIFIER_VALUE = 3;
+      public static final int CREATE_FAIL_BAD_IDENTIFIER_VALUE = 3;
       /**
-       * <code>CREATE_FAIL_VERIFICATION = 4;</code>
+       * <code>CREATE_FAIL_IDENTIFIER_TAKEN = 4;</code>
        */
-      public static final int CREATE_FAIL_VERIFICATION_VALUE = 4;
+      public static final int CREATE_FAIL_IDENTIFIER_TAKEN_VALUE = 4;
+      /**
+       * <code>CREATE_FAIL_VERIFICATION = 5;</code>
+       */
+      public static final int CREATE_FAIL_VERIFICATION_VALUE = 5;
 
 
       public final int getNumber() { return value; }
@@ -7188,8 +7196,9 @@ public final class StudyMessage {
           case 0: return CREATE_UNKNOWN;
           case 1: return CREATE_OK;
           case 2: return CREATE_FAIL_SIGNATURE;
-          case 3: return CREATE_FAIL_IDENTIFIER;
-          case 4: return CREATE_FAIL_VERIFICATION;
+          case 3: return CREATE_FAIL_BAD_IDENTIFIER;
+          case 4: return CREATE_FAIL_IDENTIFIER_TAKEN;
+          case 5: return CREATE_FAIL_VERIFICATION;
           default: return null;
         }
       }
@@ -7613,735 +7622,6 @@ public final class StudyMessage {
     }
 
     // @@protoc_insertion_point(class_scope:de.velcommuta.denul.networking.protobuf.study.StudyCreateReply)
-  }
-
-  public interface StudyIdentifierRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest)
-      com.google.protobuf.MessageOrBuilder {
-  }
-  /**
-   * Protobuf type {@code de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest}
-   *
-   * <pre>
-   * Empty? Nothing much we need here
-   * </pre>
-   */
-  public static final class StudyIdentifierRequest extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest)
-      StudyIdentifierRequestOrBuilder {
-    // Use StudyIdentifierRequest.newBuilder() to construct.
-    private StudyIdentifierRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private StudyIdentifierRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final StudyIdentifierRequest defaultInstance;
-    public static StudyIdentifierRequest getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public StudyIdentifierRequest getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private StudyIdentifierRequest(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.class, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<StudyIdentifierRequest> PARSER =
-        new com.google.protobuf.AbstractParser<StudyIdentifierRequest>() {
-      public StudyIdentifierRequest parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new StudyIdentifierRequest(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<StudyIdentifierRequest> getParserForType() {
-      return PARSER;
-    }
-
-    private void initFields() {
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest}
-     *
-     * <pre>
-     * Empty? Nothing much we need here
-     * </pre>
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest)
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequestOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.class, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.Builder.class);
-      }
-
-      // Construct using de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_descriptor;
-      }
-
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest getDefaultInstanceForType() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.getDefaultInstance();
-      }
-
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest build() {
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest buildPartial() {
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest result = new de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest(this);
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest) {
-          return mergeFrom((de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest other) {
-        if (other == de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierRequest) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest)
-    }
-
-    static {
-      defaultInstance = new StudyIdentifierRequest(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierRequest)
-  }
-
-  public interface StudyIdentifierReplyOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>required bytes queueIdentifier = 1;</code>
-     */
-    boolean hasQueueIdentifier();
-    /**
-     * <code>required bytes queueIdentifier = 1;</code>
-     */
-    com.google.protobuf.ByteString getQueueIdentifier();
-  }
-  /**
-   * Protobuf type {@code de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply}
-   */
-  public static final class StudyIdentifierReply extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply)
-      StudyIdentifierReplyOrBuilder {
-    // Use StudyIdentifierReply.newBuilder() to construct.
-    private StudyIdentifierReply(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private StudyIdentifierReply(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final StudyIdentifierReply defaultInstance;
-    public static StudyIdentifierReply getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public StudyIdentifierReply getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private StudyIdentifierReply(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              queueIdentifier_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.class, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<StudyIdentifierReply> PARSER =
-        new com.google.protobuf.AbstractParser<StudyIdentifierReply>() {
-      public StudyIdentifierReply parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new StudyIdentifierReply(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<StudyIdentifierReply> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    public static final int QUEUEIDENTIFIER_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString queueIdentifier_;
-    /**
-     * <code>required bytes queueIdentifier = 1;</code>
-     */
-    public boolean hasQueueIdentifier() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required bytes queueIdentifier = 1;</code>
-     */
-    public com.google.protobuf.ByteString getQueueIdentifier() {
-      return queueIdentifier_;
-    }
-
-    private void initFields() {
-      queueIdentifier_ = com.google.protobuf.ByteString.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      if (!hasQueueIdentifier()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, queueIdentifier_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, queueIdentifier_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply)
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReplyOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.class, de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.Builder.class);
-      }
-
-      // Construct using de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        queueIdentifier_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_descriptor;
-      }
-
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply getDefaultInstanceForType() {
-        return de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.getDefaultInstance();
-      }
-
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply build() {
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply buildPartial() {
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply result = new de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.queueIdentifier_ = queueIdentifier_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply) {
-          return mergeFrom((de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply other) {
-        if (other == de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply.getDefaultInstance()) return this;
-        if (other.hasQueueIdentifier()) {
-          setQueueIdentifier(other.getQueueIdentifier());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasQueueIdentifier()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (de.velcommuta.denul.networking.protobuf.study.StudyMessage.StudyIdentifierReply) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private com.google.protobuf.ByteString queueIdentifier_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>required bytes queueIdentifier = 1;</code>
-       */
-      public boolean hasQueueIdentifier() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required bytes queueIdentifier = 1;</code>
-       */
-      public com.google.protobuf.ByteString getQueueIdentifier() {
-        return queueIdentifier_;
-      }
-      /**
-       * <code>required bytes queueIdentifier = 1;</code>
-       */
-      public Builder setQueueIdentifier(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        queueIdentifier_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required bytes queueIdentifier = 1;</code>
-       */
-      public Builder clearQueueIdentifier() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        queueIdentifier_ = getDefaultInstance().getQueueIdentifier();
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply)
-    }
-
-    static {
-      defaultInstance = new StudyIdentifierReply(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:de.velcommuta.denul.networking.protobuf.study.StudyIdentifierReply)
   }
 
   public interface StudyListQueryOrBuilder extends
@@ -10516,14 +9796,26 @@ public final class StudyMessage {
 
     /**
      * <code>repeated bytes message = 2;</code>
+     *
+     * <pre>
+     * Contains StudyJoin messages encrypted w/ pubkey
+     * </pre>
      */
     java.util.List<com.google.protobuf.ByteString> getMessageList();
     /**
      * <code>repeated bytes message = 2;</code>
+     *
+     * <pre>
+     * Contains StudyJoin messages encrypted w/ pubkey
+     * </pre>
      */
     int getMessageCount();
     /**
      * <code>repeated bytes message = 2;</code>
+     *
+     * <pre>
+     * Contains StudyJoin messages encrypted w/ pubkey
+     * </pre>
      */
     com.google.protobuf.ByteString getMessage(int index);
   }
@@ -10764,6 +10056,10 @@ public final class StudyMessage {
     private java.util.List<com.google.protobuf.ByteString> message_;
     /**
      * <code>repeated bytes message = 2;</code>
+     *
+     * <pre>
+     * Contains StudyJoin messages encrypted w/ pubkey
+     * </pre>
      */
     public java.util.List<com.google.protobuf.ByteString>
         getMessageList() {
@@ -10771,12 +10067,20 @@ public final class StudyMessage {
     }
     /**
      * <code>repeated bytes message = 2;</code>
+     *
+     * <pre>
+     * Contains StudyJoin messages encrypted w/ pubkey
+     * </pre>
      */
     public int getMessageCount() {
       return message_.size();
     }
     /**
      * <code>repeated bytes message = 2;</code>
+     *
+     * <pre>
+     * Contains StudyJoin messages encrypted w/ pubkey
+     * </pre>
      */
     public com.google.protobuf.ByteString getMessage(int index) {
       return message_.get(index);
@@ -11097,6 +10401,10 @@ public final class StudyMessage {
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public java.util.List<com.google.protobuf.ByteString>
           getMessageList() {
@@ -11104,18 +10412,30 @@ public final class StudyMessage {
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public int getMessageCount() {
         return message_.size();
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public com.google.protobuf.ByteString getMessage(int index) {
         return message_.get(index);
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public Builder setMessage(
           int index, com.google.protobuf.ByteString value) {
@@ -11129,6 +10449,10 @@ public final class StudyMessage {
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public Builder addMessage(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -11141,6 +10465,10 @@ public final class StudyMessage {
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public Builder addAllMessage(
           java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
@@ -11152,6 +10480,10 @@ public final class StudyMessage {
       }
       /**
        * <code>repeated bytes message = 2;</code>
+       *
+       * <pre>
+       * Contains StudyJoin messages encrypted w/ pubkey
+       * </pre>
        */
       public Builder clearMessage() {
         message_ = java.util.Collections.emptyList();
@@ -12129,16 +11461,6 @@ public final class StudyMessage {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_de_velcommuta_denul_networking_protobuf_study_StudyCreateReply_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListQuery_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -12226,37 +11548,36 @@ public final class StudyMessage {
       "H_CURVE25519\020\001\"(\n\nPubkeyAlgo\022\016\n\nPK_UNKNO" +
       "WN\020\000\022\n\n\006PK_RSA\020\001\"P\n\024VerificationStrategy" +
       "\022\016\n\nVF_UNKNOWN\020\000\022\016\n\nVF_DNS_TXT\020\001\022\013\n\007VF_F" +
-      "ILE\020\002\022\013\n\007VF_META\020\003\"\222\002\n\020StudyCreateReply\022" +
+      "ILE\020\002\022\013\n\007VF_META\020\003\"\270\002\n\020StudyCreateReply\022" +
       "\027\n\017queueIdentifier\030\001 \002(\014\022\\\n\006status\030\002 \002(\016" +
       "2L.de.velcommuta.denul.networking.protob" +
-      "uf.study.StudyCreateReply.CreateStatus\"\206" +
+      "uf.study.StudyCreateReply.CreateStatus\"\254" +
       "\001\n\014CreateStatus\022\022\n\016CREATE_UNKNOWN\020\000\022\r\n\tC" +
-      "REATE_OK\020\001\022\031\n\025CREATE_FAIL_SIGNATURE\020\002\022\032\n",
-      "\026CREATE_FAIL_IDENTIFIER\020\003\022\034\n\030CREATE_FAIL" +
-      "_VERIFICATION\020\004\"\030\n\026StudyIdentifierReques" +
-      "t\"/\n\024StudyIdentifierReply\022\027\n\017queueIdenti" +
-      "fier\030\001 \002(\014\"\020\n\016StudyListQuery\"`\n\016StudyLis" +
-      "tReply\022N\n\tstudylist\030\001 \003(\0132;.de.velcommut" +
-      "a.denul.networking.protobuf.study.StudyW" +
-      "rapper\"\302\001\n\tStudyJoin\022\027\n\017queueIdentifier\030" +
-      "\001 \002(\014\022\017\n\007kexData\030\002 \002(\014\022V\n\014kexAlgorithm\030\003" +
-      " \002(\0162@.de.velcommuta.denul.networking.pr" +
-      "otobuf.study.StudyJoin.KexAlgo\"3\n\007KexAlg",
-      "o\022\017\n\013KEX_UNKNOWN\020\000\022\027\n\023KEX_ECDH_CURVE2551" +
-      "9\020\001\")\n\016StudyJoinQuery\022\027\n\017queueIdentifier" +
-      "\030\001 \002(\014\"\356\001\n\023StudyJoinQueryReply\022^\n\006status" +
-      "\030\001 \002(\0162N.de.velcommuta.denul.networking." +
-      "protobuf.study.StudyJoinQueryReply.Query" +
-      "Status\022\017\n\007message\030\002 \003(\014\"f\n\013QueryStatus\022\022" +
-      "\n\016STATUS_UNKNOWN\020\000\022\r\n\tSTATUS_OK\020\001\022\031\n\025STA" +
-      "TUS_FAIL_NOT_FOUND\020\002\022\031\n\025STATUS_FAIL_SIGN" +
-      "ATURE\020\003\"&\n\013StudyDelete\022\027\n\017queueIdentifie" +
-      "r\030\001 \002(\014\"\327\001\n\020StudyDeleteReply\022\\\n\006status\030\001",
-      " \002(\0162L.de.velcommuta.denul.networking.pr" +
-      "otobuf.study.StudyDeleteReply.DeleteStat" +
-      "us\"e\n\014DeleteStatus\022\022\n\016DELETE_UNKNOWN\020\000\022\r" +
-      "\n\tDELETE_OK\020\001\022\031\n\025DELETE_FAIL_BAD_IDENT\020\002" +
-      "\022\027\n\023DELETE_FAIL_BAD_SIG\020\003"
+      "REATE_OK\020\001\022\031\n\025CREATE_FAIL_SIGNATURE\020\002\022\036\n",
+      "\032CREATE_FAIL_BAD_IDENTIFIER\020\003\022 \n\034CREATE_" +
+      "FAIL_IDENTIFIER_TAKEN\020\004\022\034\n\030CREATE_FAIL_V" +
+      "ERIFICATION\020\005\"\020\n\016StudyListQuery\"`\n\016Study" +
+      "ListReply\022N\n\tstudylist\030\001 \003(\0132;.de.velcom" +
+      "muta.denul.networking.protobuf.study.Stu" +
+      "dyWrapper\"\302\001\n\tStudyJoin\022\027\n\017queueIdentifi" +
+      "er\030\001 \002(\014\022\017\n\007kexData\030\002 \002(\014\022V\n\014kexAlgorith" +
+      "m\030\003 \002(\0162@.de.velcommuta.denul.networking" +
+      ".protobuf.study.StudyJoin.KexAlgo\"3\n\007Kex" +
+      "Algo\022\017\n\013KEX_UNKNOWN\020\000\022\027\n\023KEX_ECDH_CURVE2",
+      "5519\020\001\")\n\016StudyJoinQuery\022\027\n\017queueIdentif" +
+      "ier\030\001 \002(\014\"\356\001\n\023StudyJoinQueryReply\022^\n\006sta" +
+      "tus\030\001 \002(\0162N.de.velcommuta.denul.networki" +
+      "ng.protobuf.study.StudyJoinQueryReply.Qu" +
+      "eryStatus\022\017\n\007message\030\002 \003(\014\"f\n\013QueryStatu" +
+      "s\022\022\n\016STATUS_UNKNOWN\020\000\022\r\n\tSTATUS_OK\020\001\022\031\n\025" +
+      "STATUS_FAIL_NOT_FOUND\020\002\022\031\n\025STATUS_FAIL_S" +
+      "IGNATURE\020\003\"&\n\013StudyDelete\022\027\n\017queueIdenti" +
+      "fier\030\001 \002(\014\"\327\001\n\020StudyDeleteReply\022\\\n\006statu" +
+      "s\030\001 \002(\0162L.de.velcommuta.denul.networking",
+      ".protobuf.study.StudyDeleteReply.DeleteS" +
+      "tatus\"e\n\014DeleteStatus\022\022\n\016DELETE_UNKNOWN\020" +
+      "\000\022\r\n\tDELETE_OK\020\001\022\031\n\025DELETE_FAIL_BAD_IDEN" +
+      "T\020\002\022\027\n\023DELETE_FAIL_BAD_SIG\020\003"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -12300,56 +11621,44 @@ public final class StudyMessage {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyCreateReply_descriptor,
         new java.lang.String[] { "QueueIdentifier", "Status", });
-    internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierRequest_descriptor,
-        new java.lang.String[] { });
-    internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_de_velcommuta_denul_networking_protobuf_study_StudyIdentifierReply_descriptor,
-        new java.lang.String[] { "QueueIdentifier", });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListQuery_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListQuery_descriptor,
         new java.lang.String[] { });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListReply_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyListReply_descriptor,
         new java.lang.String[] { "Studylist", });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoin_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoin_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoin_descriptor,
         new java.lang.String[] { "QueueIdentifier", "KexData", "KexAlgorithm", });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoinQuery_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoinQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoinQuery_descriptor,
         new java.lang.String[] { "QueueIdentifier", });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoinQueryReply_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoinQueryReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyJoinQueryReply_descriptor,
         new java.lang.String[] { "Status", "Message", });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyDelete_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyDelete_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyDelete_descriptor,
         new java.lang.String[] { "QueueIdentifier", });
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyDeleteReply_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_de_velcommuta_denul_networking_protobuf_study_StudyDeleteReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_de_velcommuta_denul_networking_protobuf_study_StudyDeleteReply_descriptor,

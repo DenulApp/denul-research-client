@@ -77,6 +77,13 @@ public class StudyRequest {
     public byte[] queue;
 
     /**
+     * Constructor. Initializes the Queue Identifier with random data
+     */
+    public StudyRequest() {
+        randomizeQueueIdentifier();
+    }
+
+    /**
      * Randomize the queue identifier
      */
     public void randomizeQueueIdentifier() {

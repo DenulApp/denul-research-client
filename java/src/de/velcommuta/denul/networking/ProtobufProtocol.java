@@ -364,7 +364,11 @@ public class ProtobufProtocol implements Protocol {
         } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_OK) {
             // Everything is fine
             return REG_OK;
-        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_IDENTIFIER) {
+        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_IDENTIFIER_TAKEN) {
+            // The identifier is already taken. Re-randomize it and recursively try again
+            req.randomizeQueueIdentifier();
+            return registerStudy(req);
+        } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_BAD_IDENTIFIER) {
             logger.warning("registerStudy: Bad identifier");
             return REG_FAIL_IDENTIFIER;
         } else if (scr.getStatus() == StudyMessage.StudyCreateReply.CreateStatus.CREATE_FAIL_SIGNATURE) {

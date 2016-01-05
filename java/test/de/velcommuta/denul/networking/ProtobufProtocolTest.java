@@ -354,6 +354,8 @@ public class ProtobufProtocolTest extends TestCase {
 
             List<byte[]> rv = p.getStudyJoinRequests(req);
             assertTrue(Arrays.equals(rv.get(0), new byte[] {0x00, 0x01}));
+            rv = p.getStudyJoinRequests(req);
+            assertEquals(rv.size(), 0);
         } catch (IOException e) {
             e.printStackTrace();
             fail();

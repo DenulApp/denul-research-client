@@ -299,15 +299,18 @@ public class ProtobufProtocolTest extends TestCase {
     /**
      * Test the study registration networking code
      */
-    public void testRegisterStudy() {
+    public void testRegisterDeleteStudy() {
         try {
             Connection c = new TLSConnection(host, port);
             Protocol p = new ProtobufProtocol();
             p.connect(c);
-
             StudyRequest req = StudyRequestTest.getRandomStudyRequest();
-
+            // Ensure that study cannot be deleted if it has not been uploaded yet
+            assertEquals(p.deleteStudy(req), Protocol.SDEL_FAIL_IDENTIFIER);
+            // Register study
             assertEquals(p.registerStudy(req), Protocol.REG_OK);
+            // Delete study
+            assertEquals(p.deleteStudy(req), Protocol.SDEL_OK);
         } catch (IOException e) {
             e.printStackTrace();
             fail();
@@ -356,6 +359,8 @@ public class ProtobufProtocolTest extends TestCase {
             assertTrue(Arrays.equals(rv.get(0), new byte[] {0x00, 0x01}));
             rv = p.getStudyJoinRequests(req);
             assertEquals(rv.size(), 0);
+            // delete study
+            assertEquals(p.deleteStudy(req), Protocol.SDEL_OK);
         } catch (IOException e) {
             e.printStackTrace();
             fail();

@@ -85,6 +85,18 @@ public interface Protocol {
     // Incorrect verification data
     int REG_FAIL_VERIFICATION = 5;
 
+    // Return values for the study deletion
+    // Study deletion okay
+    int SDEL_OK = 0;
+    // No connection
+    int SDEL_FAIL_NO_CONNECTION = 1;
+    // Protocol error
+    int SDEL_FAIL_PROTOCOL_ERROR = 2;
+    // Incorrect signature
+    int SDEL_FAIL_SIGNATURE = 3;
+    // Incorrect identifier
+    int SDEL_FAIL_IDENTIFIER = 4;
+
     /**
      * Establish a connection using this protocol, via the provided Connection
      * @param conn The Connection object
@@ -187,4 +199,11 @@ public interface Protocol {
      * @return A List of encrypted StudyJoinRequests, or an empty list if none are available, or null if an error occured
      */
     List<byte[]> getStudyJoinRequests(StudyRequest req);
+
+    /**
+     * Delete a study from the server
+     * @param req The study request
+     * @return one of the SDEL_* constants defined by the interface, indicating the result
+     */
+    int deleteStudy(StudyRequest req);
 }

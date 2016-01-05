@@ -459,6 +459,51 @@ public class ProtobufProtocol implements Protocol {
         return rv;
     }
 
+    @Override
+    public int deleteStudy(StudyRequest req) {
+        assert req != null;
+        assert req.privkey != null;
+        assert req.queue != null;
+
+        // Create StudyDelete message
+        StudyMessage.StudyDelete.Builder sd = StudyMessage.StudyDelete.newBuilder();
+        sd.setQueueIdentifier(ByteString.copyFrom(req.queue));
+        byte[] msg = sd.build().toByteArray();
+        // Prepare StudyWrapper
+        StudyMessage.StudyWrapper.Builder sw = StudyMessage.StudyWrapper.newBuilder();
+        sw.setType(StudyMessage.StudyWrapper.MessageType.MSG_STUDYDELETE);
+        sw.setMessage(ByteString.copyFrom(msg));
+        // Add authenticator
+        sw.setSignature(ByteString.copyFrom(req.authenticate(msg)));
+        // Create wrapper
+        MetaMessage.Wrapper.Builder wrapper = MetaMessage.Wrapper.newBuilder();
+        wrapper.setStudyWrapper(sw);
+        // Transceive
+        MetaMessage.Wrapper reply = transceiveWrapper(wrapper.build());
+        if (reply == null) {
+            logger.severe("deleteStudy: Transceive error - No connection?");
+            return SDEL_FAIL_NO_CONNECTION;
+        }
+        StudyMessage.StudyDeleteReply sdr = toStudyDeleteReply(reply);
+        if (sdr == null) {
+            logger.severe("deleteStudy: Reply did not contain a StudyDeleteReply");
+            return SDEL_FAIL_PROTOCOL_ERROR;
+        }
+        // We have received a studyDeleteReply
+        if (sdr.getStatus() == StudyMessage.StudyDeleteReply.DeleteStatus.DELETE_OK) {
+            return SDEL_OK;
+        } else if (sdr.getStatus() == StudyMessage.StudyDeleteReply.DeleteStatus.DELETE_FAIL_BAD_IDENT) {
+            logger.severe("deleteStudy: Server complained about bad identifier");
+            return SDEL_FAIL_IDENTIFIER;
+        } else if (sdr.getStatus() == StudyMessage.StudyDeleteReply.DeleteStatus.DELETE_FAIL_BAD_SIG) {
+            logger.severe("deleteStudy: Server complained about bad signature");
+            return SDEL_FAIL_SIGNATURE;
+        } else {
+            logger.severe("deleteStudy: Protocol error");
+            return SDEL_FAIL_PROTOCOL_ERROR;
+        }
+    }
+
     // Helper functions
     /**
      * Send a wrapper message to the server and receive and parse a wrapper message in return
@@ -643,6 +688,21 @@ public class ProtobufProtocol implements Protocol {
             return wrapper.getStudyListReply();
         } else {
             logger.severe("toStudyListReply: Wrapper message did not contain a StudyListReply message");
+            return null;
+        }
+    }
+
+
+    /**
+     * Extract a StudyDeleteReply from a Wrapper message
+     * @param wrapper The wrapper message, containing a StudyDeleteReply
+     * @return The StudyDeleteReply, or null if the wrapper did not contain one
+     */
+    private StudyMessage.StudyDeleteReply toStudyDeleteReply(MetaMessage.Wrapper wrapper) {
+        if (wrapper.hasStudyDeleteReply()) {
+            return wrapper.getStudyDeleteReply();
+        } else {
+            logger.severe("toStudyDeleteReply: Wrapper message did not contain a StudyDeleteReply message");
             return null;
         }
     }

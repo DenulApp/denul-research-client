@@ -159,6 +159,20 @@ public class StudyRequest {
     }
 
     /**
+     * Authenticate data using the private key associated with this StudyRequest. Used to authenticate StudyJoinQueries
+     * and other related stuff
+     * @param data The data to be authenticated
+     * @return The authenticator, as byte[]
+     */
+    public byte[] authenticate(byte[] data) {
+        assert data != null;
+        assert privkey != null;
+        byte[] signature = RSA.sign(data, privkey);
+        assert signature != null;
+        return signature;
+    }
+
+    /**
      * Data holder class for Investigators associated with a study
      */
     public static class Investigator {
@@ -418,9 +432,8 @@ public class StudyRequest {
 
         StudyMessage.StudyWrapper.Builder wrapper = StudyMessage.StudyWrapper.newBuilder();
         wrapper.setMessage(ByteString.copyFrom(serialized));
-        byte[] signature = RSA.sign(serialized, privkey);
-        assert signature != null;
-        wrapper.setSignature(ByteString.copyFrom(signature));
+        // Authenticate
+        wrapper.setSignature(ByteString.copyFrom(authenticate(serialized)));
         wrapper.setType(StudyMessage.StudyWrapper.MessageType.MSG_STUDYCREATE);
 
         return wrapper.build();

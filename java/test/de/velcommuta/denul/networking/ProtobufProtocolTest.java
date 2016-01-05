@@ -335,6 +335,31 @@ public class ProtobufProtocolTest extends TestCase {
         }
     }
 
+    /**
+     * Test if the studyJoinQuery works
+     */
+    public void testStudyJoinAndQuery() {
+        try {
+            Connection c = new TLSConnection(host, port);
+            Protocol p = new ProtobufProtocol();
+            p.connect(c);
+
+            StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+
+            assertEquals(p.registerStudy(req), Protocol.REG_OK);
+
+            // This is a horrible misuse of the API. But it works. So.
+            DataBlock block = new DataBlock(req.queue, new byte[] {0x00, 0x01}, req.queue);
+            assertEquals(p.put(block), Protocol.PUT_OK);
+
+            List<byte[]> rv = p.getStudyJoinRequests(req);
+            assertTrue(Arrays.equals(rv.get(0), new byte[] {0x00, 0x01}));
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
 
     /**
      * Helper function to derive a key that can be authenticated using the provided auth string

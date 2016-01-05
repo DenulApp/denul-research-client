@@ -180,4 +180,11 @@ public interface Protocol {
      * @return A List of StudyRequests, or an empty list if no requests have been registered. Null if an error occured
      */
     List<StudyRequest> listRegisteredStudies();
+
+    /**
+     * Retrieve all available StudyJoinRequests associated with a specific StudyRequest
+     * @param req The StudyRequest
+     * @return A List of encrypted StudyJoinRequests, or an empty list if none are available, or null if an error occured
+     */
+    List<byte[]> getStudyJoinRequests(StudyRequest req);
 }

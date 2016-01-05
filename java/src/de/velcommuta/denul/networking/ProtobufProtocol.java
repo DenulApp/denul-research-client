@@ -409,6 +409,56 @@ public class ProtobufProtocol implements Protocol {
         return rv;
     }
 
+    @Override
+    public List<byte[]> getStudyJoinRequests(StudyRequest req) {
+        assert req != null;
+        assert req.queue != null;
+        assert req.privkey != null;
+
+        List<byte[]> rv = new LinkedList<>();
+        // Get StudyJoinQuery builder
+        StudyMessage.StudyJoinQuery.Builder sjq = StudyMessage.StudyJoinQuery.newBuilder();
+        sjq.setQueueIdentifier(ByteString.copyFrom(req.queue));
+        // Build
+        byte[] query = sjq.build().toByteArray();
+        // Prepare StudyMessageWrapper
+        StudyMessage.StudyWrapper.Builder sw = StudyMessage.StudyWrapper.newBuilder();
+        sw.setMessage(ByteString.copyFrom(query));
+        sw.setType(StudyMessage.StudyWrapper.MessageType.MSG_STUDYJOINQUERY);
+        // Authenticate
+        sw.setSignature(ByteString.copyFrom(req.authenticate(query)));
+        // Prepare wrapper
+        MetaMessage.Wrapper.Builder wrapper = MetaMessage.Wrapper.newBuilder();
+        wrapper.setStudyWrapper(sw);
+
+        MetaMessage.Wrapper reply = transceiveWrapper(wrapper.build());
+        if (reply == null) {
+            logger.severe("getStudyJoinRequests: reply == null, something's fishy");
+            return null;
+        }
+        StudyMessage.StudyJoinQueryReply sjqr = toStudyJoinQueryReply(reply);
+        if (sjqr == null) {
+            logger.severe("getStudyJoinRequests: wrapper did not contain SJQR :(");
+            return null;
+        }
+        // We have a valid StudyJoinQueryReply, check response code
+        if (sjqr.getStatus() == StudyMessage.StudyJoinQueryReply.QueryStatus.STATUS_OK) {
+            for (ByteString bs : sjqr.getMessageList()) {
+                rv.add(bs.toByteArray());
+            }
+        } else if (sjqr.getStatus() == StudyMessage.StudyJoinQueryReply.QueryStatus.STATUS_FAIL_SIGNATURE) {
+            logger.severe("getStudyJoinRequests: Server claims wrong signature!");
+            return null;
+        } else if (sjqr.getStatus() == StudyMessage.StudyJoinQueryReply.QueryStatus.STATUS_FAIL_NOT_FOUND) {
+            logger.severe("getStudyJoinRequests: Server claims queue identifier not found");
+            return null;
+        } else if (sjqr.getStatus() == StudyMessage.StudyJoinQueryReply.QueryStatus.STATUS_UNKNOWN) {
+            logger.severe("getStudyJoinRequests: Server experienced unknown error");
+            return null;
+        }
+        return rv;
+    }
+
     // Helper functions
     /**
      * Send a wrapper message to the server and receive and parse a wrapper message in return
@@ -599,6 +649,21 @@ public class ProtobufProtocol implements Protocol {
 
 
     /**
+     * Extract a StudyJoinQueryReply from a wrapper
+     * @param wrapper The wrapper containing a StudyJoinQueryReply
+     * @return The StudyJoinQueryReply, or null if the wrapper did not contain one
+     */
+    private StudyMessage.StudyJoinQueryReply toStudyJoinQueryReply(MetaMessage.Wrapper wrapper) {
+        if (wrapper.hasStudyJoinQueryReply()) {
+            return wrapper.getStudyJoinQueryReply();
+        } else {
+            logger.severe("toStudyJoinQueryReply: Wrapper message did not contain a StudyJoinQuery reply");
+            return null;
+        }
+    }
+
+
+    /**
      * Convert the byte[]-representation of a Wrapper message into a Wrapper message
      * @param bytes The byte[]-representation of a Wrapper message
      * @return The Wrapper message, or null, if the bytes did not represent a wrapper message
@@ -650,7 +715,7 @@ public class ProtobufProtocol implements Protocol {
      */
     protected static boolean checkKeyFormat(byte[] key) {
         // The key must be a SHA256 hash => 64 hex characters
-        return key != null && key.length == 32;
+        return key != null && (key.length == 32 || key.length == 16);
     }
 
 

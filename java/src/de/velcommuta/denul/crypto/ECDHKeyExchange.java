@@ -129,6 +129,22 @@ public class ECDHKeyExchange implements KeyExchange {
     }
 
 
+    /**
+     * Reset the key agreement so a new key agreement can be performed (with the same key)
+     */
+    @Override
+    public void reset() {
+        assert mKeypair != null;
+        assert mKeyAgree != null;
+        try {
+            mKeyAgree.init(mKeypair.getPrivate());
+            mPhaseSuccess = false;
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public boolean putPartnerKexData(byte[] data) {
         if (mPhaseSuccess) {

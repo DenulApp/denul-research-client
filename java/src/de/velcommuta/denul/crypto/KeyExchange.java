@@ -34,4 +34,9 @@ public interface KeyExchange {
      * @return The KeyPair
      */
     KeyPair getKeypair();
+
+    /**
+     * Reset the key agreement to allow another key agreement to be performed using the same private key
+     */
+    void reset();
 }

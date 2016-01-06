@@ -48,7 +48,7 @@ public class ECDHKeyExchangeTest extends TestCase {
     /**
      * Test what happens if we try to insert data twice
      */
-    public void testDoubleDataInsert() {
+    public void testInvalidDoubleDataInsert() {
         // initialize two kex instances
         KeyExchange kex1 = new ECDHKeyExchange();
         KeyExchange kex2 = new ECDHKeyExchange();
@@ -64,6 +64,42 @@ public class ECDHKeyExchangeTest extends TestCase {
         byte[] key2 = kex2.getAgreedKey();
         // Ensure the keys match
         assertTrue(Arrays.equals(key1, key2));
+    }
+
+
+    /**
+     * Test what happens if we try to insert data twice, with a reset in between
+     */
+    public void testValidDoubleDataInsert() {
+        // initialize two kex instances
+        KeyExchange kex1 = new ECDHKeyExchange();
+        KeyExchange kex2 = new ECDHKeyExchange();
+        // Get the public messages
+        byte[] kex1to2 = kex1.getPublicKexData();
+        byte[] kex2to1 = kex2.getPublicKexData();
+        // Pass the messages to the other kex
+        assertTrue(kex1.putPartnerKexData(kex2to1));
+        assertTrue(kex2.putPartnerKexData(kex1to2));
+        // Retrieve generated keys
+        byte[] key1 = kex1.getAgreedKey();
+        byte[] key2 = kex2.getAgreedKey();
+        // Ensure the keys match
+        assertTrue(Arrays.equals(key1, key2));
+        // Create a new KeyExchange
+        KeyExchange kex3 = new ECDHKeyExchange();
+        kex1.reset();
+        byte[] kex1to3 = kex1.getPublicKexData();
+        byte[] kex3to1 = kex3.getPublicKexData();
+        assertTrue(Arrays.equals(kex1to3, kex1to2));
+        // Pass messages
+        assertTrue(kex1.putPartnerKexData(kex3to1));
+        assertTrue(kex3.putPartnerKexData(kex1to3));
+        // Retrieve keys
+        byte[] key3 = kex1.getAgreedKey();
+        byte[] key4 = kex3.getAgreedKey();
+        // Ensure they match
+        assertTrue(Arrays.equals(key3, key4));
+
     }
 
 

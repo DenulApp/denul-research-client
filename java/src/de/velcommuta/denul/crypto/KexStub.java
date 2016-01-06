@@ -38,4 +38,7 @@ public class KexStub implements KeyExchange {
     public KeyPair getKeypair() {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void reset() {throw new NotImplementedException();}
 }

@@ -71,6 +71,7 @@ public class SQLContract {
         public static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME + ";";
         public static final String SELECT_BY_QUEUE = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " +
                 COLUMN_QUEUE + " LIKE ?;";
+        public static final String DELETE_ID = "DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " LIKE ?;";
     }
 
     public static class Investigators {
@@ -165,6 +166,13 @@ public class SQLContract {
                 COLUMN_CTR_OUT + " LIKE ? AND " +
                 COLUMN_KEY_IN + " LIKE ? AND " +
                 COLUMN_CTR_IN + " LIKE ?;";
+
+        public static final String UPDATE_ID = "UPDATE " + TABLE_NAME + " SET " +
+                COLUMN_KEY_OUT + " = ?, " +
+                COLUMN_CTR_OUT + " = ?, " +
+                COLUMN_KEY_IN + " = ?, " +
+                COLUMN_CTR_IN + " = ? " +
+                "WHERE " + COLUMN_ID + " LIKE ?;";
     }
 
     public static class Data {

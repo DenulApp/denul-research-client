@@ -132,14 +132,7 @@ public class SQLiteDatabaseTest extends TestCase {
         KeySet ks = new KeySet(key1, key2, ctr1, ctr2, true);
         long part = mDB.addParticipant(ks, rv);
         // Prepare data
-        List<Location> loclist = new LinkedList<>();
-        Location loc = new Location();
-        loc.setLatitude(0);
-        loc.setLongitude(1);
-        loc.setTime(10f);
-        loclist.add(loc);
-        GPSTrack track = new GPSTrack(loclist, "bla", GPSTrack.VALUE_CYCLING, 0, 1, "GMT+1", 1000.0f);
-        track.setDescription("Here be descriptions");
+        GPSTrack track = getRandomGPSTrack();
         // Perform insert
         mDB.addGPSTrack(track, part);
         // Retrieve GPS Tracks
@@ -166,5 +159,22 @@ public class SQLiteDatabaseTest extends TestCase {
         assertEquals(first.getDistance(), track.getDistance());
         assertEquals(first.getModeOfTransportation(), track.getModeOfTransportation());
         assertEquals(first.getPosition(), track.getPosition());
+    }
+
+    /**
+     * Helper function to create a random GPS track
+     * @return A random GPS track
+     */
+    public static GPSTrack getRandomGPSTrack() {
+        // TODO Make it actually random. Doh.
+        List<Location> loclist = new LinkedList<>();
+        Location loc = new Location();
+        loc.setLatitude(0);
+        loc.setLongitude(1);
+        loc.setTime(10f);
+        loclist.add(loc);
+        GPSTrack track = new GPSTrack(loclist, "bla", GPSTrack.VALUE_CYCLING, 0, 1, "GMT+1", 1000.0f);
+        track.setDescription("Here be descriptions");
+        return track;
     }
 }

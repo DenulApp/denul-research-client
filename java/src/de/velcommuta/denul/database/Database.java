@@ -24,6 +24,12 @@ public interface Database {
     long addStudyRequest(StudyRequest studyRequest);
 
     /**
+     * Delete a study from the database
+     * @param req The study
+     */
+    void deleteStudy(StudyRequest req);
+
+    /**
      * Retrieve a specific {@link StudyRequest} by its ID
      * @param id The ID
      * @return The study request
@@ -52,6 +58,12 @@ public interface Database {
     long addParticipant(KeySet keys, long studyid);
 
     /**
+     * Update the keys of a participant
+     * @param keys The new KeySet to save for the participant. MUST NOT return -1 on a call to {@link KeySet#getID}.
+     */
+    void updateParticipant(KeySet keys);
+
+    /**
      * Get a List of all active participants
      * @return A List of participants
      */
@@ -72,11 +84,18 @@ public interface Database {
     long getParticipantIDByKeySet(KeySet keys);
 
     /**
+     * Add a Shareable to the database
+     * @param sh A shareable, with the {@link KeySet} returned by {@link Shareable#getOwner()} not returning -1 on a
+     *           call to {@link KeySet#getID()}.
+     */
+    void addShareable(Shareable sh);
+
+    /**
      * Add a GPS track to the database
      * @param track The GPS track
-     * @param ownerid The Database ID of the owner (i.e. participant)
+     * @param participantID The Database ID of the owner (i.e. participant)
      */
-    void addGPSTrack(GPSTrack track, long ownerid);
+    void addGPSTrack(GPSTrack track, long participantID);
 
     /**
      * Get a List of all saved GPS tracks

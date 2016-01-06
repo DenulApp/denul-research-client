@@ -65,11 +65,12 @@ public class StudyRequestTest extends TestCase {
 
     /**
      * Generate a random study request and return it
+     * @param bitness The bitness of the RSA key
      * @return The study request
      */
-    public static StudyRequest getRandomStudyRequest() {
+    public static StudyRequest getRandomStudyRequest(int bitness) {
         // Start key generation in background
-        FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA(1024);
+        FutureTask<KeyPair> rsagen = AsyncKeyGenerator.generateRSA(bitness);
         FutureTask<ECDHKeyExchange> ecdhgen = AsyncKeyGenerator.generateECDH();
 
         StudyRequest req = new StudyRequest();
@@ -121,5 +122,13 @@ public class StudyRequestTest extends TestCase {
             throw new IllegalArgumentException("Exception during key retrieval:", e);
         }
         return req;
+    }
+
+    /**
+     * Get a random study request with a 1024 bit key
+     * @return The study request
+     */
+    public static StudyRequest getRandomStudyRequest() {
+        return getRandomStudyRequest(1024);
     }
 }

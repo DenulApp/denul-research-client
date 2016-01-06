@@ -13,7 +13,7 @@ public class DataBlock {
     private byte[] mKey;
     private byte[] mIdentifier;
     private byte[] mCiphertext;
-    private Friend mOwner;
+    private KeySet mOwner;
     private int mGranularity;
 
 
@@ -100,7 +100,7 @@ public class DataBlock {
      * Setter for the optional Owner field
      * @param owner The owner of the data
      */
-    public void setOwner(Friend owner) {
+    public void setOwner(KeySet owner) {
         mOwner = owner;
     }
 
@@ -127,7 +127,7 @@ public class DataBlock {
      * Getter for the optional owner field
      * @return The owner, if set, or null;
      */
-    public Friend getOwner() {
+    public KeySet getOwner() {
         return mOwner;
     }
 

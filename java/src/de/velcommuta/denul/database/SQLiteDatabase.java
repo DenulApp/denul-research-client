@@ -38,7 +38,7 @@ public class SQLiteDatabase implements Database {
      * Protected constructor, only for unittesting use
      * @param filename The filename of the database
      */
-    protected SQLiteDatabase(String filename) {
+    public SQLiteDatabase(String filename) {
         assert filename != null && !filename.equals("");
         try {
             mConnection = DriverManager.getConnection("jdbc:sqlite:" + filename);
@@ -161,6 +161,25 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
+    public void deleteStudy(StudyRequest req) {
+        assert isOpen();
+        assert req != null;
+        assert req.queue != null;
+        long studyid = getStudyIDByQueueIdentifier(req.queue);
+        if (studyid > 0) {
+            try {
+                PreparedStatement stmt = mConnection.prepareStatement(Studies.DELETE_ID);
+                stmt.setLong(1, studyid);
+                int rv = stmt.executeUpdate();
+                assert rv == 1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("SQL Error: ", e);
+            }
+        }
+    }
+
+    @Override
     public StudyRequest getStudyRequestByID(long id) {
         assert isOpen();
         assert id >= 0;
@@ -275,6 +294,29 @@ public class SQLiteDatabase implements Database {
     }
 
     @Override
+    public void updateParticipant(KeySet keys) {
+        assert isOpen();
+        assert keys != null;
+        assert keys.getID() >= 0;
+        try {
+            PreparedStatement stmt = mConnection.prepareStatement(StudyParticipants.UPDATE_ID);
+            // Set parameters
+            stmt.setBytes(1, keys.getOutboundKey());
+            stmt.setBytes(2, keys.getOutboundCtr());
+            stmt.setBytes(3, keys.getInboundKey());
+            stmt.setBytes(4, keys.getInboundCtr());
+            stmt.setLong(5, keys.getID());
+            int affected_rows = stmt.executeUpdate();
+            assert affected_rows == 1;
+            mConnection.commit();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("SQL Error: ", e);
+        }
+    }
+
+    @Override
     public List<KeySet> getParticipants() {
         assert isOpen();
         List<KeySet> rv = new LinkedList<>();
@@ -335,6 +377,15 @@ public class SQLiteDatabase implements Database {
             throw new IllegalArgumentException("SQL Exception: ", e);
         }
         return rv;
+    }
+
+    @Override
+    public void addShareable(Shareable sh) {
+        if (sh.getType() == Shareable.SHAREABLE_TRACK) {
+            addGPSTrack((GPSTrack) sh, sh.getID());
+        } else {
+            throw new IllegalArgumentException("Unknown shareable");
+        }
     }
 
     @Override

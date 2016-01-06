@@ -8,7 +8,6 @@ import de.velcommuta.denul.data.DataBlock;
 import de.velcommuta.denul.data.KeySet;
 import de.velcommuta.denul.data.Shareable;
 import de.velcommuta.denul.data.ShareableUnwrapper;
-import de.velcommuta.denul.data.TokenPair;
 import de.velcommuta.denul.data.proto.DataContainer;
 
 import java.util.logging.Logger;

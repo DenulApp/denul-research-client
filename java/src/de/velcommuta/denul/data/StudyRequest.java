@@ -2,10 +2,7 @@ package de.velcommuta.denul.data;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import de.velcommuta.denul.crypto.ECDHKeyExchange;
-import de.velcommuta.denul.crypto.KexStub;
-import de.velcommuta.denul.crypto.KeyExchange;
-import de.velcommuta.denul.crypto.RSA;
+import de.velcommuta.denul.crypto.*;
 import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 
 import javax.crypto.BadPaddingException;
@@ -195,6 +192,28 @@ public class StudyRequest {
         byte[] decrypted = RSA.decryptRSA(data, privkey);
         assert decrypted != null;
         return decrypted;
+    }
+
+
+    /**
+     * Perform a key exchange with the key exchange used for this StudyRequest and return the resulting KeySet
+     * @param req The StudyJoinRequest with which to perform a kex
+     * @return The resulting KeySet
+     */
+    public KeySet performKex(StudyJoinRequest req) {
+        // Ensure sanity
+        assert exchange != null;
+        assert req != null;
+        assert req.kexpub != null;
+        // TODO Ensure key exchange methods match
+        // Perform exchange
+        exchange.putPartnerKexData(req.kexpub);
+        byte[] key = exchange.getAgreedKey();
+        // Reset exchange
+        exchange.reset();
+        // Expand keys and return KeySet
+        KeyExpansion expansion = new HKDFKeyExpansion(key);
+        return expansion.expand(true);
     }
 
     /**

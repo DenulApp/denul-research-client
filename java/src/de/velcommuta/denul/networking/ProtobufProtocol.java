@@ -13,6 +13,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import de.velcommuta.denul.data.DataBlock;
+import de.velcommuta.denul.data.StudyJoinRequest;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.data.TokenPair;
 import de.velcommuta.denul.networking.protobuf.c2s.C2S;
@@ -21,6 +22,9 @@ import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 import de.velcommuta.denul.util.FormatHelper;
 import de.velcommuta.libvicbf.VICBF;
 import org.jetbrains.annotations.Nullable;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 /**
  * Protocol employing Protobuf for message generation and parsing.
@@ -414,12 +418,12 @@ public class ProtobufProtocol implements Protocol {
     }
 
     @Override
-    public List<byte[]> getStudyJoinRequests(StudyRequest req) {
+    public List<StudyJoinRequest> getStudyJoinRequests(StudyRequest req) {
         assert req != null;
         assert req.queue != null;
         assert req.privkey != null;
 
-        List<byte[]> rv = new LinkedList<>();
+        List<StudyJoinRequest> rv = new LinkedList<>();
         // Get StudyJoinQuery builder
         StudyMessage.StudyJoinQuery.Builder sjq = StudyMessage.StudyJoinQuery.newBuilder();
         sjq.setQueueIdentifier(ByteString.copyFrom(req.queue));
@@ -448,7 +452,34 @@ public class ProtobufProtocol implements Protocol {
         // We have a valid StudyJoinQueryReply, check response code
         if (sjqr.getStatus() == StudyMessage.StudyJoinQueryReply.QueryStatus.STATUS_OK) {
             for (ByteString bs : sjqr.getMessageList()) {
-                rv.add(bs.toByteArray());
+                try {
+                    // Decrypt data
+                    byte[] decrypted = req.decrypt(bs.toByteArray());
+                    // Deserialize into Protobuf StudyJoin
+                    StudyMessage.StudyJoin sj = StudyMessage.StudyJoin.parseFrom(decrypted);
+                    // Create data container object
+                    StudyJoinRequest request = new StudyJoinRequest();
+                    // Set fields
+                    request.kexpub = sj.getKexData().toByteArray();
+                    request.queue = sj.getQueueIdentifier().toByteArray();
+                    if (!Arrays.equals(request.queue, req.queue)) {
+                        logger.severe("getStudyJoinRequest: Got StudyJoin for incorrect queue identifier, ignoring");
+                        continue;
+                    }
+                    if (sj.getKexAlgorithm() == StudyMessage.StudyJoin.KexAlgo.KEX_ECDH_CURVE25519) {
+                        request.kexalgo = StudyJoinRequest.KEX_ALGO.KEX_ECDH_CURVE25519;
+                    } else {
+                        request.kexalgo = StudyJoinRequest.KEX_ALGO.KEX_UNKNOWN;
+                    }
+                    // Add to return list
+                    rv.add(request);
+                } catch (IllegalBlockSizeException | BadPaddingException e) {
+                    e.printStackTrace();
+                    logger.severe("getStudyJoinRequests: Exception during decryption, skipping");
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                    logger.severe("getStudyJoinRequests: Data did not contain StudyJoin message, skipping");
+                }
             }
         } else if (sjqr.getStatus() == StudyMessage.StudyJoinQueryReply.QueryStatus.STATUS_FAIL_SIGNATURE) {
             logger.severe("getStudyJoinRequests: Server claims wrong signature!");

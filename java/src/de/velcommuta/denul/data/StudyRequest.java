@@ -8,6 +8,8 @@ import de.velcommuta.denul.crypto.KeyExchange;
 import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
@@ -177,6 +179,22 @@ public class StudyRequest {
         byte[] signature = RSA.sign(data, privkey);
         assert signature != null;
         return signature;
+    }
+
+
+    /**
+     * Decrypt some asymmetrically encrypted data with the private key associated with this StudyRequest
+     * @param data The data to decrypt
+     * @return The decrypted data
+     * @throws IllegalBlockSizeException If the decryption throws it
+     * @throws BadPaddingException If the decryption throws it
+     */
+    public byte[] decrypt(byte[] data) throws IllegalBlockSizeException, BadPaddingException {
+        assert data != null;
+        assert privkey != null;
+        byte[] decrypted = RSA.decryptRSA(data, privkey);
+        assert decrypted != null;
+        return decrypted;
     }
 
     /**

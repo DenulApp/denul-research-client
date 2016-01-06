@@ -1,7 +1,9 @@
 package de.velcommuta.denul.networking;
 
-import de.velcommuta.denul.data.StudyRequest;
-import de.velcommuta.denul.data.StudyRequestTest;
+import com.google.protobuf.ByteString;
+import de.velcommuta.denul.crypto.RSA;
+import de.velcommuta.denul.data.*;
+import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 import junit.framework.TestCase;
 
 import java.io.IOException;
@@ -15,10 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.crypto.IllegalBlockSizeException;
 import javax.net.ssl.SSLHandshakeException;
 
-import de.velcommuta.denul.data.DataBlock;
-import de.velcommuta.denul.data.TokenPair;
 import de.velcommuta.denul.util.FormatHelper;
 
 /**
@@ -370,25 +371,39 @@ public class ProtobufProtocolTest extends TestCase {
      */
     public void testStudyJoinAndQuery() {
         try {
+            // Generate random StudyRequest
+            StudyRequest req = StudyRequestTest.getRandomStudyRequest();
+            // Connect
             Connection c = new TLSConnection(host, port);
             Protocol p = new ProtobufProtocol();
             p.connect(c);
 
-            StudyRequest req = StudyRequestTest.getRandomStudyRequest();
-
+            // Upload
             assertEquals(p.registerStudy(req), Protocol.REG_OK);
 
-            // This is a horrible misuse of the API. But it works. So.
-            DataBlock block = new DataBlock(req.queue, new byte[] {0x00, 0x01}, req.queue);
+            // Create StudyJoin message
+            StudyMessage.StudyJoin.Builder join = StudyMessage.StudyJoin.newBuilder();
+            join.setQueueIdentifier(ByteString.copyFrom(req.queue));
+            join.setKexAlgorithm(StudyMessage.StudyJoin.KexAlgo.KEX_ECDH_CURVE25519);
+            join.setKexData(ByteString.copyFrom(new byte[] {0x00, 0x01}));
+
+            // Encrypt it
+            byte[] ciphertext = RSA.encryptRSA(join.build().toByteArray(), req.pubkey);
+
+            // Upload it
+            DataBlock block = new DataBlock(req.queue, ciphertext, req.queue);
             assertEquals(p.put(block), Protocol.PUT_OK);
 
-            List<byte[]> rv = p.getStudyJoinRequests(req);
-            assertTrue(Arrays.equals(rv.get(0), new byte[] {0x00, 0x01}));
+            // Check if the retrieval code works
+            List<StudyJoinRequest> rv = p.getStudyJoinRequests(req);
+            assertTrue(Arrays.equals(rv.get(0).queue, req.queue));
+            assertTrue(Arrays.equals(rv.get(0).kexpub, new byte[] {0x00, 0x01}));
+            assertTrue(rv.get(0).kexalgo == StudyJoinRequest.KEX_ALGO.KEX_ECDH_CURVE25519);
             rv = p.getStudyJoinRequests(req);
             assertEquals(rv.size(), 0);
             // delete study
             assertEquals(p.deleteStudy(req), Protocol.SDEL_OK);
-        } catch (IOException e) {
+        } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
             fail();
         }

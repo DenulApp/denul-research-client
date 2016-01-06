@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.velcommuta.denul.data.DataBlock;
+import de.velcommuta.denul.data.StudyJoinRequest;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.data.TokenPair;
 
@@ -196,9 +197,9 @@ public interface Protocol {
     /**
      * Retrieve all available StudyJoinRequests associated with a specific StudyRequest
      * @param req The StudyRequest
-     * @return A List of encrypted StudyJoinRequests, or an empty list if none are available, or null if an error occured
+     * @return A List of {@link StudyJoinRequest}s, or an empty list if none are available, or null if an error occured
      */
-    List<byte[]> getStudyJoinRequests(StudyRequest req);
+    List<StudyJoinRequest> getStudyJoinRequests(StudyRequest req);
 
     /**
      * Delete a study from the server

@@ -416,12 +416,30 @@ public class TextUI {
 
 
     /**
+     * View the imprint
+     */
+    public void viewImprint() {
+        println("");
+        println("     Imprint:");
+        println("This software was written for a Master Thesis at the Technische Universität Darmstadt, in the SEEMOO working group.");
+        println("The software is under the TBD license."); // TODO Insert license
+        println("");
+        println("This software uses the following Open Source Libraries:");
+        println("- Bouncycastle by The Legion of the Bouncy Castle (MIT License)");
+        println("- DNSJava by Brian Wellington (BSD License)");
+        println("- Protocol Buffers by Google (BSD License)");
+        println("- LibVICBF by Malexmave (Apache License v2)");
+        println("- sqlite-jdbc by Xerial (Apache License v2)");
+        println("");
+    }
+
+
+    /**
      * Show the main menu of the application
      */
     public void mainMenu() {
         // Define the main menu options
-        // TODO Add imprint with license information for used libraries
-        String[] menuOptions = {"New research request", "View active research data", "Settings", "Quit"};
+        String[] menuOptions = {"New research request", "View active research data", "Settings", "Imprint", "Quit"};
         // Print the program header
         println("    Denul Research Client\n");
         // Main loop
@@ -443,6 +461,9 @@ public class TextUI {
                     viewSettings();
                     break;
                 case 3:
+                    viewImprint();
+                    break;
+                case 4:
                     running = false;
                     break;
                 default:

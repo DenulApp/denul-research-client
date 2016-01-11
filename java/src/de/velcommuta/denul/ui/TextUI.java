@@ -3,10 +3,12 @@ package de.velcommuta.denul.ui;
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
 import de.velcommuta.denul.data.StudyRequest;
+import de.velcommuta.denul.database.Database;
 import de.velcommuta.denul.database.SQLiteDatabase;
 import de.velcommuta.denul.networking.DNSVerifier;
 import de.velcommuta.denul.networking.HttpsVerifier;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
+import de.velcommuta.denul.util.StudyManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,9 +20,11 @@ import java.util.concurrent.FutureTask;
 
 // Static-import a bunch of methods for more concise code
 import static de.velcommuta.denul.util.Output.println;
+import static de.velcommuta.denul.util.Output.print;
 import static de.velcommuta.denul.util.Input.readLine;
 import static de.velcommuta.denul.util.Input.readLines;
 import static de.velcommuta.denul.util.Input.readSelection;
+import static de.velcommuta.denul.util.Input.readInt;
 import static de.velcommuta.denul.util.Input.yes;
 import static de.velcommuta.denul.util.Input.confirm;
 import static de.velcommuta.denul.util.Input.confirmCancel;
@@ -30,13 +34,14 @@ import static de.velcommuta.denul.util.Input.confirmCancel;
  */
 public class TextUI {
     private StudyRequest request;
+    private Database mDatabase;
 
     /**
      * Open the local database and ask for a password, if needed
      * @return true if the database was successfully opened, false otherwise
      */
     private boolean openDatabase() {
-        new SQLiteDatabase();
+        mDatabase = new SQLiteDatabase();
         return true;
     }
 
@@ -121,6 +126,10 @@ public class TextUI {
 
         // Get verification strategy
         request.verification = addVerificationStrategy();
+
+        if (yes("Upload the study to the server now (otherwise it will be discarded)?")) {
+            StudyManager.registerStudy(request, mDatabase);
+        }
     }
 
 
@@ -352,12 +361,54 @@ public class TextUI {
      * View active studies
      */
     public void viewActiveStudies() {
-        println("NotImplemented");
+        println("");
+        println("        Your active studies:");
+        List<StudyRequest> sr = StudyManager.getMyStudies(mDatabase);
+        if (sr.size() == 0) {
+            println("You do not have any active studies - returning to main menu");
+            println("");
+            return;
+        }
+        int i = 1;
+        for (StudyRequest req : sr) {
+            println(i + "  " + req.name + " (" + StudyManager.getStudyParticipants(req, mDatabase).size() + " Participants)");
+            i = i+1;
+        }
+        println("");
+        print("Please select a study by entering its number, or enter 0 to return to the main menu: ");
+        int select = readInt();
+        while (select <= 0 || select > sr.size()) {
+            if (select == 0) {
+                println("");
+                return;
+            } else {
+                print("That's not a valid selection. Please enter a number between 0 and " + sr.size() + ": ");
+                select = readInt();
+            }
+        }
+        // select now contains the number of the selected study
+        // TODO Check for new data is a debugging helper, this should happen automagically
+        int action = readSelection("Please select an action:", new String[] {"(debug) Check for new data", "View Data", "Delete Study", "Return to main menu"});
+        if (action == 0) { // Update data
+            StudyManager.updateStudyData(mDatabase, sr.get(select -1));
+            println("Data updated");
+            // Recursively return to the study list
+        } else if (action == 1) { // View data
+            println("NotImplemented"); // FIXME NotImplemented
+        } else if (action == 2) { // Delete Study
+            if (yes("Are you sure? This cannot be undone, and all data will be deleted.")) {
+                StudyManager.deleteStudy(sr.get(select - 1), mDatabase);
+                println("Study deleted");
+            }
+        } else if (action == 3) { // Return to main menu
+            return;
+        }
+        viewActiveStudies();
     }
 
 
     /**
-     * View settings studies
+     * View settings
      */
     public void viewSettings() {
         println("NotImplemented");

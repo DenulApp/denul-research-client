@@ -283,8 +283,6 @@ public class SQLiteDatabase implements Database {
             } else {
                 throw new IllegalArgumentException("Insert failed, no record created");
             }
-            // Commit changes to DB
-            mConnection.commit();
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();

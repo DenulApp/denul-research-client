@@ -38,7 +38,7 @@ public class Input {
      * Read input from STDIN and make sure it's a number
      * @return The number that was entered
      */
-    private static int readInt() {
+    public static int readInt() {
         String rep = read();
         try {
             return Integer.parseInt(rep);

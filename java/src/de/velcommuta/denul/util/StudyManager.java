@@ -170,8 +170,6 @@ public class StudyManager {
      * @param participants The keysets to query
      */
     private static void retrieve(Database db, Protocol p, List<KeySet> participants) {
-        // prepare return value
-        List<Shareable> rv = new LinkedList<>();
         // List of TokenPairs to query
         List<TokenPair> query = new LinkedList<>();
         // Map from TokenPairs to associated KeySets

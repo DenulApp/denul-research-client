@@ -2,6 +2,8 @@ package de.velcommuta.denul.ui;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
+import de.velcommuta.denul.data.GPSTrack;
+import de.velcommuta.denul.data.Shareable;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.database.Database;
 import de.velcommuta.denul.database.SQLiteDatabase;
@@ -394,7 +396,10 @@ public class TextUI {
             println("Data updated");
             // Recursively return to the study list
         } else if (action == 1) { // View data
-            println("NotImplemented"); // FIXME NotImplemented
+            List<Shareable> shares = mDatabase.getDataByStudyID(sr.get(select -1).id);
+            for (Shareable shr: shares) {
+                println(shr.toString());
+            }
         } else if (action == 2) { // Delete Study
             if (yes("Are you sure? This cannot be undone, and all data will be deleted.")) {
                 StudyManager.deleteStudy(sr.get(select - 1), mDatabase);

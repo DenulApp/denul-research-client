@@ -671,6 +671,7 @@ public class SQLiteDatabase implements Database {
                 rs.getFloat(7)); // Distance
         track.setDescription(rs.getString(9)); // Description
         track.setID((int) rs.getLong(1)); // ID
+        track.setOwner(rs.getInt(3));
         irs.close();
         innerstmt.close();
         return track;

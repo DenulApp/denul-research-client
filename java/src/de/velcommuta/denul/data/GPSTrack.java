@@ -294,4 +294,46 @@ public class GPSTrack implements Shareable {
         }
         return true;
     }
+
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{\n  \"Owner\": ");
+        builder.append(mOwner);
+        builder.append(",\n  \"Start\": ");
+        builder.append(mTimestampStart);
+        builder.append(",\n  \"End\": ");
+        builder.append(mTimestampEnd);
+        builder.append(",\n  \"Timezone\": \"");
+        builder.append(mTimezone);
+        builder.append("\",\n  \"Mode of Transportation\": \"");
+        switch (mModeOfTransportation) {
+            case VALUE_RUNNING:
+                builder.append("running");
+                break;
+            case VALUE_CYCLING:
+                builder.append("cycling");
+                break;
+            default:
+                builder.append("unknown");
+        }
+        builder.append("\"\n  \"Path\": [");
+        for (int i = 0; i < mPosition.size(); i++) {
+            Location loc = mPosition.get(i);
+            builder.append("\n    {\n      \"Latitude\": ");
+            builder.append(loc.getLatitude());
+            builder.append(",\n      \"Longitude\": ");
+            builder.append(loc.getLongitude());
+            builder.append(",\n      \"Timestamp\": ");
+            builder.append(loc.getTime());
+            builder.append("\n    }");
+            if (i != mPosition.size()-1) {
+                builder.append(",");
+            }
+        }
+        builder.append("\n  ]");
+        builder.append("\n}");
+        return builder.toString();
+    }
 }

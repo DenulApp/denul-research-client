@@ -371,7 +371,7 @@ public class TextUI {
         }
         int i = 1;
         for (StudyRequest req : sr) {
-            println(i + "  " + req.name + " (" + StudyManager.getStudyParticipants(req, mDatabase).size() + " Participants)");
+            println(i + "  " + req.name + " (" + StudyManager.getStudyParticipants(req, mDatabase).size() + " Participants, " + mDatabase.getDataByStudyID(req.id).size() + " data entries)");
             i = i+1;
         }
         println("");

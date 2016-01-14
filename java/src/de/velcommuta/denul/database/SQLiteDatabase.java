@@ -306,7 +306,6 @@ public class SQLiteDatabase implements Database {
             stmt.setLong(5, keys.getID());
             int affected_rows = stmt.executeUpdate();
             assert affected_rows == 1;
-            mConnection.commit();
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -380,7 +379,7 @@ public class SQLiteDatabase implements Database {
     @Override
     public void addShareable(Shareable sh) {
         if (sh.getType() == Shareable.SHAREABLE_TRACK) {
-            addGPSTrack((GPSTrack) sh, sh.getID());
+            addGPSTrack((GPSTrack) sh, sh.getOwner());
         } else {
             throw new IllegalArgumentException("Unknown shareable");
         }
@@ -424,7 +423,6 @@ public class SQLiteDatabase implements Database {
                 assert changed > 0;
             }
             innerstmt.close();
-            mConnection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("SQL Error: ", e);

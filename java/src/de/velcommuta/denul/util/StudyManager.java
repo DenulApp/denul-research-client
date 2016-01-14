@@ -13,12 +13,15 @@ import de.velcommuta.denul.networking.TLSConnection;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Class providing static functions to perform study management. All-in-one solution for network- and database side of
  * study management, data retrieval, and so on
  */
 public class StudyManager {
+    private static final Logger logger = Logger.getLogger(ProtobufProtocol.class.getName());
+
     /**
      * Register a Study on the server and add it to the local database
      * @param req The study request
@@ -65,7 +68,7 @@ public class StudyManager {
 
             int rv = p.deleteStudy(req);
             if (rv == Protocol.SDEL_FAIL_NO_CONNECTION) {
-                // TODO Log
+                logger.severe("deleteStudy: FAIL NO CONNECTION");
                 return false;
             }
             db.deleteStudy(req);
@@ -201,7 +204,7 @@ public class StudyManager {
             byte[] value = result.get(pair);
             if (value == Protocol.GET_FAIL_KEY_FMT || value == Protocol.GET_FAIL_NO_CONNECTION || value == Protocol.GET_FAIL_PROTOCOL_ERROR) {
                 // Protocol error, ignore
-                // TODO Log
+                logger.severe("retrieve: GET of key block FAILED - No connection or other error");
                 continue;
             } else if (value == Protocol.GET_FAIL_KEY_NOT_TAKEN) {
                 // No value under this key, ignore
@@ -210,10 +213,6 @@ public class StudyManager {
             // If this statement is reached, value is a key block
             // Retrieve matching KeySet
             KeySet ks = buffer.get(pair);
-            // Increment counters
-            ks = deriv.notifyInboundIdentifierUsed(ks);
-            // Write changes to database
-            db.updateParticipant(ks);
 
             if (Arrays.equals(value, new byte[] {0x42})) {
                 // Encountered revocation, do nothing
@@ -223,8 +222,17 @@ public class StudyManager {
             DataBlock data = enc.decryptKeysAndIdentifier(value, ks);
             if (data == null) {
                 // Decryption failed, ignore - false positive or other weird stuff going on
+                logger.severe("retrieve: Decryption of key block FAILED");
+                // Increment counters
+                ks = deriv.notifyInboundIdentifierUsed(ks);
+                // Write changes to database
+                db.updateParticipant(ks);
                 continue;
             }
+            // Increment counters
+            ks = deriv.notifyInboundIdentifierUsed(ks);
+            // Write changes to database
+            db.updateParticipant(ks);
             data.setOwner(ks);
             // Decryption was successful
             // Add to revocation list to remove it from server
@@ -244,10 +252,11 @@ public class StudyManager {
             byte[] value = result.get(ident);
             if (value == Protocol.GET_FAIL_KEY_FMT || value == Protocol.GET_FAIL_NO_CONNECTION || value == Protocol.GET_FAIL_PROTOCOL_ERROR) {
                 // Protocol error, ignore
-                // TODO Log
+                logger.severe("retrieve: Retrieval of data block FAILED - No connection or other weird error");
                 continue;
             } else if (value == Protocol.GET_FAIL_KEY_NOT_TAKEN) {
                 // No value under this key, ignore
+                logger.severe("retrieve: Retrieval of data block FAILED - Key not taken");
                 continue;
             }
             // We seem to have retrieved a data block
@@ -257,6 +266,8 @@ public class StudyManager {
             if (sh != null) {
                 // Decryption successful, write to Databases
                 db.addShareable(sh);
+            } else {
+                logger.severe("retrieve: Decryption of data block FAILED");
             }
             requery.add(block.getOwner());
         }

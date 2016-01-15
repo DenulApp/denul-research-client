@@ -1,7 +1,6 @@
 package de.velcommuta.denul;
 
 import de.velcommuta.denul.ui.TextUI;
-import de.velcommuta.denul.util.Input;
 
 /**
  * Main Class

@@ -6,7 +6,6 @@ import de.velcommuta.denul.networking.protobuf.study.StudyMessage;
 import de.velcommuta.denul.util.AsyncKeyGenerator;
 import de.velcommuta.denul.util.FormatHelper;
 import junit.framework.TestCase;
-import org.junit.Test;
 
 import java.security.KeyPair;
 import java.util.Random;
@@ -14,8 +13,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test the serialization and signature functions of the StudyRequest

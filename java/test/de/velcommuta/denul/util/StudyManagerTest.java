@@ -4,7 +4,6 @@ import com.google.protobuf.ByteString;
 import de.velcommuta.denul.crypto.*;
 import de.velcommuta.denul.data.*;
 import de.velcommuta.denul.database.SQLiteDatabase;
-import de.velcommuta.denul.database.SQLiteDatabaseTest;
 import de.velcommuta.denul.networking.Connection;
 import de.velcommuta.denul.networking.ProtobufProtocol;
 import de.velcommuta.denul.networking.Protocol;

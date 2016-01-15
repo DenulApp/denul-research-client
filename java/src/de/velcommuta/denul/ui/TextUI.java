@@ -2,7 +2,6 @@ package de.velcommuta.denul.ui;
 
 import de.velcommuta.denul.crypto.ECDHKeyExchange;
 import de.velcommuta.denul.crypto.RSA;
-import de.velcommuta.denul.data.GPSTrack;
 import de.velcommuta.denul.data.Shareable;
 import de.velcommuta.denul.data.StudyRequest;
 import de.velcommuta.denul.database.Database;

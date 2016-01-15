@@ -3,6 +3,7 @@
 
 package de.velcommuta.denul.data.proto;
 
+@SuppressWarnings("ALL")
 public final class DataContainer {
   private DataContainer() {}
   public static void registerAllExtensions(

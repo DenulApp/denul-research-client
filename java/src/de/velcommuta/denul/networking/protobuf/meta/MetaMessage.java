@@ -3,6 +3,7 @@
 
 package de.velcommuta.denul.networking.protobuf.meta;
 
+@SuppressWarnings("ALL")
 public final class MetaMessage {
   private MetaMessage() {}
   public static void registerAllExtensions(

@@ -8,7 +8,7 @@ public class Location {
     private double longitude;
     private double time;
 
-    public Location() {};
+    public Location() {}
 
     public void setLatitude(double lat) {
         latitude = lat;

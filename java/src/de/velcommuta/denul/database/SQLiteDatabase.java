@@ -83,10 +83,7 @@ public class SQLiteDatabase implements Database {
         assert isOpen();
         assert req != null;
         long rv;
-        Savepoint before = null;
         try {
-            // Set up a savepoint to roll back to in case of problems
-            before = mConnection.setSavepoint();
             // Insert the StudyRequest itself
             PreparedStatement stmt = mConnection.prepareStatement(Studies.INSERT, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,  req.name);
@@ -117,7 +114,6 @@ public class SQLiteDatabase implements Database {
             if (generatedKeys.next()) {
                 rv = generatedKeys.getLong(1);
             } else {
-                mConnection.rollback(before);
                 throw new IllegalArgumentException("Insert failed, no record created");
             }
             stmt.close();
@@ -146,15 +142,8 @@ public class SQLiteDatabase implements Database {
                 assert affected_rows > 0;
             }
             stmt.close();
-            // Commit
-            mConnection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
-            if (before != null) try {
-                mConnection.rollback(before);
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
             throw new IllegalArgumentException("SQL Exception: ", e);
         }
         return rv;

@@ -318,7 +318,9 @@ public class GPSTrack implements Shareable {
             default:
                 builder.append("unknown");
         }
-        builder.append("\"\n  \"Path\": [");
+        builder.append("\",\n  \"Distance\": ");
+        builder.append(mDistance);
+        builder.append(",\n  \"Path\": [");
         for (int i = 0; i < mPosition.size(); i++) {
             Location loc = mPosition.get(i);
             builder.append("\n    {\n      \"Latitude\": ");

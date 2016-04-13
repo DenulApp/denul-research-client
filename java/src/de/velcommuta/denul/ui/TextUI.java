@@ -426,7 +426,8 @@ public class TextUI {
         println("");
         println("     Imprint:");
         println("This software was written for a Master Thesis at the Technische Universität Darmstadt, in the SEEMOO working group.");
-        println("The software is under the TBD license."); // TODO Insert license
+        println("The software is licensed under the GNU GPL v3.");
+        println("See https://gnu.org/licenses/ for details.");
         println("");
         println("This software uses the following Open Source Libraries:");
         println("- Bouncycastle by The Legion of the Bouncy Castle (MIT License)");
